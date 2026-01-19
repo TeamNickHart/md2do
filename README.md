@@ -5,7 +5,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-8.0%2B-orange)](https://pnpm.io/)
 
-A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript, designed for developers who love markdown.
+A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript,
+designed for developers who love markdown.
 
 ## ✨ Features
 
@@ -186,11 +187,13 @@ md2do stats --assignee nick --by priority
 
 ## 🤖 AI Integration (MCP)
 
-md2do includes a **Model Context Protocol (MCP)** server that enables AI assistants like Claude to interact with your tasks. The MCP server exposes tools, resources, and prompts for task management through a standardized protocol.
+md2do includes a **Model Context Protocol (MCP)** server that enables AI assistants like Claude to interact with your
+tasks. The MCP server exposes tools, resources, and prompts for task management through a standardized protocol.
 
 **What is MCP?**
 
-The Model Context Protocol is an open protocol developed by Anthropic that allows AI assistants to securely connect to external data sources and tools. Think of it like a "Language Server Protocol" for AI assistants.
+The Model Context Protocol is an open protocol developed by Anthropic that allows AI assistants to securely connect to
+external data sources and tools. Think of it like a "Language Server Protocol" for AI assistants.
 
 **Quick Setup for Claude Code:**
 

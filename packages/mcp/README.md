@@ -1,10 +1,12 @@
 # @md2do/mcp
 
-MCP (Model Context Protocol) server for md2do task manager. This allows AI assistants like Claude Code to directly query and analyze your markdown tasks.
+MCP (Model Context Protocol) server for md2do task manager. This allows AI assistants like Claude Code to directly
+query and analyze your markdown tasks.
 
 ## What is MCP?
 
-The Model Context Protocol (MCP) is an open standard that enables AI assistants to interact with external tools and data sources. This MCP server exposes md2do's task management capabilities to any MCP-compatible client.
+The Model Context Protocol (MCP) is an open standard that enables AI assistants to interact with external tools and
+data sources. This MCP server exposes md2do's task management capabilities to any MCP-compatible client.
 
 ## Features
 
