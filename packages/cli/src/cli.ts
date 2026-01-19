@@ -1,6 +1,10 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { createListCommand, createStatsCommand } from './commands/index.js';
+import {
+  createListCommand,
+  createStatsCommand,
+  createTodoistCommand,
+} from './commands/index.js';
 
 const program = new Command();
 
@@ -12,6 +16,7 @@ program
 // Add commands
 program.addCommand(createListCommand());
 program.addCommand(createStatsCommand());
+program.addCommand(createTodoistCommand());
 
 // Show help if no command specified
 if (process.argv.length === 2) {

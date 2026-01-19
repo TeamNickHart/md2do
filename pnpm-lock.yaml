@@ -44,9 +44,18 @@ importers:
 
   packages/cli:
     dependencies:
+      '@doist/todoist-api-typescript':
+        specifier: ^3.0.3
+        version: 3.0.3(type-fest@0.20.2)
+      '@md2do/config':
+        specifier: workspace:*
+        version: link:../config
       '@md2do/core':
         specifier: workspace:*
         version: link:../core
+      '@md2do/todoist':
+        specifier: workspace:*
+        version: link:../todoist
       chalk:
         specifier: ^5.6.2
         version: 5.6.2
