@@ -382,10 +382,18 @@ md2do/
 # Build the project
 pnpm build
 
-# Link the CLI globally
-npm link packages/cli
+# Link the CLI globally (choose one method)
 
-# Test it out
+# Method 1: Using pnpm (recommended)
+pnpm --filter @md2do/cli link --global
+
+# Method 2: Run directly with node (no global install)
+node packages/cli/dist/cli.js list --path examples
+
+# Method 3: Link from package directory
+cd packages/cli && pnpm link --global && cd ../..
+
+# Test it out (if using Method 1 or 3)
 md2do list --path examples
 md2do stats --path examples
 ```
