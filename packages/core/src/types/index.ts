@@ -38,7 +38,7 @@ export interface ParsingContext {
   currentHeading?: string;
 }
 
-export interface TaskFilter {
+export interface TaskFilterCriteria {
   assignee?: string | string[];
   completed?: boolean;
   overdue?: boolean;
