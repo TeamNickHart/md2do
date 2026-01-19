@@ -17,6 +17,7 @@ A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown
 - ⚡ **Fast** - Built with performance in mind using fast-glob
 - 🔧 **Flexible** - Output in pretty, table, or JSON formats
 - 📁 **Context-aware** - Automatically extracts project and person context from folder structure
+- 🤖 **AI-powered** - MCP server integration for Claude and other AI assistants
 
 ## 📦 Installation
 
@@ -183,6 +184,39 @@ md2do stats --assignee nick --by priority
 | `--project <name>`          | Filter by project                                     |
 | `--no-colors`               | Disable colors in output                              |
 
+## 🤖 AI Integration (MCP)
+
+md2do includes a **Model Context Protocol (MCP)** server that enables AI assistants like Claude to interact with your tasks. The MCP server exposes tools, resources, and prompts for task management through a standardized protocol.
+
+**What is MCP?**
+
+The Model Context Protocol is an open protocol developed by Anthropic that allows AI assistants to securely connect to external data sources and tools. Think of it like a "Language Server Protocol" for AI assistants.
+
+**Quick Setup for Claude Code:**
+
+```bash
+# Build the MCP server
+pnpm --filter @md2do/mcp build
+
+# Add to your Claude Code configuration
+# See packages/mcp/README.md for detailed instructions
+```
+
+**Available Capabilities:**
+
+- 🔧 **Tools**: `list_tasks`, `get_task_stats`, `search_tasks`, `get_task_by_id`
+- 📚 **Resources**: Access tasks by project, person, file, or all tasks
+- 📋 **Prompts**: Daily standup, sprint summary, overdue review templates
+
+**Use Cases:**
+
+- Generate daily standup reports automatically
+- Ask Claude to analyze your task backlog
+- Get AI-powered task prioritization recommendations
+- Create sprint summaries and progress reports
+
+👉 **[Full MCP Documentation](packages/mcp/README.md)** - Complete setup guide, API reference, and examples
+
 ## 📁 Project Structure & Context
 
 md2do automatically extracts context from your file structure:
@@ -306,11 +340,18 @@ md2do/
 │   │   │   ├── sorting/     # Task sorting
 │   │   │   └── types/       # TypeScript types
 │   │   └── tests/
-│   └── cli/           # CLI interface
+│   ├── cli/           # CLI interface
+│   │   ├── src/
+│   │   │   ├── commands/    # List and stats commands
+│   │   │   ├── formatters/  # Output formatters
+│   │   │   └── scanner.ts   # File scanning
+│   │   └── tests/
+│   └── mcp/           # MCP server for AI integration
 │       ├── src/
-│       │   ├── commands/    # List and stats commands
-│       │   ├── formatters/  # Output formatters
-│       │   └── scanner.ts   # File scanning
+│       │   ├── tools/       # MCP tools (list, stats, search)
+│       │   ├── resources/   # MCP resources (task URIs)
+│       │   ├── prompts/     # MCP prompt templates
+│       │   └── utils/       # Scanner utilities
 │       └── tests/
 ├── examples/          # Example markdown files
 └── .claude/          # Claude Code configuration
@@ -393,10 +434,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Tables powered by [cli-table3](https://github.com/cli-table/cli-table3)
 - File scanning with [fast-glob](https://github.com/mrmlnc/fast-glob)
 - Date handling with [date-fns](https://github.com/date-fns/date-fns)
+- AI integration powered by [Model Context Protocol SDK](https://github.com/modelcontextprotocol/typescript-sdk) by Anthropic
 
 ## 🗺️ Roadmap
 
-- [ ] MCP (Model Context Protocol) integration
+- [x] **MCP (Model Context Protocol) integration** - ✅ Complete! See [MCP docs](packages/mcp/README.md)
 - [ ] Todoist synchronization
 - [ ] Watch mode for continuous monitoring
 - [ ] Configuration file support
