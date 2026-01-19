@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-8.0%2B-orange)](https://pnpm.io/)
+[![pnpm](https://img.shields.io/badge/pnpm-9.0%2B-orange)](https://pnpm.io/)
 
 A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript,
 designed for developers who love markdown.
@@ -296,7 +296,7 @@ Found 113 tasks
 ### Prerequisites
 
 - Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- pnpm >= 9.0.0
 
 ### Setup
 
