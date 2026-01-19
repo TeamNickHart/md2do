@@ -51,9 +51,11 @@ export class TodoistClient {
   /**
    * Create a new task
    */
-  async createTask(params: TodoistTaskParams): Promise<Task> {
+  async createTask(
+    params: TodoistTaskParams | Record<string, unknown>,
+  ): Promise<Task> {
     try {
-      return await this.api.addTask(params);
+      return await this.api.addTask(params as TodoistTaskParams);
     } catch (error) {
       throw new Error(
         `Failed to create task: ${error instanceof Error ? error.message : String(error)}`,
