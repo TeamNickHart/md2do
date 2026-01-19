@@ -118,6 +118,7 @@ export interface TodoistTaskParams {
   priority: number;
   labels?: string[];
   due_date?: string;
+  due_string?: string;
   project_id?: string;
 }
 
