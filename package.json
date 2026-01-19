@@ -27,7 +27,10 @@
     "typecheck": "pnpm -r typecheck",
     "validate": "pnpm build && pnpm lint && pnpm format:check && pnpm typecheck && pnpm test:run",
     "clean": "pnpm -r clean && rm -rf node_modules",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "link:cli": "pnpm --filter @md2do/cli link --global",
+    "unlink:cli": "pnpm --filter @md2do/cli unlink --global",
+    "cli": "node packages/cli/dist/cli.js"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
