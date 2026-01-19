@@ -28,8 +28,8 @@
     "validate": "pnpm build && pnpm lint && pnpm format:check && pnpm typecheck && pnpm test:run",
     "clean": "pnpm -r clean && rm -rf node_modules",
     "prepare": "husky install",
-    "link:cli": "pnpm --filter @md2do/cli link --global",
-    "unlink:cli": "pnpm --filter @md2do/cli unlink --global",
+    "link:cli": "cd packages/cli && pnpm link --global",
+    "unlink:cli": "cd packages/cli && pnpm unlink --global",
     "cli": "node packages/cli/dist/cli.js"
   },
   "devDependencies": {

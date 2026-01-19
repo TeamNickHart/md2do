@@ -391,8 +391,8 @@ pnpm link:cli
 pnpm cli -- list --path examples
 pnpm cli -- stats --path examples
 
-# Method 3: Using pnpm filter directly
-pnpm --filter @md2do/cli link --global
+# Method 3: Link from package directory
+cd packages/cli && pnpm link --global
 
 # Test it out (if using Method 1 or 3)
 md2do list --path examples
