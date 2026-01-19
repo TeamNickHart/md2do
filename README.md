@@ -18,6 +18,8 @@ designed for developers who love markdown.
 - ⚡ **Fast** - Built with performance in mind using fast-glob
 - 🔧 **Flexible** - Output in pretty, table, or JSON formats
 - 📁 **Context-aware** - Automatically extracts project and person context from folder structure
+- 🔄 **Todoist integration** - Bidirectional sync foundation with official Todoist API
+- ⚙️ **Configurable** - Hierarchical config support (global, project, environment)
 - 🤖 **AI-powered** - MCP server integration for Claude and other AI assistants
 
 ## 📦 Installation
@@ -335,12 +337,13 @@ pnpm validate
 ```
 md2do/
 ├── packages/
-│   ├── core/          # Core parsing and filtering engine
+│   ├── core/          # Core parsing, filtering, and file writing
 │   │   ├── src/
 │   │   │   ├── parser/      # Markdown task parser
 │   │   │   ├── scanner/     # File scanner
 │   │   │   ├── filters/     # Task filtering
 │   │   │   ├── sorting/     # Task sorting
+│   │   │   ├── writer/      # File modification (atomic updates)
 │   │   │   └── types/       # TypeScript types
 │   │   └── tests/
 │   ├── cli/           # CLI interface
@@ -349,6 +352,16 @@ md2do/
 │   │   │   ├── formatters/  # Output formatters
 │   │   │   └── scanner.ts   # File scanning
 │   │   └── tests/
+│   ├── config/        # Configuration management
+│   │   ├── src/
+│   │   │   ├── schema.ts    # Zod schemas for validation
+│   │   │   └── loader.ts    # Hierarchical config loading
+│   │   └── tests/
+│   ├── todoist/       # Todoist API integration
+│   │   ├── src/
+│   │   │   ├── client.ts    # API client wrapper
+│   │   │   └── mapper.ts    # Task format conversion
+│   │   └── tests/
 │   └── mcp/           # MCP server for AI integration
 │       ├── src/
 │       │   ├── tools/       # MCP tools (list, stats, search)
@@ -356,6 +369,9 @@ md2do/
 │       │   ├── prompts/     # MCP prompt templates
 │       │   └── utils/       # Scanner utilities
 │       └── tests/
+├── docs/              # Documentation
+│   ├── todoist-setup.md              # Todoist configuration guide
+│   └── todoist-implementation-plan.md # Technical roadmap
 ├── examples/          # Example markdown files
 └── .claude/          # Claude Code configuration
 ```
@@ -394,14 +410,25 @@ pnpm --filter @md2do/core test:ui
 
 **Test Coverage:**
 
-- 285 tests across 8 test suites
+- 359 tests across 14 test suites
 - Parser tests (70 tests)
 - Scanner tests (43 tests)
 - Filter tests (41 tests)
 - Sorting tests (26 tests)
 - Pattern matching tests (43 tests)
 - Date utility tests (45 tests)
+- Writer tests (15 tests)
+- Config tests (26 tests)
+- Todoist tests (31 tests)
 - And more!
+
+## 📖 Additional Documentation
+
+- [Todoist Setup Guide](docs/todoist-setup.md) - Complete guide to configuring Todoist integration
+- [Todoist Implementation Plan](docs/todoist-implementation-plan.md) - Technical roadmap and architecture
+- [Config Package](packages/config/README.md) - Configuration management documentation
+- [Todoist Package](packages/todoist/README.md) - Todoist API integration documentation
+- [MCP Package](packages/mcp/README.md) - Model Context Protocol server documentation
 
 ## 🤝 Contributing
 
@@ -442,9 +469,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🗺️ Roadmap
 
 - [x] **MCP (Model Context Protocol) integration** - ✅ Complete! See [MCP docs](packages/mcp/README.md)
-- [ ] Todoist synchronization
+- [x] **Configuration file support** - ✅ Complete! Hierarchical config with `.md2do.json`/`.yaml`
+- [x] **Todoist integration foundation** - ✅ Complete! API client, task mapping, file writer
+  - [ ] CLI commands (`md2do todoist sync`, `md2do todoist push`, etc.)
+  - [ ] Bidirectional sync logic
+  - [ ] Interactive token setup
 - [ ] Watch mode for continuous monitoring
-- [ ] Configuration file support
 - [ ] Custom output templates
 - [ ] GitHub Issues integration
 - [ ] Web dashboard
