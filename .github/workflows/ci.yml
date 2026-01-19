@@ -87,11 +87,11 @@ jobs:
       - name: Run format check
         run: pnpm format:check
 
-  # Job 3: Lint check (parallel, no build needed)
+  # Job 3: Lint check (after build, needs type definitions)
   lint:
     name: Lint Check
     runs-on: ubuntu-latest
-    needs: install
+    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -114,6 +114,11 @@ jobs:
             **/node_modules
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
 
       - name: Run lint
         run: pnpm lint
