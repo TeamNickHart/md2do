@@ -1,2 +1,3 @@
 // Command exports
-export {};
+export { createListCommand } from './list.js';
+export { createStatsCommand } from './stats.js';
