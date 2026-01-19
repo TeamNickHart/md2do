@@ -1,4 +1,4 @@
-// Core exports - pure business logic, no I/O
+// Core exports - parsing, filtering, scanning, and file writing
 
 // Types
 export * from './types/index.js';
@@ -9,6 +9,9 @@ export * from './parser/patterns.js';
 
 // Scanner
 export * from './scanner/index.js';
+
+// Writer
+export * from './writer/index.js';
 
 // Filters (export as namespace to avoid conflicts)
 export * as filters from './filters/index.js';

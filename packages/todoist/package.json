@@ -1,7 +1,7 @@
 {
-  "name": "@md2do/core",
+  "name": "@md2do/todoist",
   "version": "0.1.0",
-  "description": "Core parsing, filtering, scanning, and file writing for md2do",
+  "description": "Todoist API integration for md2do",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -17,10 +17,13 @@
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
+    "test:run": "vitest run",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@doist/todoist-api-typescript": "^3.0.3",
+    "@md2do/core": "workspace:*",
     "date-fns": "^3.0.6"
   },
   "devDependencies": {
