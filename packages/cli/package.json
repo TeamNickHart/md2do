@@ -16,7 +16,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@doist/todoist-api-typescript": "^3.0.3",
+    "@md2do/config": "workspace:*",
     "@md2do/core": "workspace:*",
+    "@md2do/todoist": "workspace:*",
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
     "commander": "^11.1.0",
