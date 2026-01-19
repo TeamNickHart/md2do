@@ -115,10 +115,13 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
         with:
-          name: build-artifacts
+          path: |
+            packages/*/dist
+            packages/*/tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
 
       - name: Run lint
         run: pnpm lint
@@ -154,14 +157,13 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+      - name: Cache build output
+        uses: actions/cache/save@v4
         with:
-          name: build-artifacts
           path: |
             packages/*/dist
             packages/*/tsconfig.tsbuildinfo
-          retention-days: 1
+          key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
 
   # Job 5: Type check (after build, needs .d.ts files)
   typecheck:
@@ -191,10 +193,13 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
         with:
-          name: build-artifacts
+          path: |
+            packages/*/dist
+            packages/*/tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
 
       - name: Run typecheck
         run: pnpm typecheck
@@ -227,10 +232,13 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
         with:
-          name: build-artifacts
+          path: |
+            packages/*/dist
+            packages/*/tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
 
       - name: Run tests
         run: pnpm test:run
