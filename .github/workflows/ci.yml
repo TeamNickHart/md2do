@@ -77,12 +77,17 @@ jobs:
           run_install: false
 
       - name: Restore node_modules cache
+        id: cache-restore
         uses: actions/cache/restore@v4
         with:
           path: |
             **/node_modules
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
 
       - name: Run format check
         run: pnpm format:check
@@ -108,6 +113,7 @@ jobs:
           run_install: false
 
       - name: Restore node_modules cache
+        id: cache-restore-nm
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -115,13 +121,22 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore-nm.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
       - name: Restore build cache
+        id: cache-restore-build
         uses: actions/cache/restore@v4
         with:
           path: |
             packages/*/dist
             packages/*/tsconfig.tsbuildinfo
           key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
+
+      - name: Build packages (if cache miss)
+        if: steps.cache-restore-build.outputs.cache-hit != 'true'
+        run: pnpm build
 
       - name: Run lint
         run: pnpm lint
@@ -147,12 +162,17 @@ jobs:
           run_install: false
 
       - name: Restore node_modules cache
+        id: cache-restore
         uses: actions/cache/restore@v4
         with:
           path: |
             **/node_modules
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm build
@@ -186,6 +206,7 @@ jobs:
           run_install: false
 
       - name: Restore node_modules cache
+        id: cache-restore-nm
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -193,13 +214,22 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore-nm.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
       - name: Restore build cache
+        id: cache-restore-build
         uses: actions/cache/restore@v4
         with:
           path: |
             packages/*/dist
             packages/*/tsconfig.tsbuildinfo
           key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
+
+      - name: Build packages (if cache miss)
+        if: steps.cache-restore-build.outputs.cache-hit != 'true'
+        run: pnpm build
 
       - name: Run typecheck
         run: pnpm typecheck
@@ -225,6 +255,7 @@ jobs:
           run_install: false
 
       - name: Restore node_modules cache
+        id: cache-restore-nm
         uses: actions/cache/restore@v4
         with:
           path: |
@@ -232,13 +263,22 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore-nm.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
       - name: Restore build cache
+        id: cache-restore-build
         uses: actions/cache/restore@v4
         with:
           path: |
             packages/*/dist
             packages/*/tsconfig.tsbuildinfo
           key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
+
+      - name: Build packages (if cache miss)
+        if: steps.cache-restore-build.outputs.cache-hit != 'true'
+        run: pnpm build
 
       - name: Run tests
         run: pnpm test:run
