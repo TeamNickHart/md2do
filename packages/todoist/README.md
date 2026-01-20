@@ -12,7 +12,31 @@ Todoist API integration for md2do, providing bidirectional task synchronization 
 - ✅ **Type Safe** - Full TypeScript support with strict mode
 - 🧪 **Well Tested** - 31 tests with comprehensive coverage
 
+## Getting Your Todoist API Token
+
+Before using this package, you'll need a Todoist API token:
+
+1. **Log in to Todoist** at [https://app.todoist.com](https://app.todoist.com)
+2. **Go to Settings** → **Integrations**
+   - Direct link: [Todoist Integrations Settings](https://app.todoist.com/app/settings/integrations/developer)
+3. **Copy your API token** from the "API token" section
+4. **Keep it secure!** This token provides full access to your Todoist account
+
 ## Installation
+
+### For CLI Usage (Recommended)
+
+If you're using md2do CLI, the Todoist integration is already included:
+
+```bash
+# Install md2do globally
+npm install -g @md2do/cli
+
+# Or use locally
+npx @md2do/cli todoist list
+```
+
+### For Programmatic Usage
 
 ```bash
 # Install with peer dependencies
@@ -22,7 +46,45 @@ pnpm add @md2do/todoist @md2do/core
 npm install @md2do/todoist @md2do/core
 ```
 
-## Quick Start
+## Configuration
+
+### For CLI Users
+
+Configure your API token using one of these methods:
+
+**Option 1: Environment Variable** (recommended for security)
+
+```bash
+export TODOIST_API_TOKEN="your-api-token-here"
+```
+
+**Option 2: Global Config File** (~/.md2do.json)
+
+```json
+{
+  "todoist": {
+    "apiToken": "your-api-token-here",
+    "defaultProject": "Inbox"
+  }
+}
+```
+
+**Option 3: Project Config File** (./.md2do.json)
+
+```json
+{
+  "todoist": {
+    "apiToken": "your-project-token-here",
+    "defaultProject": "Work"
+  }
+}
+```
+
+For complete configuration options, see the [Configuration Guide](https://md2do.com/todoist) (coming soon).
+
+### For Programmatic Usage
+
+Pass the API token directly to the client:
 
 ```typescript
 import { TodoistClient } from '@md2do/todoist';
@@ -295,7 +357,66 @@ formatTaskContent('Fix bug', {
 // 'Fix bug @nick !!! #backend (2026-01-25) [todoist:123456]'
 ```
 
-## Usage with Configuration
+## CLI Usage Examples
+
+Once configured, use the md2do CLI commands:
+
+### List Todoist Tasks
+
+```bash
+# List all tasks from default project
+md2do todoist list
+
+# List from specific project
+md2do todoist list --project Work
+
+# Limit results
+md2do todoist list --limit 10
+
+# JSON output
+md2do todoist list --format json
+```
+
+### Create Tasks
+
+```bash
+# Simple task
+md2do todoist add "Review pull request"
+
+# With priority and labels
+md2do todoist add "Fix bug" --priority urgent --labels bug,backend
+
+# With due date
+md2do todoist add "Meeting prep" --due tomorrow --project Work
+```
+
+### Import Markdown Tasks
+
+```bash
+# Import a task from markdown to Todoist
+md2do todoist import tasks.md:15
+
+# Specify project
+md2do todoist import notes.md:42 --project Personal
+```
+
+### Sync with Todoist
+
+```bash
+# Sync all tasks (dry run first)
+md2do todoist sync --dry-run
+
+# Actually sync
+md2do todoist sync
+
+# Sync specific directory
+md2do todoist sync --path ./work-notes
+
+# Pull only (update markdown from Todoist)
+md2do todoist sync --direction pull
+```
+
+## Programmatic Usage with Configuration
 
 Use with `@md2do/config` for automatic token management:
 

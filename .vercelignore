@@ -1,0 +1,10 @@
+# Ignore everything except docs
+/*
+!/docs
+!/vercel.json
+!/package.json
+!/pnpm-lock.yaml
+!/pnpm-workspace.yaml
+
+# But ignore these within docs
+/docs/node_modules
