@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Left bracket [ -->
+  <path d="M 25 10 L 25 90 M 25 10 L 35 10 M 25 90 L 35 90"
+        stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"/>
+
+  <!-- X in the middle -->
+  <path d="M 40 35 L 60 65 M 60 35 L 40 65"
+        stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- Right bracket ] -->
+  <path d="M 75 10 L 75 90 M 75 10 L 65 10 M 75 90 L 65 90"
+        stroke="currentColor" stroke-width="8" stroke-linecap="round" fill="none"/>
+</svg>
