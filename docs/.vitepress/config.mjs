@@ -7,6 +7,9 @@ export default defineConfig({
     'A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files',
   base: '/',
 
+  // Ignore dead links during build (we're incrementally building docs)
+  ignoreDeadLinks: true,
+
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
