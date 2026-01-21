@@ -1,0 +1,56 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`E2E: JSON Format > should handle filters in JSON format 1`] = `
+{
+  "metadata": {
+    "completed": 0,
+    "incomplete": 0,
+    "total": 0,
+  },
+  "tasks": [],
+}
+`;
+
+exports[`E2E: JSON Format > should have correct JSON schema 1`] = `
+{
+  "metadata": {
+    "completed": 0,
+    "incomplete": 0,
+    "total": 0,
+  },
+  "tasks": [],
+}
+`;
+
+exports[`E2E: JSON Format > should include all metadata in JSON tasks 1`] = `
+{
+  "metadata": {
+    "completed": 0,
+    "incomplete": 0,
+    "total": 0,
+  },
+  "tasks": [],
+}
+`;
+
+exports[`E2E: JSON Format > should output valid JSON 1`] = `
+"{
+  "tasks": [],
+  "metadata": {
+    "total": 0,
+    "completed": 0,
+    "incomplete": 0
+  }
+}
+"
+`;
+
+exports[`E2E: Output Options > should hide paths with --no-paths 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Output Options > should show context with --context 1`] = `
+"No tasks found
+"
+`;
