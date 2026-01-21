@@ -1,0 +1,12 @@
+{
+  "markdown": {
+    "root": ".",
+    "pattern": "**/*.md",
+    "exclude": ["node_modules/**", ".git/**"]
+  },
+  "output": {
+    "format": "pretty",
+    "colors": true,
+    "paths": true
+  }
+}
