@@ -1,0 +1,75 @@
+name: 📊 Coverage Improvement
+description: Track coverage improvement for a specific module
+title: "[Coverage] Improve coverage for <module>"
+labels: ["coverage", "testing"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to track coverage improvements for specific modules.
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package needs coverage improvement?
+      options:
+        - "@md2do/core"
+        - "@md2do/cli"
+        - "@md2do/config"
+        - "@md2do/todoist"
+        - "@md2do/mcp"
+    validations:
+      required: true
+
+  - type: input
+    id: module
+    attributes:
+      label: Module/File
+      description: Specific module or file (e.g., `parser/index.ts`)
+      placeholder: "parser/index.ts"
+    validations:
+      required: true
+
+  - type: input
+    id: current-coverage
+    attributes:
+      label: Current Coverage
+      description: Current coverage percentage
+      placeholder: "75%"
+    validations:
+      required: true
+
+  - type: input
+    id: target-coverage
+    attributes:
+      label: Target Coverage
+      description: Target coverage percentage
+      placeholder: "85%"
+    validations:
+      required: true
+
+  - type: textarea
+    id: uncovered-lines
+    attributes:
+      label: Uncovered Lines/Branches
+      description: List specific uncovered lines or branches
+      placeholder: |
+        - Lines 45-52: Error handling for invalid dates
+        - Branch: `if (priority === 'custom')` not covered
+    validations:
+      required: false
+
+  - type: textarea
+    id: test-strategy
+    attributes:
+      label: Test Strategy
+      description: How do you plan to improve coverage?
+      placeholder: |
+        - Add edge case tests for date parsing
+        - Test all priority levels
+        - Add error condition tests
+    validations:
+      required: false

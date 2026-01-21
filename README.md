@@ -4,6 +4,8 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-9.0%2B-orange)](https://pnpm.io/)
+[![codecov](https://codecov.io/gh/TeamNickHart/md2do/branch/main/graph/badge.svg)](https://codecov.io/gh/TeamNickHart/md2do)
+[![CI](https://github.com/TeamNickHart/md2do/workflows/CI/badge.svg)](https://github.com/TeamNickHart/md2do/actions)
 
 A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript,
 designed for developers who love markdown.

@@ -1,0 +1,55 @@
+{
+  // TypeScript settings
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  // Editor settings
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Vitest extension settings
+  "vitest.enable": true,
+  "vitest.commandLine": "pnpm test",
+
+  // Coverage Gutters extension settings
+  // Install: https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters
+  "coverage-gutters.coverageFileNames": [
+    "coverage/lcov.info",
+    "packages/*/coverage/lcov.info",
+    "**/coverage/lcov.info"
+  ],
+  "coverage-gutters.coverageBaseDir": "**",
+  "coverage-gutters.showLineCoverage": true,
+  "coverage-gutters.showRulerCoverage": true,
+  "coverage-gutters.showGutterCoverage": true,
+  "coverage-gutters.highlightdark": "rgba(255, 0, 0, 0.3)",
+  "coverage-gutters.highlightlight": "rgba(255, 0, 0, 0.3)",
+  "coverage-gutters.partialHighlightDark": "rgba(255, 255, 0, 0.3)",
+  "coverage-gutters.partialHighlightLight": "rgba(255, 255, 0, 0.3)",
+  "coverage-gutters.coveredHighlightDark": "rgba(0, 255, 0, 0.3)",
+  "coverage-gutters.coveredHighlightLight": "rgba(0, 255, 0, 0.3)",
+
+  // File associations
+  "files.associations": {
+    "*.md": "markdown"
+  },
+
+  // Exclude from file explorer
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.turbo": true,
+    "**/coverage": false // Show coverage folders for inspection
+  },
+
+  // Search settings
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/coverage": true,
+    "**/.turbo": true
+  }
+}

@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`E2E: Combined Filters > should filter by assignee and priority 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Combined Filters > should filter by project, assignee, and date 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Combined Filters > should filter by tag, priority, and status 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Assignee > should filter tasks assigned to alice 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Assignee > should filter tasks assigned to bob 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Assignee > should filter tasks assigned to charlie 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Date > should filter overdue tasks 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Date > should filter tasks due this week 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Date > should filter tasks due today (2026-01-19) 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Priority > should filter low priority tasks 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Project > should filter acme-app project tasks 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Filtering by Project > should filter widget-co project tasks 1`] = `
+"No tasks found
+"
+`;

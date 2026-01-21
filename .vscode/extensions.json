@@ -1,0 +1,22 @@
+{
+  "recommendations": [
+    // Testing & Coverage
+    "vitest.explorer",
+    "ryanluker.vscode-coverage-gutters",
+
+    // TypeScript & JavaScript
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // Markdown
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint",
+
+    // Git
+    "eamodio.gitlens",
+
+    // Utilities
+    "streetsidesoftware.code-spell-checker",
+    "usernamehw.errorlens"
+  ]
+}
