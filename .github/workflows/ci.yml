@@ -11,6 +11,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Permissions for coverage reporting
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   # Job 1: Install dependencies (required by all other jobs)
   install:
