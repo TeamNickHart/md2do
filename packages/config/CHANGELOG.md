@@ -1,5 +1,16 @@
 # @md2do/config
 
+## 0.2.2
+
+### Patch Changes
+
+- [#12](https://github.com/TeamNickHart/md2do/pull/12) [`f07ba4c`](https://github.com/TeamNickHart/md2do/commit/f07ba4c4f6f46b43129e1ebd2b8ea67800e21dee) Thanks [@nickhart](https://github.com/nickhart)! - Enhance npm package discoverability with comprehensive READMEs and improved keywords
+  - Add conversion-focused README for @md2do/cli with Quick Start and common use cases
+  - Add developer-focused README for @md2do/core with complete API reference
+  - Add npm badges (version, downloads, license) to all package READMEs
+  - Expand keywords across all packages for better npm search discoverability
+  - Update root README tagline and add npm badges
+
 ## 0.2.0
 
 ### Minor Changes
