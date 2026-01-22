@@ -2,9 +2,26 @@
   "name": "@md2do/config",
   "version": "0.1.0",
   "description": "Configuration management for md2do with hierarchical resolution",
+  "keywords": [
+    "config",
+    "configuration",
+    "cosmiconfig"
+  ],
+  "homepage": "https://md2do.com",
+  "bugs": "https://github.com/TeamNickHart/md2do/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamNickHart/md2do.git",
+    "directory": "packages/config"
+  },
+  "license": "MIT",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

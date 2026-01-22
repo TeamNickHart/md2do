@@ -9,7 +9,7 @@
     "task",
     "cli"
   ],
-  "author": "Nick Hart",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0",
@@ -42,9 +42,14 @@
     "cli": "node packages/cli/dist/cli.js",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "changeset": "changeset",
+    "version": "changeset version && pnpm install --lockfile-only",
+    "release": "pnpm build && changeset publish --provenance"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/cli": "^2.29.8",
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",

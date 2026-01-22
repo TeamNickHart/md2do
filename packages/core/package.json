@@ -2,9 +2,27 @@
   "name": "@md2do/core",
   "version": "0.1.0",
   "description": "Core parsing, filtering, scanning, and file writing for md2do",
+  "keywords": [
+    "markdown",
+    "todo",
+    "parser",
+    "task-management"
+  ],
+  "homepage": "https://md2do.com",
+  "bugs": "https://github.com/TeamNickHart/md2do/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamNickHart/md2do.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
