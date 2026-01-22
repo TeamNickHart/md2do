@@ -1,5 +1,9 @@
 # @md2do/mcp
 
+[![npm version](https://badge.fury.io/js/%40md2do%2Fmcp.svg)](https://www.npmjs.com/package/@md2do/mcp)
+[![npm downloads](https://img.shields.io/npm/dm/@md2do/mcp.svg)](https://www.npmjs.com/package/@md2do/mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 MCP (Model Context Protocol) server for md2do task manager. This allows AI assistants like Claude Code to directly
 query and analyze your markdown tasks.
 

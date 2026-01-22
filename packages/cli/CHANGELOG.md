@@ -1,5 +1,11 @@
 # @md2do/cli
 
+## 0.2.1
+
+### Patch Changes
+
+- [#11](https://github.com/TeamNickHart/md2do/pull/11) [`0e3f3ba`](https://github.com/TeamNickHart/md2do/commit/0e3f3ba9aa4fce44e45cfbc64b4f2a6bc6fd7cc4) Thanks [@nickhart](https://github.com/nickhart)! - Fix CLI version display to read from package.json instead of hardcoded value
+
 ## 0.2.0
 
 ### Minor Changes

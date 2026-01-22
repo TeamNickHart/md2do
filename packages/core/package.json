@@ -6,7 +6,17 @@
     "markdown",
     "todo",
     "parser",
-    "task-management"
+    "task-management",
+    "task",
+    "task-parser",
+    "markdown-parser",
+    "todo-list",
+    "task-tracker",
+    "filtering",
+    "sorting",
+    "scanner",
+    "library",
+    "typescript"
   ],
   "homepage": "https://md2do.com",
   "bugs": "https://github.com/TeamNickHart/md2do/issues",
