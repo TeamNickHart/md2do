@@ -2,10 +2,29 @@
   "name": "@md2do/mcp",
   "version": "0.1.0",
   "description": "MCP (Model Context Protocol) server for md2do task manager",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "claude",
+    "task-management"
+  ],
+  "homepage": "https://md2do.com",
+  "bugs": "https://github.com/TeamNickHart/md2do/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamNickHart/md2do.git",
+    "directory": "packages/mcp"
+  },
+  "license": "MIT",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "md2do-mcp": "./dist/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsup src/index.ts --format cjs --dts",

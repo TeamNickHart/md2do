@@ -2,10 +2,31 @@
   "name": "@md2do/cli",
   "version": "0.1.0",
   "description": "CLI interface for md2do task manager",
+  "keywords": [
+    "markdown",
+    "todo",
+    "task",
+    "cli",
+    "todoist",
+    "mcp",
+    "task-management"
+  ],
+  "homepage": "https://md2do.com",
+  "bugs": "https://github.com/TeamNickHart/md2do/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamNickHart/md2do.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "md2do": "./dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsup src/cli.ts src/index.ts --format cjs --dts",

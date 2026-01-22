@@ -2,9 +2,26 @@
   "name": "@md2do/todoist",
   "version": "0.1.0",
   "description": "Todoist API integration for md2do",
+  "keywords": [
+    "todoist",
+    "task-sync",
+    "integration"
+  ],
+  "homepage": "https://md2do.com",
+  "bugs": "https://github.com/TeamNickHart/md2do/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamNickHart/md2do.git",
+    "directory": "packages/todoist"
+  },
+  "license": "MIT",
+  "author": "Nicholas Hart <nickhart@gmail.com>",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

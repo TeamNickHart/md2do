@@ -17,6 +17,14 @@ export default defineConfig({
       'meta',
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
     ],
+    [
+      'script',
+      {
+        defer: '',
+        'data-domain': 'md2do.com',
+        src: 'https://plausible.io/js/script.js',
+      },
+    ],
   ],
 
   themeConfig: {
