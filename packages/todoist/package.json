@@ -1,6 +1,6 @@
 {
   "name": "@md2do/todoist",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Todoist API integration for md2do",
   "keywords": [
     "todoist",

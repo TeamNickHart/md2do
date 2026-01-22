@@ -1,6 +1,6 @@
 {
   "name": "@md2do/core",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Core parsing, filtering, scanning, and file writing for md2do",
   "keywords": [
     "markdown",
