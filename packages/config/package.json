@@ -1,6 +1,6 @@
 {
   "name": "@md2do/config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Configuration management for md2do with hierarchical resolution",
   "keywords": [
     "config",
