@@ -1,5 +1,7 @@
 # md2do
 
+[![npm version](https://badge.fury.io/js/%40md2do%2Fcli.svg)](https://www.npmjs.com/package/@md2do/cli)
+[![npm downloads](https://img.shields.io/npm/dm/@md2do/cli.svg)](https://www.npmjs.com/package/@md2do/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
@@ -7,8 +9,8 @@
 [![codecov](https://codecov.io/gh/TeamNickHart/md2do/branch/main/graph/badge.svg)](https://codecov.io/gh/TeamNickHart/md2do)
 [![CI](https://github.com/TeamNickHart/md2do/workflows/CI/badge.svg)](https://github.com/TeamNickHart/md2do/actions)
 
-A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript,
-designed for developers who love markdown.
+Manage TODO items in markdown files with powerful filtering, sorting, and Todoist sync.
+Built with TypeScript, designed for developers who love markdown.
 
 ## ✨ Features
 

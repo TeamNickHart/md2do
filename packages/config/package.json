@@ -5,7 +5,16 @@
   "keywords": [
     "config",
     "configuration",
-    "cosmiconfig"
+    "cosmiconfig",
+    "settings",
+    "markdown",
+    "todo",
+    "task-management",
+    "hierarchical-config",
+    "config-loader",
+    "validation",
+    "zod",
+    "typescript"
   ],
   "homepage": "https://md2do.com",
   "bugs": "https://github.com/TeamNickHart/md2do/issues",

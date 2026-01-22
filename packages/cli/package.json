@@ -1,6 +1,6 @@
 {
   "name": "@md2do/cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "CLI interface for md2do task manager",
   "keywords": [
     "markdown",
@@ -9,7 +9,17 @@
     "cli",
     "todoist",
     "mcp",
-    "task-management"
+    "task-management",
+    "productivity",
+    "gtd",
+    "project-management",
+    "developer-tools",
+    "terminal",
+    "command-line",
+    "plain-text",
+    "markdown-tasks",
+    "todo-list",
+    "task-tracker"
   ],
   "homepage": "https://md2do.com",
   "bugs": "https://github.com/TeamNickHart/md2do/issues",

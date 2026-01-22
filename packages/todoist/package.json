@@ -5,7 +5,16 @@
   "keywords": [
     "todoist",
     "task-sync",
-    "integration"
+    "integration",
+    "markdown",
+    "todo",
+    "task-management",
+    "sync",
+    "api-client",
+    "bidirectional-sync",
+    "productivity",
+    "task-integration",
+    "typescript"
   ],
   "homepage": "https://md2do.com",
   "bugs": "https://github.com/TeamNickHart/md2do/issues",

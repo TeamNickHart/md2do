@@ -7,7 +7,15 @@
     "model-context-protocol",
     "ai",
     "claude",
-    "task-management"
+    "task-management",
+    "markdown",
+    "todo",
+    "ai-assistant",
+    "llm",
+    "anthropic",
+    "claude-code",
+    "integration",
+    "typescript"
   ],
   "homepage": "https://md2do.com",
   "bugs": "https://github.com/TeamNickHart/md2do/issues",

@@ -1,5 +1,9 @@
 # @md2do/config
 
+[![npm version](https://badge.fury.io/js/%40md2do%2Fconfig.svg)](https://www.npmjs.com/package/@md2do/config)
+[![npm downloads](https://img.shields.io/npm/dm/@md2do/config.svg)](https://www.npmjs.com/package/@md2do/config)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 Hierarchical configuration management for md2do with support for multiple config sources and validation.
 
 ## Features
