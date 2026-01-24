@@ -37,6 +37,28 @@
     "*.md": "markdown"
   },
 
+  // Markdown-specific settings (for md2do task management)
+  "[markdown]": {
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.wordWrap": "on",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "editor.snippetSuggestions": "top" // Show snippets first for quick task entry
+  },
+
+  // Markdown All in One settings
+  "markdown.extension.toc.levels": "2..6",
+  "markdown.extension.list.indentationSize": "adaptive",
+  "markdown.extension.tableFormatter.enabled": true,
+
+  // Markdown checkbox settings
+  "markdown.extension.completion.root": "${workspaceFolder}",
+  "markdown.preview.breaks": true,
+
   // Exclude from file explorer
   "files.exclude": {
     "**/node_modules": true,
