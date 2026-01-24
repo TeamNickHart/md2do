@@ -82,7 +82,7 @@ This task:
 When syncing with Todoist, md2do adds task IDs:
 
 ```markdown
-- [ ] Review pull request @nick !! #code-review (2026-01-25) [todoist:123456789]
+- [ ] Review pull request (2026-01-25)
 ```
 
 The `[todoist:ID]` links the task to Todoist for bidirectional sync.
@@ -141,7 +141,7 @@ md2do recognizes metadata in this order on each line:
 **Example parsing:**
 
 ```markdown
-- [ ] Fix bug @nick !!! #backend #urgent (2026-01-25) [todoist:123]
+- [ ] Fix bug (2026-01-25)
 ```
 
 Extracts:
