@@ -101,7 +101,7 @@ md2do todoist import notes.md:42 --project Personal
 md2do links tasks using IDs:
 
 ```markdown
-- [ ] Review PR @nick !! #code-review (2026-01-25) [todoist:123456789]
+- [ ] Review PR (2026-01-25)
 ```
 
 The `[todoist:ID]` marker connects your markdown to Todoist.
