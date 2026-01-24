@@ -1,0 +1,173 @@
+{
+  "md2do Task": {
+    "prefix": "task",
+    "scope": "markdown",
+    "description": "Create a new md2do task with all metadata",
+    "body": [
+      "- [ ] ${1:Task description} @${2:assignee} ${3|!,!!,!!!|} #${4:tag} (${5:YYYY-MM-DD})$0"
+    ]
+  },
+  "md2do Simple Task": {
+    "prefix": "todo",
+    "scope": "markdown",
+    "description": "Create a simple task",
+    "body": [
+      "- [ ] ${1:Task description}$0"
+    ]
+  },
+  "md2do Assignee": {
+    "prefix": "@",
+    "scope": "markdown",
+    "description": "Add assignee to task",
+    "body": [
+      "@${1:username}$0"
+    ]
+  },
+  "md2do Urgent Priority": {
+    "prefix": "urgent",
+    "scope": "markdown",
+    "description": "Insert urgent priority marker",
+    "body": [
+      "!!!$0"
+    ]
+  },
+  "md2do High Priority": {
+    "prefix": "high",
+    "scope": "markdown",
+    "description": "Insert high priority marker",
+    "body": [
+      "!!$0"
+    ]
+  },
+  "md2do Normal Priority": {
+    "prefix": "normal",
+    "scope": "markdown",
+    "description": "Insert normal priority marker",
+    "body": [
+      "!$0"
+    ]
+  },
+  "md2do Tag": {
+    "prefix": "#tag",
+    "scope": "markdown",
+    "description": "Add tag to task",
+    "body": [
+      "#${1:tag}$0"
+    ]
+  },
+  "md2do Due Date": {
+    "prefix": "due",
+    "scope": "markdown",
+    "description": "Add due date to task",
+    "body": [
+      "(${1:YYYY-MM-DD})$0"
+    ]
+  },
+  "md2do Due Today": {
+    "prefix": "today",
+    "scope": "markdown",
+    "description": "Add today as due date",
+    "body": [
+      "(${CURRENT_YEAR}-${CURRENT_MONTH}-${CURRENT_DATE})$0"
+    ]
+  },
+  "md2do Todoist ID": {
+    "prefix": "todoist",
+    "scope": "markdown",
+    "description": "Add Todoist sync ID",
+    "body": [
+      "[todoist:${1:id}]$0"
+    ]
+  },
+  "md2do Task with Team": {
+    "prefix": "team-task",
+    "scope": "markdown",
+    "description": "Create a task with assignee, priority, and tag",
+    "body": [
+      "- [ ] ${1:Task description} @${2:assignee} ${3|!,!!,!!!|} #${4:team}$0"
+    ]
+  },
+  "md2do Bug Task": {
+    "prefix": "bug",
+    "scope": "markdown",
+    "description": "Create a bug task",
+    "body": [
+      "- [ ] Fix: ${1:Bug description} @${2:assignee} ${3|!!,!!!|} #bug #${4:component}$0"
+    ]
+  },
+  "md2do Feature Task": {
+    "prefix": "feature",
+    "scope": "markdown",
+    "description": "Create a feature task",
+    "body": [
+      "- [ ] Implement ${1:Feature description} @${2:assignee} ${3|!,!!|} #feature #${4:component}$0"
+    ]
+  },
+  "md2do Meeting Action": {
+    "prefix": "action",
+    "scope": "markdown",
+    "description": "Create a meeting action item",
+    "body": [
+      "- [ ] Action: ${1:Action item} @${2:assignee} (${3:YYYY-MM-DD})$0"
+    ]
+  },
+  "md2do Project Section": {
+    "prefix": "project-section",
+    "scope": "markdown",
+    "description": "Create a project section with tasks",
+    "body": [
+      "## ${1:Project Name}",
+      "",
+      "### ${2:Sprint/Phase}",
+      "",
+      "- [ ] ${3:Task 1} @${4:assignee} ${5|!,!!,!!!|} #${6:tag}",
+      "- [ ] ${7:Task 2} @${8:assignee} ${9|!,!!,!!!|} #${10:tag}",
+      "$0"
+    ]
+  },
+  "md2do Sprint Planning": {
+    "prefix": "sprint",
+    "scope": "markdown",
+    "description": "Create sprint planning template",
+    "body": [
+      "# Sprint ${1:Number} - ${2:Name}",
+      "",
+      "**Dates:** ${3:Start} - ${4:End}",
+      "",
+      "## Goals",
+      "",
+      "- ${5:Goal 1}",
+      "",
+      "## Tasks",
+      "",
+      "### High Priority",
+      "",
+      "- [ ] ${6:Task} @${7:assignee} !!! #${8:tag}",
+      "",
+      "### Medium Priority",
+      "",
+      "- [ ] ${9:Task} @${10:assignee} !! #${11:tag}",
+      "",
+      "### Low Priority",
+      "",
+      "- [ ] ${12:Task} @${13:assignee} ! #${14:tag}",
+      "$0"
+    ]
+  },
+  "md2do 1-on-1 Template": {
+    "prefix": "1on1",
+    "scope": "markdown",
+    "description": "Create 1-on-1 meeting template",
+    "body": [
+      "# 1:1 with ${1:Name} - ${2:Date}",
+      "",
+      "## Topics",
+      "",
+      "- ${3:Topic 1}",
+      "",
+      "## Action Items",
+      "",
+      "- [ ] ${4:Action} @${5:assignee} (${6:YYYY-MM-DD})$0"
+    ]
+  }
+}

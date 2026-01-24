@@ -11,6 +11,9 @@
     // Markdown
     "yzhang.markdown-all-in-one",
     "davidanson.vscode-markdownlint",
+    "bierner.markdown-checkbox", // Toggle checkboxes easily
+    "bierner.markdown-preview-github-styles", // GitHub-style preview
+    "mushan.vscode-paste-image", // Paste images into markdown
 
     // Git
     "eamodio.gitlens",
