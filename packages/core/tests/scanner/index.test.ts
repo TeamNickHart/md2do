@@ -65,7 +65,7 @@ describe('MarkdownScanner', () => {
 
   describe('Basic task scanning', () => {
     it('should scan simple unchecked task', () => {
-      const content = '- [ ] Simple task';
+      const content = '- [ ] Simple task [due: 2026-01-30]';
       const result = scanner.scanFile('test.md', content);
 
       expect(result.tasks).toHaveLength(1);
@@ -281,7 +281,7 @@ No tasks at all.
       const result = scanner.scanFile('test.md', content);
 
       expect(result.tasks[0]?.dueDate).toBeUndefined();
-      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings).toHaveLength(2); // Relative date + missing date warnings
       expect(result.warnings[0]?.reason).toContain(
         'Relative due date without context',
       );
@@ -461,9 +461,9 @@ Line 4
 
       const result = scanner.scanFiles(files);
 
-      expect(result.warnings).toHaveLength(2);
+      expect(result.warnings).toHaveLength(4); // 2 relative date + 2 missing date warnings
       expect(result.warnings[0]?.file).toBe('file1.md');
-      expect(result.warnings[1]?.file).toBe('file2.md');
+      expect(result.warnings[2]?.file).toBe('file2.md');
     });
 
     it('should handle empty file array', () => {
@@ -556,6 +556,96 @@ Line 4
       const result = scanner.scanFile('test.md', content);
 
       expect(result.tasks).toHaveLength(0);
+    });
+  });
+
+  describe('Duplicate Todoist ID warnings', () => {
+    it('should warn on duplicate Todoist ID within same file', () => {
+      const content = `
+- [ ] First task [todoist:123456] [due: 2026-01-30]
+- [ ] Second task [todoist:123456] [due: 2026-01-31]
+`.trim();
+      const result = scanner.scanFile('test.md', content);
+
+      expect(result.tasks).toHaveLength(2);
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('Duplicate Todoist ID');
+      expect(result.warnings[0]?.reason).toContain('123456');
+      expect(result.warnings[0]?.line).toBe(2);
+    });
+
+    it('should not warn on unique Todoist IDs', () => {
+      const content = `
+- [ ] First task [todoist:111111] [due: 2026-01-30]
+- [ ] Second task [todoist:222222] [due: 2026-01-31]
+- [ ] Third task [todoist:333333] [due: 2026-02-01]
+`.trim();
+      const result = scanner.scanFile('test.md', content);
+
+      expect(result.tasks).toHaveLength(3);
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should warn on multiple duplicates', () => {
+      const content = `
+- [ ] Task A [todoist:111] [due: 2026-01-30]
+- [ ] Task B [todoist:222] [due: 2026-01-31]
+- [ ] Task C [todoist:111] [due: 2026-02-01]
+- [ ] Task D [todoist:222] [due: 2026-02-02]
+- [ ] Task E [todoist:111] [due: 2026-02-03]
+`.trim();
+      const result = scanner.scanFile('test.md', content);
+
+      expect(result.tasks).toHaveLength(5);
+      // Should have 3 warnings: C duplicates A, D duplicates B, E duplicates A
+      expect(result.warnings).toHaveLength(3);
+    });
+
+    it('should track duplicates across multiple files', () => {
+      const files = [
+        {
+          path: 'file1.md',
+          content: '- [ ] Task in file 1 [todoist:123456] [due: 2026-01-30]',
+        },
+        {
+          path: 'file2.md',
+          content: '- [ ] Task in file 2 [todoist:123456] [due: 2026-01-31]',
+        },
+      ];
+
+      const result = scanner.scanFiles(files);
+
+      expect(result.tasks).toHaveLength(2);
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('Duplicate Todoist ID');
+      expect(result.warnings[0]?.reason).toContain('across files');
+      expect(result.warnings[0]?.file).toBe('file2.md');
+    });
+
+    it('should not warn when same file scanned separately', () => {
+      const content = '- [ ] Task [todoist:123456] [due: 2026-01-30]';
+
+      // Scan same file multiple times as if they were different files
+      const result1 = scanner.scanFile('test1.md', content);
+      const result2 = scanner.scanFile('test2.md', content);
+
+      // Each scan should have no warnings (they're separate scans)
+      expect(result1.warnings).toHaveLength(0);
+      expect(result2.warnings).toHaveLength(0);
+    });
+
+    it('should include location information in warning', () => {
+      const content = `
+- [ ] First task [todoist:999] [due: 2026-01-30]
+- [ ] Second task [due: 2026-01-31]
+- [ ] Third task [todoist:999] [due: 2026-02-01]
+`.trim();
+      const result = scanner.scanFile('backlog.md', content);
+
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.file).toBe('backlog.md');
+      expect(result.warnings[0]?.line).toBe(3);
+      expect(result.warnings[0]?.reason).toContain('backlog.md:1');
     });
   });
 });

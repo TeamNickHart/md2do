@@ -25,6 +25,8 @@ interface ListCommandOptions {
   colors?: boolean;
   paths?: boolean;
   context?: boolean;
+  warnings?: boolean;
+  allWarnings?: boolean;
 }
 
 export function createListCommand(): Command {
@@ -76,6 +78,10 @@ export function createListCommand(): Command {
     .option('--no-colors', 'Disable colors in output')
     .option('--no-paths', 'Hide file paths')
     .option('--context', 'Show context information (project, person, heading)')
+
+    // Warning options
+    .option('--no-warnings', 'Hide all warnings')
+    .option('--all-warnings', 'Show all warnings (default shows first 5)')
 
     .action(async (options: ListCommandOptions) => {
       try {
@@ -205,19 +211,26 @@ export function createListCommand(): Command {
 
         console.log(output);
 
-        // Show warnings if any
-        if (scanResult.warnings.length > 0) {
+        // Show warnings if any (unless --no-warnings)
+        if (options.warnings !== false && scanResult.warnings.length > 0) {
           console.error(
-            `\n⚠️  ${scanResult.warnings.length} warnings encountered during scanning`,
+            `\n⚠️  ${scanResult.warnings.length} warning${scanResult.warnings.length > 1 ? 's' : ''} encountered during scanning`,
           );
-          for (const warning of scanResult.warnings.slice(0, 5)) {
+
+          // Show all warnings if --all-warnings, otherwise show first 5
+          const warningsToShow = options.allWarnings
+            ? scanResult.warnings
+            : scanResult.warnings.slice(0, 5);
+
+          for (const warning of warningsToShow) {
             console.error(
               `  ${warning.file}:${warning.line} - ${warning.reason}`,
             );
           }
-          if (scanResult.warnings.length > 5) {
+
+          if (!options.allWarnings && scanResult.warnings.length > 5) {
             console.error(
-              `  ... and ${scanResult.warnings.length - 5} more warnings`,
+              `  ... and ${scanResult.warnings.length - 5} more warning${scanResult.warnings.length - 5 > 1 ? 's' : ''} (use --all-warnings to see all)`,
             );
           }
         }

@@ -419,7 +419,7 @@ describe('parseTask', () => {
       const result = parseTask('- [ ] Task [due: tomorrow]', 1, file, {});
 
       expect(result.task?.dueDate).toBeUndefined();
-      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings).toHaveLength(2); // Relative date + missing date warnings
       expect(result.warnings[0]?.reason).toContain(
         'Relative due date without context',
       );
@@ -533,6 +533,112 @@ describe('parseTask', () => {
       expect(result.task?.text).toBe('Fix payment bug');
       expect(result.task?.todoistId).toBe('987654');
       expect(result.task?.completedDate).toBeInstanceOf(Date);
+    });
+  });
+
+  describe('Malformed checkbox warnings', () => {
+    it('should warn on asterisk bullet marker', () => {
+      const result = parseTask('* [x] Task with asterisk', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain(
+        'Unsupported bullet marker (* or +)',
+      );
+      expect(result.warnings[0]?.file).toBe(file);
+      expect(result.warnings[0]?.line).toBe(1);
+    });
+
+    it('should warn on plus bullet marker', () => {
+      const result = parseTask('+ [ ] Task with plus', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain(
+        'Unsupported bullet marker (* or +)',
+      );
+    });
+
+    it('should warn on extra space after x', () => {
+      const result = parseTask('- [x ] Task with extra space', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('Malformed checkbox');
+    });
+
+    it('should warn on extra space before x', () => {
+      const result = parseTask('- [ x] Task with extra space', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('Malformed checkbox');
+    });
+
+    it('should warn on missing space before checkbox', () => {
+      const result = parseTask('-[x] Task without space', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain(
+        'Missing space before checkbox',
+      );
+    });
+
+    it('should warn on missing space after checkbox', () => {
+      const result = parseTask('- [x]Task without space', 1, file, {});
+      expect(result.task).toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain(
+        'Missing space after checkbox',
+      );
+    });
+  });
+
+  describe('Missing date warnings', () => {
+    it('should warn on incomplete task without date or context', () => {
+      const result = parseTask('- [ ] Task without date', 1, file, {});
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('Task has no due date');
+    });
+
+    it('should not warn on task with explicit due date', () => {
+      const result = parseTask('- [ ] Task [due: 2026-01-30]', 1, file, {});
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should not warn on task with context date', () => {
+      const context: ParsingContext = {
+        currentDate: new Date('2026-01-30'),
+      };
+      const result = parseTask('- [ ] Task with context', 1, file, context);
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should not warn on completed tasks without date', () => {
+      const result = parseTask('- [x] Completed task', 1, file, {});
+      expect(result.task).not.toBeNull();
+      // Should only warn about missing completion date, not due date
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain('completion date');
+    });
+
+    it('should warn on completed task without completion date', () => {
+      const result = parseTask('- [x] Completed task', 1, file, {});
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(1);
+      expect(result.warnings[0]?.reason).toContain(
+        'Completed task missing completion date',
+      );
+    });
+
+    it('should not warn on completed task with completion date', () => {
+      const result = parseTask(
+        '- [x] Task [completed: 2026-01-25]',
+        1,
+        file,
+        {},
+      );
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(0);
     });
   });
 });

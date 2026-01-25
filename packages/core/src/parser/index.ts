@@ -208,6 +208,53 @@ export function parseTask(
 ): { task: Task | null; warnings: Warning[] } {
   const warnings: Warning[] = [];
 
+  // Detect malformed checkboxes and provide helpful warnings
+  // Check for asterisk/plus bullet markers (not supported)
+  if (/^\s*[*+]\s+\[[ xX]\]/.test(line)) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: line.trim(),
+      reason:
+        'Unsupported bullet marker (* or +). Use dash (-) for task lists.',
+    });
+    return { task: null, warnings };
+  }
+
+  // Check for extra spaces inside checkbox: [x ] or [ x]
+  if (/^\s*-\s+\[[xX]\s+\]/.test(line) || /^\s*-\s+\[\s+[xX]\]/.test(line)) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: line.trim(),
+      reason:
+        'Malformed checkbox with extra spaces. Use [x] or [ ] without extra spaces.',
+    });
+    return { task: null, warnings };
+  }
+
+  // Check for missing space after checkbox: [x]Task
+  if (/^\s*-\s+\[[ xX]\][^\s]/.test(line)) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: line.trim(),
+      reason: 'Missing space after checkbox. Use "- [x] Task" format.',
+    });
+    return { task: null, warnings };
+  }
+
+  // Check for missing space before checkbox: -[x]
+  if (/^\s*-\[[ xX]\]/.test(line)) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: line.trim(),
+      reason: 'Missing space before checkbox. Use "- [x] Task" format.',
+    });
+    return { task: null, warnings };
+  }
+
   // Check if line is a task
   const taskMatch = line.match(PATTERNS.TASK_CHECKBOX);
   if (!taskMatch?.[0] || !taskMatch[2]) {
@@ -234,6 +281,29 @@ export function parseTask(
       ...dueDateResult.warning,
       file,
       line: lineNumber,
+    });
+  }
+
+  // Warn about missing dates
+  // Incomplete tasks without any date (no explicit due date and no context date)
+  if (!completed && !dueDateResult.date && !context.currentDate) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: fullText.trim(),
+      reason:
+        'Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.',
+    });
+  }
+
+  // Completed tasks should have completion dates
+  if (completed && !completedDate) {
+    warnings.push({
+      file,
+      line: lineNumber,
+      text: fullText.trim(),
+      reason:
+        'Completed task missing completion date. Add [completed: YYYY-MM-DD].',
     });
   }
 
