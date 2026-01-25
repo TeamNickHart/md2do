@@ -8,8 +8,14 @@ export default defineConfig({
   base: '/',
 
   head: [
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
-    ['link', { rel: 'icon', type: 'image/png', href: '/favicon.png' }],
+    // Modern browsers: adaptive SVG favicon
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+
+    // Safari/older browsers: PNG fallbacks with media queries
+    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-light.png', media: '(prefers-color-scheme: light)' }],
+    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-dark.png', media: '(prefers-color-scheme: dark)' }],
+    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-light.png' }], // default fallback
+
     ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
