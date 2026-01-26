@@ -8,13 +8,19 @@ export default defineConfig({
   base: '/',
 
   head: [
-    // Modern browsers: adaptive SVG favicon
-    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
+    // Safari/iOS: Simple PNG favicon (doesn't reliably support SVG or dark mode switching)
+    [
+      'link',
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        href: '/favicon.png?v=11',
+      },
+    ],
 
-    // Safari/older browsers: PNG fallbacks with media queries
-    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-light.png', media: '(prefers-color-scheme: light)' }],
-    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-dark.png', media: '(prefers-color-scheme: dark)' }],
-    ['link', { rel: 'alternate icon', type: 'image/png', href: '/favicon-light.png' }], // default fallback
+    // Modern browsers (Chrome, Firefox): SVG with adaptive dark mode support
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
 
     ['link', { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
@@ -35,7 +41,7 @@ export default defineConfig({
 
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '/logo.svg',
+    logo: { light: '/logo-light.svg', dark: '/logo-dark.svg' },
 
     nav: [
       { text: 'Home', link: '/' },
