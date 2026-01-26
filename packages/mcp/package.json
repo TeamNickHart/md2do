@@ -1,6 +1,6 @@
 {
   "name": "@md2do/mcp",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "MCP (Model Context Protocol) server for md2do task manager",
   "keywords": [
     "mcp",
