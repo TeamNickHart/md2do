@@ -1,5 +1,31 @@
 # @md2do/cli
 
+## 0.2.3
+
+### Patch Changes
+
+- [#17](https://github.com/TeamNickHart/md2do/pull/17) [`c12adb3`](https://github.com/TeamNickHart/md2do/commit/c12adb32b2b50ca89bf22cdab57ca63498ba3dee) Thanks [@nickhart](https://github.com/nickhart)! - ## Security & Tooling Updates
+
+  ### Security Fixes
+  - Fix esbuild security vulnerability (GHSA-67mh-4wv8-2f99) via pnpm override forcing esbuild >= 0.25.0
+
+  ### Developer Experience
+  - Add @vitest/coverage-v8 dependency to enable code coverage reporting
+  - Update prettier to latest patch version (3.1.0 → 3.8.1)
+  - Update @modelcontextprotocol/sdk (1.25.2 → 1.25.3)
+
+  ### Testing
+  - All 401 unit tests passing
+  - All 35 E2E tests passing
+  - Coverage reporting now enabled across all packages
+
+  No breaking changes or API changes in this release.
+
+- Updated dependencies [[`c12adb3`](https://github.com/TeamNickHart/md2do/commit/c12adb32b2b50ca89bf22cdab57ca63498ba3dee)]:
+  - @md2do/core@0.2.3
+  - @md2do/config@0.2.3
+  - @md2do/todoist@0.2.3
+
 ## 0.2.2
 
 ### Patch Changes
