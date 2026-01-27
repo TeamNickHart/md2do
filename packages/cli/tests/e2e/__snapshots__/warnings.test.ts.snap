@@ -6,13 +6,13 @@ Found 3 tasks
   ✓ 1 completed | ○ 2 incomplete
 
   ○ !! Valid task (2026-02-01) @alice #bug
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+    tasks.md:6
 
   ✓ Completed task without completion date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+    tasks.md:7
 
   ○ Task without a due date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+    tasks.md:8
 
 "
 `;
@@ -23,13 +23,13 @@ Found 3 tasks
   ✓ 1 completed | ○ 2 incomplete
 
   ○ !! Valid task (2026-02-01) @alice #bug
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+    tasks.md:6
 
   ✓ Completed task without completion date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+    tasks.md:7
 
   ○ Task without a due date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+    tasks.md:8
 
 
 ⚠️  2 warnings encountered during scanning
@@ -44,13 +44,13 @@ Found 3 tasks
   ✓ 1 completed | ○ 2 incomplete
 
   ○ !! Valid task (2026-02-01) @alice #bug
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+    tasks.md:6
 
   ✓ Completed task without completion date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+    tasks.md:7
 
   ○ Task without a due date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+    tasks.md:8
 
 
 ⚠️  3 warnings encountered during scanning
@@ -66,13 +66,13 @@ Found 3 tasks
   ✓ 1 completed | ○ 2 incomplete
 
   ○ !! Valid task (2026-02-01) @alice #bug
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+    tasks.md:6
 
   ✓ Completed task without completion date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+    tasks.md:7
 
   ○ Task without a due date
-    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+    tasks.md:8
 
 
 ⚠️  6 warnings encountered during scanning

@@ -27,9 +27,16 @@ function runCLIWithConfig(
 
     // Run CLI - need to capture both stdout and stderr since warnings go to stderr
     const cliPath = join(__dirname, '../../dist/cli.js');
-    return execSync(`node ${cliPath} list --path ${tmpDir} --no-colors 2>&1`, {
-      encoding: 'utf-8',
-    });
+    const output = execSync(
+      `node ${cliPath} list --path ${tmpDir} --no-colors 2>&1`,
+      {
+        encoding: 'utf-8',
+      },
+    );
+
+    // Normalize file paths for consistent snapshots across environments
+    // Replace absolute paths with relative paths
+    return output.replace(new RegExp('file://[^\\s]+/packages/cli/', 'g'), '');
   } finally {
     rmSync(tmpDir, { recursive: true });
   }
