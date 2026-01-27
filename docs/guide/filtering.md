@@ -23,10 +23,10 @@ md2do list --all
 # Tasks assigned to alice
 md2do list --assignee alice
 
-# Multiple assignees
+# Multiple assignees ⚠️ Coming soon
 md2do list --assignee alice,bob
 
-# Unassigned tasks
+# Unassigned tasks ⚠️ Coming soon
 md2do list --no-assignee
 ```
 
@@ -36,10 +36,10 @@ md2do list --no-assignee
 # Urgent tasks only
 md2do list --priority urgent
 
-# High or urgent
+# High or urgent ⚠️ Coming soon
 md2do list --priority high,urgent
 
-# Everything except low
+# Everything except low ⚠️ Coming soon
 md2do list --priority normal,high,urgent
 ```
 
@@ -51,7 +51,7 @@ md2do list --priority normal,high,urgent
 # Tasks tagged #backend
 md2do list --tag backend
 
-# Multiple tags (OR - tasks with any tag)
+# Multiple tags (OR - tasks with any tag) ⚠️ Coming soon
 md2do list --tag backend,frontend
 
 # Tasks with specific tag combinations
@@ -64,7 +64,7 @@ md2do list --tag bug --tag urgent
 # Tasks in acme-corp project
 md2do list --project acme-corp
 
-# Multiple projects
+# Multiple projects ⚠️ Coming soon
 md2do list --project acme-corp,internal
 ```
 
@@ -91,14 +91,16 @@ md2do list --due-today
 # Due this week
 md2do list --due-this-week
 
-# Due before specific date
+# Due before specific date ⚠️ Coming soon
 md2do list --due-before 2026-02-01
 
-# Due after specific date
+# Due after specific date ⚠️ Coming soon
 md2do list --due-after 2026-01-20
 ```
 
 ### Date Range
+
+⚠️ **Coming soon**
 
 ```bash
 # Tasks due between two dates
@@ -113,13 +115,13 @@ All filters can be combined - they act as AND conditions:
 # Urgent backend tasks assigned to alice
 md2do list --assignee alice --priority urgent --tag backend
 
-# Overdue high-priority tasks
+# Overdue high-priority tasks ⚠️ Coming soon (comma-separated values)
 md2do list --overdue --priority high,urgent
 
 # Incomplete tasks for bob in acme-corp project
 md2do list --incomplete --assignee bob --project acme-corp
 
-# Frontend bugs due this week
+# Frontend bugs due this week ⚠️ Coming soon (comma-separated values)
 md2do list --tag frontend,bug --due-this-week
 ```
 
@@ -165,6 +167,8 @@ md2do list --sort priority,due
 
 ### Limit Results
 
+⚠️ **Coming soon**
+
 ```bash
 # Show only first 10 tasks
 md2do list --limit 10
@@ -179,11 +183,11 @@ md2do list --priority urgent --sort due --limit 5
 # Human-readable format (default)
 md2do list
 
-# JSON format
-md2do list --format json
+# Table format
+md2do list --format table
 
-# JSON with pretty printing
-md2do list --format json --pretty
+# JSON format (pretty-printed by default)
+md2do list --format json
 ```
 
 ## Common Workflows
@@ -225,7 +229,11 @@ md2do list --project acme-corp --incomplete --sort assignee
 Critical bugs to fix:
 
 ```bash
+# ⚠️ Coming soon (comma-separated priorities)
 md2do list --tag bug --priority urgent,high --incomplete --sort due
+
+# Working alternative - use multiple tag filters:
+md2do list --tag bug --tag urgent --incomplete --sort due
 ```
 
 ### Team Overview
@@ -257,12 +265,20 @@ See [MCP Integration](/integrations/mcp) for details.
 Today's critical work:
 
 ```bash
+# ⚠️ Coming soon (comma-separated values and --limit)
 md2do list \
   --assignee nick \
   --priority urgent,high \
   --due-today \
   --sort priority \
   --limit 5
+
+# Working alternative:
+md2do list \
+  --assignee nick \
+  --priority urgent \
+  --due-today \
+  --sort priority
 ```
 
 ### Team Burndown
@@ -295,11 +311,16 @@ md2do list \
 Quick project context:
 
 ```bash
+# ⚠️ Coming soon (--limit not yet implemented)
 # What's happening in frontend?
 md2do list --tag frontend --incomplete --limit 10
 
 # Switch to backend
 md2do list --tag backend --incomplete --limit 10
+
+# Working alternative (no limit):
+md2do list --tag frontend --incomplete
+md2do list --tag backend --incomplete
 ```
 
 ## Filter Negation (Future)

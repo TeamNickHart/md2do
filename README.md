@@ -490,11 +490,100 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - [ ] CLI commands (`md2do todoist sync`, `md2do todoist push`, etc.)
   - [ ] Bidirectional sync logic
   - [ ] Interactive token setup
+  - [ ] Validation warnings for `[todoist:ID]` markers
+    - [ ] Detect malformed IDs
+    - [ ] Verify ID exists in Todoist
+    - [ ] Warn about orphaned/deleted tasks
+
+### CLI Enhancements
+
+- [ ] Markdown output format (`--format markdown`)
+  - [ ] Machine-readable markdown with preserved metadata
+  - [ ] Easy copy/paste to other markdown files
 - [ ] Watch mode for continuous monitoring
 - [ ] Custom output templates
+- [ ] List all assignees/tags across files (`md2do list --assignees`, `md2do list --tags`)
+  - [ ] Detect duplicates and near-matches (e.g., `@nick` vs `@Nick`)
+  - [ ] Show usage frequency and statistics
+- [ ] Edit support for normalizing metadata
+  - [ ] Normalize assignees across files (fix capitalization inconsistencies)
+  - [ ] Normalize tags (consolidate synonyms)
+  - [ ] Interactive mode for reviewing and approving changes
+  - [ ] `--fix` flag to auto-fix common issues
+- [ ] Multiple value filters (`--priority high,urgent`, `--tag backend,frontend`)
+- [ ] Negative filters (`--no-assignee`, `--no-priority`, `--no-tags`)
+- [ ] Date range filtering (`--due-after DATE`, `--due-before DATE`)
+- [ ] Result limiting (`--limit N`)
+- [ ] Config inspection (`md2do config show`)
+- [ ] Date simulation for testing (`--simulate-date YYYY-MM-DD`)
+
+### Configuration & Customization
+
+- [ ] Granular warning control (`.md2do-warnings.json` similar to `.markdownlint.json`)
+  - [ ] Enable/disable specific warning types
+  - [ ] Warning severity levels
+  - [ ] Per-project warning configuration
+  - [ ] Warnings off by default, opt-in per project
+- [ ] Configurable priority-based due date defaults
+  - [ ] Customize default timeframes per priority level
+  - [ ] Example: urgent=today, high=tomorrow, normal=end-of-week, low=next-week
+  - [ ] Shared config between CLI and editor extensions
+- [ ] Case-insensitive tags and assignees by default
+  - [ ] Configurable case sensitivity
+  - [ ] Canonical form preservation
+
+### Smart Features & Automation
+
+- [ ] Due date inference based on priority
+  - [ ] Optional auto-assignment when due date missing
+  - [ ] Respects configured priority timeframes
+- [ ] Multiple assignees support
+  - [ ] Primary assignee (first @mention)
+  - [ ] Secondary assignees (additional @mentions)
+  - [ ] Filter by any assignee on task
+- [ ] Enhanced date format support
+  - [ ] Short formats: `1/25/26`, `1/25`
+  - [ ] Natural language: `tomorrow`, `next week`, `next Monday`, `in 3 days`
+  - [ ] Time of day: `(2026-01-25 9am)`, `(tomorrow 2pm)`
+  - [ ] ISO 8601 with time: `2026-01-25T14:00`
+- [ ] ML-powered suggestions
+  - [ ] Suggest priority based on task content and patterns
+  - [ ] Suggest tags based on task text
+  - [ ] Suggest assignees based on historical patterns
+- [ ] Auto-completion and smart defaults in VS Code extension
+- [ ] Autocomplete suggestions for assignees and tags
+  - [ ] Learn from existing usage across all files
+  - [ ] Context-aware suggestions (file, project, recent usage)
+  - [ ] Fuzzy matching and typo correction
+
+### Dashboard & Visualization
+
+- [ ] Configurable dashboard with markdown templating
+  - [ ] Leverage existing templating solution (investigate: Handlebars, Mustache, Liquid)
+  - [ ] Customizable widgets and layouts
+  - [ ] Export to HTML/PDF
+- [ ] VS Code extension dashboard integration
+  - [ ] Side panel with "pretty" dashboard view
+  - [ ] Live updates as files change
+  - [ ] Click-through to source tasks
+
+### VS Code Extension
+
+- [ ] Core extension with task viewing and filtering
+- [ ] IntelliSense for task metadata (@assignees, #tags, priorities)
+- [ ] Due date auto-completion with smart defaults
+- [ ] Quick actions (mark complete, change priority, set due date)
+- [ ] Integrated dashboard view
+- [ ] CodeLens showing task counts per file
+- [ ] Autocomplete for assignees and tags (learned from workspace)
+- [ ] Inline suggestions with fuzzy matching
+
+### Integrations
+
 - [ ] GitHub Issues integration
-- [ ] Web dashboard
-- [ ] VS Code extension
+- [ ] Linear integration
+- [ ] Jira integration
+- [ ] Notion integration
 
 ## 📞 Support
 
