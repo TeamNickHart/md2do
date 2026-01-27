@@ -214,6 +214,10 @@ Control validation warnings for markdown task syntax:
 }
 ```
 
+::: tip Complementary Linting
+md2do warnings focus on task-specific validation (metadata, task semantics). For comprehensive markdown syntax checking, consider using [markdownlint](https://github.com/DavidAnson/markdownlint) alongside md2do.
+:::
+
 **Options:**
 
 - `enabled` - Enable/disable all warnings (default: `true`)
