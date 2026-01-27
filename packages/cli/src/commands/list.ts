@@ -1,5 +1,6 @@
 import { Command } from 'commander';
-import { filters, sorting } from '@md2do/core';
+import { filters, sorting, filterWarnings } from '@md2do/core';
+import { loadConfig, DEFAULT_CONFIG } from '@md2do/config';
 import { scanMarkdownFiles } from '../scanner.js';
 import { formatAsPretty, formatAsTable } from '../formatters/pretty.js';
 import { formatAsJson } from '../formatters/json.js';
@@ -211,27 +212,42 @@ export function createListCommand(): Command {
 
         console.log(output);
 
-        // Show warnings if any (unless --no-warnings)
-        if (options.warnings !== false && scanResult.warnings.length > 0) {
-          console.error(
-            `\n⚠️  ${scanResult.warnings.length} warning${scanResult.warnings.length > 1 ? 's' : ''} encountered during scanning`,
+        // Load config and apply warning filters (unless --no-warnings overrides)
+        if (options.warnings !== false) {
+          const config = await loadConfig({
+            cwd: options.path || process.cwd(),
+          });
+          const warningConfig = config.warnings ?? DEFAULT_CONFIG.warnings;
+
+          // Apply config-based filtering
+          const filteredWarnings = filterWarnings(
+            scanResult.warnings,
+            warningConfig ?? {},
           );
 
-          // Show all warnings if --all-warnings, otherwise show first 5
-          const warningsToShow = options.allWarnings
-            ? scanResult.warnings
-            : scanResult.warnings.slice(0, 5);
-
-          for (const warning of warningsToShow) {
+          // Show warnings if any remain after filtering
+          if (filteredWarnings.length > 0) {
             console.error(
-              `  ${warning.file}:${warning.line} - ${warning.reason}`,
+              `\n⚠️  ${filteredWarnings.length} warning${filteredWarnings.length > 1 ? 's' : ''} encountered during scanning`,
             );
-          }
 
-          if (!options.allWarnings && scanResult.warnings.length > 5) {
-            console.error(
-              `  ... and ${scanResult.warnings.length - 5} more warning${scanResult.warnings.length - 5 > 1 ? 's' : ''} (use --all-warnings to see all)`,
-            );
+            // Show all warnings if --all-warnings, otherwise show first 5
+            const warningsToShow = options.allWarnings
+              ? filteredWarnings
+              : filteredWarnings.slice(0, 5);
+
+            for (const warning of warningsToShow) {
+              // Use message field (new) or fallback to reason (legacy)
+              const message =
+                warning.message || warning.reason || 'Unknown warning';
+              console.error(`  ${warning.file}:${warning.line} - ${message}`);
+            }
+
+            if (!options.allWarnings && filteredWarnings.length > 5) {
+              console.error(
+                `  ... and ${filteredWarnings.length - 5} more warning${filteredWarnings.length - 5 > 1 ? 's' : ''} (use --all-warnings to see all)`,
+              );
+            }
           }
         }
       } catch (error) {

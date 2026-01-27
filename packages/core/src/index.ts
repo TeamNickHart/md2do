@@ -19,6 +19,9 @@ export * as filters from './filters/index.js';
 // Sorting (export as namespace to avoid conflicts)
 export * as sorting from './sorting/index.js';
 
+// Warnings
+export * from './warnings/filter.js';
+
 // Utilities
 export * from './utils/dates.js';
 export * from './utils/id.js';

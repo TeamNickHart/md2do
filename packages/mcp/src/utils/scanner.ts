@@ -60,11 +60,16 @@ export async function scanMarkdownFiles(
       allWarnings.push(...result.warnings);
     } catch (error) {
       // Add warning for files that couldn't be read
+      const message = `Failed to read file: ${error instanceof Error ? error.message : 'Unknown error'}`;
       allWarnings.push({
+        severity: 'error',
+        source: 'md2do',
+        ruleId: 'file-read-error',
         file,
         line: 0,
         text: '',
-        reason: `Failed to read file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        message,
+        reason: message,
       });
     }
   }

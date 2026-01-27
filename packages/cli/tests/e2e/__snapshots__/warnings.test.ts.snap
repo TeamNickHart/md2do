@@ -1,0 +1,104 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`E2E: Warning Configuration Profiles > custom: all disabled > all-disabled 1`] = `
+"
+Found 3 tasks
+  ✓ 1 completed | ○ 2 incomplete
+
+  ○ !! Valid task (2026-02-01) @alice #bug
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+
+  ✓ Completed task without completion date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+
+  ○ Task without a due date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+
+"
+`;
+
+exports[`E2E: Warning Configuration Profiles > custom: only spacing errors > custom-space-only 1`] = `
+"
+Found 3 tasks
+  ✓ 1 completed | ○ 2 incomplete
+
+  ○ !! Valid task (2026-02-01) @alice #bug
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+
+  ✓ Completed task without completion date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+
+  ○ Task without a due date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+
+
+⚠️  2 warnings encountered during scanning
+  tasks.md:4 - Missing space after checkbox. Use "- [x] Task" format.
+  tasks.md:5 - Missing space before checkbox. Use "- [x] Task" format.
+"
+`;
+
+exports[`E2E: Warning Configuration Profiles > recommended profile (default) > recommended-default 1`] = `
+"
+Found 3 tasks
+  ✓ 1 completed | ○ 2 incomplete
+
+  ○ !! Valid task (2026-02-01) @alice #bug
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+
+  ✓ Completed task without completion date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+
+  ○ Task without a due date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+
+
+⚠️  3 warnings encountered during scanning
+  tasks.md:3 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  tasks.md:4 - Missing space after checkbox. Use "- [x] Task" format.
+  tasks.md:5 - Missing space before checkbox. Use "- [x] Task" format.
+"
+`;
+
+exports[`E2E: Warning Configuration Profiles > strict profile > strict-all-warnings 1`] = `
+"
+Found 3 tasks
+  ✓ 1 completed | ○ 2 incomplete
+
+  ○ !! Valid task (2026-02-01) @alice #bug
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:6
+
+  ✓ Completed task without completion date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:7
+
+  ○ Task without a due date
+    file:///Users/nickhart/Developer/TeamNickHart/md2do/packages/cli/tasks.md:8
+
+
+⚠️  6 warnings encountered during scanning
+  tasks.md:3 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  tasks.md:4 - Missing space after checkbox. Use "- [x] Task" format.
+  tasks.md:5 - Missing space before checkbox. Use "- [x] Task" format.
+  tasks.md:6 - Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.
+  tasks.md:7 - Completed task missing completion date. Add [completed: YYYY-MM-DD].
+  ... and 1 more warning (use --all-warnings to see all)
+"
+`;
+
+exports[`E2E: Warning Filtering Edge Cases > respects CLI --no-warnings override > cli-no-warnings-override 1`] = `
+"No tasks found
+"
+`;
+
+exports[`E2E: Warning Filtering Edge Cases > shows warnings correctly with truncation > truncated-warnings 1`] = `
+"No tasks found
+
+⚠️  20 warnings encountered during scanning
+  many-warnings.md:1 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  many-warnings.md:2 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  many-warnings.md:3 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  many-warnings.md:4 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  many-warnings.md:5 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
+  ... and 15 more warnings (use --all-warnings to see all)
+"
+`;

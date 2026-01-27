@@ -114,9 +114,13 @@ export class MarkdownScanner {
           const existing = todoistIds.get(result.task.todoistId);
           if (existing) {
             warnings.push({
+              severity: 'error',
+              source: 'md2do',
+              ruleId: 'duplicate-todoist-id',
               file: filePath,
               line: lineNumber,
               text: result.task.text,
+              message: `Duplicate Todoist ID [todoist:${result.task.todoistId}]. Also found at ${existing.file}:${existing.line}.`,
               reason: `Duplicate Todoist ID [todoist:${result.task.todoistId}]. Also found at ${existing.file}:${existing.line}.`,
             });
           } else {
@@ -168,9 +172,13 @@ export class MarkdownScanner {
             // Only add warning if duplicate is in a different file
             // (same-file duplicates are already caught by scanFile)
             allWarnings.push({
+              severity: 'error',
+              source: 'md2do',
+              ruleId: 'duplicate-todoist-id',
               file: task.file,
               line: task.line,
               text: task.text,
+              message: `Duplicate Todoist ID [todoist:${task.todoistId}] across files. Also found at ${existing.file}:${existing.line}.`,
               reason: `Duplicate Todoist ID [todoist:${task.todoistId}] across files. Also found at ${existing.file}:${existing.line}.`,
             });
           } else if (!existing) {

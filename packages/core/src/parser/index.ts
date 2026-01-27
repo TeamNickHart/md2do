@@ -126,9 +126,14 @@ export function extractDueDate(
       return {
         date: undefined,
         warning: {
+          severity: 'warning',
+          source: 'md2do',
+          ruleId: 'relative-date-no-context',
           file: '', // Will be filled in by caller
           line: 0, // Will be filled in by caller
           text: text.trim(),
+          message:
+            'Relative due date without context date from heading. Add a heading with a date above this task.',
           reason:
             'Relative due date without context date from heading. Add a heading with a date above this task.',
         },
@@ -212,9 +217,14 @@ export function parseTask(
   // Check for asterisk/plus bullet markers (not supported)
   if (/^\s*[*+]\s+\[[ xX]\]/.test(line)) {
     warnings.push({
+      severity: 'warning',
+      source: 'md2do',
+      ruleId: 'unsupported-bullet',
       file,
       line: lineNumber,
       text: line.trim(),
+      message:
+        'Unsupported bullet marker (* or +). Use dash (-) for task lists.',
       reason:
         'Unsupported bullet marker (* or +). Use dash (-) for task lists.',
     });
@@ -224,9 +234,14 @@ export function parseTask(
   // Check for extra spaces inside checkbox: [x ] or [ x]
   if (/^\s*-\s+\[[xX]\s+\]/.test(line) || /^\s*-\s+\[\s+[xX]\]/.test(line)) {
     warnings.push({
+      severity: 'warning',
+      source: 'md2do',
+      ruleId: 'malformed-checkbox',
       file,
       line: lineNumber,
       text: line.trim(),
+      message:
+        'Malformed checkbox with extra spaces. Use [x] or [ ] without extra spaces.',
       reason:
         'Malformed checkbox with extra spaces. Use [x] or [ ] without extra spaces.',
     });
@@ -236,9 +251,13 @@ export function parseTask(
   // Check for missing space after checkbox: [x]Task
   if (/^\s*-\s+\[[ xX]\][^\s]/.test(line)) {
     warnings.push({
+      severity: 'warning',
+      source: 'md2do',
+      ruleId: 'missing-space-after',
       file,
       line: lineNumber,
       text: line.trim(),
+      message: 'Missing space after checkbox. Use "- [x] Task" format.',
       reason: 'Missing space after checkbox. Use "- [x] Task" format.',
     });
     return { task: null, warnings };
@@ -247,9 +266,13 @@ export function parseTask(
   // Check for missing space before checkbox: -[x]
   if (/^\s*-\[[ xX]\]/.test(line)) {
     warnings.push({
+      severity: 'warning',
+      source: 'md2do',
+      ruleId: 'missing-space-before',
       file,
       line: lineNumber,
       text: line.trim(),
+      message: 'Missing space before checkbox. Use "- [x] Task" format.',
       reason: 'Missing space before checkbox. Use "- [x] Task" format.',
     });
     return { task: null, warnings };
@@ -288,9 +311,14 @@ export function parseTask(
   // Incomplete tasks without any date (no explicit due date and no context date)
   if (!completed && !dueDateResult.date && !context.currentDate) {
     warnings.push({
+      severity: 'info',
+      source: 'md2do',
+      ruleId: 'missing-due-date',
       file,
       line: lineNumber,
       text: fullText.trim(),
+      message:
+        'Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.',
       reason:
         'Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.',
     });
@@ -299,9 +327,14 @@ export function parseTask(
   // Completed tasks should have completion dates
   if (completed && !completedDate) {
     warnings.push({
+      severity: 'info',
+      source: 'md2do',
+      ruleId: 'missing-completed-date',
       file,
       line: lineNumber,
       text: fullText.trim(),
+      message:
+        'Completed task missing completion date. Add [completed: YYYY-MM-DD].',
       reason:
         'Completed task missing completion date. Add [completed: YYYY-MM-DD].',
     });

@@ -65,9 +65,38 @@ export interface ScanResult {
   };
 }
 
+export type WarningSeverity = 'info' | 'warning' | 'error';
+
+export type WarningCode =
+  | 'unsupported-bullet' // * or + instead of -
+  | 'malformed-checkbox' // [x ] or [ x]
+  | 'missing-space-after' // -[x]Task
+  | 'missing-space-before' // -[x] Task
+  | 'relative-date-no-context' // [due: tomorrow] without heading date
+  | 'missing-due-date' // Incomplete task with no due date
+  | 'missing-completed-date' // [x] without [completed: date]
+  | 'duplicate-todoist-id' // Same Todoist ID in multiple tasks
+  | 'file-read-error'; // Failed to read file
+
 export interface Warning {
+  // Position
   file: string;
   line: number;
-  text: string;
-  reason: string;
+  column?: number;
+
+  // Classification
+  severity: WarningSeverity;
+  source: 'md2do';
+  ruleId: WarningCode;
+
+  // Content
+  message: string; // User-facing message
+  text?: string; // The actual text that triggered it
+
+  // Documentation (optional - for future use)
+  url?: string;
+
+  // Legacy field for backward compatibility (deprecated)
+  /** @deprecated Use message instead */
+  reason?: string;
 }

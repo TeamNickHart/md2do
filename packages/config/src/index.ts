@@ -5,6 +5,7 @@ export {
   MarkdownConfigSchema,
   TodoistConfigSchema,
   OutputConfigSchema,
+  WarningConfigSchema,
   DEFAULT_CONFIG,
 } from './schema.js';
 export type {
@@ -12,4 +13,6 @@ export type {
   MarkdownConfig,
   TodoistConfig,
   OutputConfig,
+  WarningConfig,
 } from './schema.js';
+export { PRESET_STRICT, PRESET_RECOMMENDED, getPreset } from './presets.js';
