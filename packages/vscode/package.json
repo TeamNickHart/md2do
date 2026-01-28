@@ -1,0 +1,100 @@
+{
+  "name": "md2do-vscode",
+  "displayName": "md2do",
+  "description": "Intelligent markdown task management with Todoist integration",
+  "version": "0.1.0",
+  "publisher": "md2do",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "todo",
+    "task",
+    "todoist",
+    "task-management",
+    "productivity"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "workspaceContains:**/*.md"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "md2do.toggleComplete",
+        "title": "md2do: Toggle Task Completion",
+        "category": "md2do"
+      },
+      {
+        "command": "md2do.refreshTasks",
+        "title": "md2do: Refresh Tasks",
+        "category": "md2do",
+        "icon": "$(refresh)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "md2do.toggleComplete",
+        "key": "cmd+shift+c",
+        "mac": "cmd+shift+c",
+        "win": "ctrl+shift+c",
+        "linux": "ctrl+shift+c",
+        "when": "editorTextFocus && editorLangId == markdown"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "md2doTasks",
+          "name": "md2do Tasks"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "md2do.refreshTasks",
+          "when": "view == md2doTasks",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "md2do",
+      "properties": {
+        "md2do.autoScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan workspace for tasks"
+        },
+        "md2do.warnings.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show md2do validation warnings in Problems panel"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup src/extension.ts --format cjs --external vscode",
+    "dev": "tsup src/extension.ts --format cjs --external vscode --watch",
+    "typecheck": "tsc --noEmit",
+    "vscode:prepublish": "pnpm build",
+    "package": "vsce package",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@md2do/core": "workspace:*",
+    "@md2do/config": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^2.22.0",
+    "tsup": "^8.0.1"
+  }
+}
