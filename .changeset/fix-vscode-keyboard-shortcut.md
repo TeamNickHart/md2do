@@ -2,10 +2,25 @@
 'md2do-vscode': patch
 ---
 
-fix: change keyboard shortcut to Cmd+Enter to avoid macOS conflicts
+**Keyboard Shortcut, Logo, and Critical Bug Fixes**
 
-Changed the toggle task completion keyboard shortcut from `Cmd+Shift+C` to `Cmd+Enter` (Mac) and from `Ctrl+Shift+C` to `Ctrl+Enter` (Windows/Linux) to avoid conflicts with macOS system shortcuts that open Terminal.
+### 1. Keyboard Shortcut: Changed to Cmd+K Enter (chord-style)
 
-The new `Cmd+Enter` shortcut is semantically appropriate for a "complete" action and less likely to conflict with system or application shortcuts.
+Changed the toggle task completion keyboard shortcut to `Cmd+K Enter` (Mac) / `Ctrl+K Enter` (Windows/Linux) to avoid conflicts with:
 
-Fixes: Keyboard shortcut conflict on macOS where Cmd+Shift+C opened Terminal instead of toggling task completion
+- macOS system shortcuts (Cmd+Shift+C opened Terminal)
+- VSCode's built-in markdown list continuation (Cmd+Enter)
+
+The chord-style keybinding (press Cmd+K, then Enter) avoids conflicts and is consistent with VSCode conventions.
+
+### 2. Added Logo/Icon
+
+Added md2do checkbox logo as the extension icon for professional branding in the VSCode marketplace. The icon includes adaptive dark/light mode support.
+
+### 3. Critical Bug Fix: Task Explorer Path Resolution
+
+**Fixed:** Task explorer was completely broken - clicking tasks gave errors like "cannot open file:///Nick/notes.md"
+
+**Root Cause:** Scanner stored relative paths but goToTask tried to use them as absolute paths with vscode.Uri.file()
+
+**Solution:** Added proper path resolution to convert relative paths to absolute using workspace root before creating URI
