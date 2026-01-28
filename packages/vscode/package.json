@@ -4,7 +4,7 @@
   "description": "Intelligent markdown task management with Todoist integration",
   "version": "0.1.3",
   "publisher": "md2do",
-  "icon": "icon.svg",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
