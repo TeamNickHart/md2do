@@ -1,5 +1,13 @@
 # VSCode Extension
 
+::: warning BETA RELEASE
+The md2do VSCode extension is currently in **beta**. It's distributed via [GitHub Releases](https://github.com/TeamNickHart/md2do/releases) as a `.vsix` file. We're gathering feedback before publishing to the VSCode Marketplace.
+
+**Current version:** v0.1.1
+
+[Download Latest Release](https://github.com/TeamNickHart/md2do/releases/latest) • [Report Issues](https://github.com/TeamNickHart/md2do/issues)
+:::
+
 Intelligent markdown task management directly in Visual Studio Code, powered by [md2do](https://md2do.com).
 
 ## What is it?
