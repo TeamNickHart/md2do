@@ -2,7 +2,7 @@
   "name": "md2do-vscode",
   "displayName": "md2do",
   "description": "Intelligent markdown task management with Todoist integration",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "md2do",
   "engines": {
     "vscode": "^1.85.0"
