@@ -60,10 +60,10 @@
     "keybindings": [
       {
         "command": "md2do.toggleComplete",
-        "key": "cmd+shift+c",
-        "mac": "cmd+shift+c",
-        "win": "ctrl+shift+c",
-        "linux": "ctrl+shift+c",
+        "key": "cmd+enter",
+        "mac": "cmd+enter",
+        "win": "ctrl+enter",
+        "linux": "ctrl+enter",
         "when": "editorTextFocus && editorLangId == markdown"
       }
     ],
