@@ -1,11 +1,20 @@
 import * as vscode from 'vscode';
 import { DiagnosticProvider } from './providers/diagnosticProvider.js';
 import { TaskTreeDataProvider } from './providers/treeDataProvider.js';
+import { TaskHoverProvider } from './providers/hoverProvider.js';
+import { TaskCompletionProvider } from './providers/completionProvider.js';
 import { toggleComplete, goToTask } from './commands/toggleComplete.js';
+import {
+  toggleTaskFromTree,
+  copyTaskAsMarkdown,
+  deleteTask,
+  editTask,
+} from './commands/treeActions.js';
 
 let statusBarItem: vscode.StatusBarItem;
 let diagnosticProvider: DiagnosticProvider;
 let taskTreeDataProvider: TaskTreeDataProvider;
+let completionProvider: TaskCompletionProvider;
 
 /**
  * Activate the extension
@@ -18,6 +27,7 @@ export async function activate(
   // Initialize providers
   diagnosticProvider = new DiagnosticProvider();
   taskTreeDataProvider = new TaskTreeDataProvider();
+  completionProvider = new TaskCompletionProvider();
 
   // Register tree view
   const treeView = vscode.window.createTreeView('md2doTasks', {
@@ -41,6 +51,16 @@ export async function activate(
     vscode.commands.registerCommand('md2do.refreshTasks', async () => {
       await refreshAll();
     }),
+    vscode.commands.registerCommand(
+      'md2do.toggleTaskFromTree',
+      toggleTaskFromTree,
+    ),
+    vscode.commands.registerCommand(
+      'md2do.copyTaskAsMarkdown',
+      copyTaskAsMarkdown,
+    ),
+    vscode.commands.registerCommand('md2do.deleteTask', deleteTask),
+    vscode.commands.registerCommand('md2do.editTask', editTask),
   );
 
   // Watch for file changes
@@ -70,11 +90,37 @@ export async function activate(
     }),
   );
 
-  // Register providers
-  context.subscriptions.push(diagnosticProvider, treeView, statusBarItem);
+  // Register hover provider
+  const hoverProvider = vscode.languages.registerHoverProvider(
+    'markdown',
+    new TaskHoverProvider(),
+  );
 
-  // Initial scan
+  // Register completion provider
+  const completionProviderDisposable =
+    vscode.languages.registerCompletionItemProvider(
+      'markdown',
+      completionProvider,
+      '[', // Trigger on [due: or [completed:
+      '@', // Trigger on @assignee
+      '#', // Trigger on #tag
+      '!', // Trigger on priority
+    );
+
+  // Register providers
+  context.subscriptions.push(
+    diagnosticProvider,
+    treeView,
+    statusBarItem,
+    hoverProvider,
+    completionProviderDisposable,
+  );
+
+  // Initial scan (updates caches for completion provider)
   await refreshAll();
+
+  // Update completion provider cache
+  await completionProvider.updateCache();
 }
 
 /**
@@ -106,6 +152,9 @@ async function refreshAll(): Promise<void> {
 
     statusBarItem.text = text;
     statusBarItem.tooltip = `md2do Tasks\n\nTotal: ${tasks.length}\nCompleted: ${completed}\nIncomplete: ${incomplete}${overdue > 0 ? `\nOverdue: ${overdue}` : ''}`;
+
+    // Update completion provider cache
+    await completionProvider.updateCache();
   } catch (error) {
     console.error('Error refreshing md2do:', error);
     statusBarItem.text = '$(error) md2do: Error';
