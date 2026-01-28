@@ -53,7 +53,7 @@
     "@md2do/config": "workspace:*",
     "@md2do/core": "workspace:*",
     "@md2do/todoist": "workspace:*",
-    "chalk": "^5.6.2",
+    "chalk": "^4.1.2",
     "cli-table3": "^0.6.5",
     "commander": "^11.1.0",
     "cosmiconfig": "^9.0.0",

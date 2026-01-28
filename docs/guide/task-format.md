@@ -2,6 +2,10 @@
 
 md2do uses standard markdown task syntax with optional metadata for rich task management.
 
+::: tip Validation Warnings
+md2do validates your task syntax and shows helpful warnings for common formatting issues. See [Warning Configuration](/guide/configuration#warning-settings) to customize validation behavior.
+:::
+
 ## Basic Tasks
 
 The simplest task format:
@@ -12,6 +16,8 @@ The simplest task format:
 ```
 
 md2do recognizes any markdown checkbox as a task.
+
+**Important:** Use dashes (`-`) for task list bullets. Asterisks (`*`) and plus signs (`+`) will trigger a validation warning.
 
 ## Task Metadata
 

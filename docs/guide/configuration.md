@@ -191,6 +191,96 @@ Set your username:
 
 Useful for filtering "my tasks" quickly.
 
+### Warning Settings
+
+Control validation warnings for markdown task syntax:
+
+```json
+{
+  "warnings": {
+    "enabled": true,
+    "rules": {
+      "unsupported-bullet": "warn",
+      "malformed-checkbox": "warn",
+      "missing-space-after": "warn",
+      "missing-space-before": "warn",
+      "relative-date-no-context": "warn",
+      "missing-due-date": "off",
+      "missing-completed-date": "off",
+      "duplicate-todoist-id": "error",
+      "file-read-error": "error"
+    }
+  }
+}
+```
+
+::: tip Complementary Linting
+md2do warnings focus on task-specific validation (metadata, task semantics). For comprehensive markdown syntax checking, consider using [markdownlint](https://github.com/DavidAnson/markdownlint) alongside md2do.
+:::
+
+**Options:**
+
+- `enabled` - Enable/disable all warnings (default: `true`)
+- `rules` - Per-rule severity levels: `"error"`, `"warn"`, `"info"`, or `"off"`
+
+**Available Warning Rules:**
+
+| Rule                       | Description                               | Default |
+| -------------------------- | ----------------------------------------- | ------- |
+| `unsupported-bullet`       | Using `*` or `+` instead of `-` for tasks | `warn`  |
+| `malformed-checkbox`       | Extra spaces in checkbox syntax           | `warn`  |
+| `missing-space-after`      | No space after checkbox `[x]`             | `warn`  |
+| `missing-space-before`     | No space before checkbox                  | `warn`  |
+| `relative-date-no-context` | Relative date without heading date        | `warn`  |
+| `missing-due-date`         | Incomplete task without due date          | `off`   |
+| `missing-completed-date`   | Completed task without completion date    | `off`   |
+| `duplicate-todoist-id`     | Same Todoist ID used multiple times       | `error` |
+| `file-read-error`          | Failed to read markdown file              | `error` |
+
+**Preset Configurations:**
+
+Use built-in presets instead of specifying individual rules:
+
+**Recommended** (default) - Validates markdown format, metadata optional:
+
+```json
+{
+  "warnings": "recommended"
+}
+```
+
+**Strict** - All warnings enabled, enforces complete metadata:
+
+```json
+{
+  "warnings": "strict"
+}
+```
+
+**Disable All** - Turn off all warnings:
+
+```json
+{
+  "warnings": {
+    "enabled": false
+  }
+}
+```
+
+**Custom** - Mix presets with overrides:
+
+```json
+{
+  "warnings": {
+    "enabled": true,
+    "rules": {
+      "missing-due-date": "warn",
+      "missing-completed-date": "off"
+    }
+  }
+}
+```
+
 ## Environment Variables
 
 Override config with environment variables:
@@ -236,11 +326,14 @@ Environment variables **always win** - they override all config files.
   },
   "todoist": {
     "defaultProject": "Team Project"
-  }
+  },
+  "warnings": "strict"
 }
 ```
 
 **Important:** Don't commit `apiToken`! Use environment variables or global config for secrets.
+
+**Note:** Team projects often use `"warnings": "strict"` to enforce consistent task formatting.
 
 ### Work vs Personal
 
@@ -288,7 +381,32 @@ For projects with markdown docs:
     "pattern": "**/*.md",
     "exclude": ["node_modules/**", "build/**", "api-reference/**"]
   },
-  "defaultAssignee": "docs-team"
+  "defaultAssignee": "docs-team",
+  "warnings": {
+    "enabled": true,
+    "rules": {
+      "missing-due-date": "off",
+      "missing-completed-date": "off"
+    }
+  }
+}
+```
+
+### Solo Developer
+
+For personal projects with flexible task formatting:
+
+```json
+{
+  "defaultAssignee": "me",
+  "warnings": {
+    "enabled": true,
+    "rules": {
+      "missing-due-date": "off",
+      "missing-completed-date": "off",
+      "unsupported-bullet": "off"
+    }
+  }
 }
 ```
 
@@ -400,6 +518,20 @@ Full configuration with all options:
     "format": "pretty",
     "colors": true,
     "paths": true
+  },
+  "warnings": {
+    "enabled": true,
+    "rules": {
+      "unsupported-bullet": "warn",
+      "malformed-checkbox": "warn",
+      "missing-space-after": "warn",
+      "missing-space-before": "warn",
+      "relative-date-no-context": "warn",
+      "missing-due-date": "off",
+      "missing-completed-date": "off",
+      "duplicate-todoist-id": "error",
+      "file-read-error": "error"
+    }
   }
 }
 ```
