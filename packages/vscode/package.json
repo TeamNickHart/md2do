@@ -4,6 +4,7 @@
   "description": "Intelligent markdown task management with Todoist integration",
   "version": "0.1.2",
   "publisher": "md2do",
+  "icon": "icon.svg",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -60,10 +61,10 @@
     "keybindings": [
       {
         "command": "md2do.toggleComplete",
-        "key": "cmd+shift+c",
-        "mac": "cmd+shift+c",
-        "win": "ctrl+shift+c",
-        "linux": "ctrl+shift+c",
+        "key": "cmd+k enter",
+        "mac": "cmd+k enter",
+        "win": "ctrl+k enter",
+        "linux": "ctrl+k enter",
         "when": "editorTextFocus && editorLangId == markdown"
       }
     ],

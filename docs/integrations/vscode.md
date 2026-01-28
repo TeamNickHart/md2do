@@ -87,7 +87,7 @@ md2do validation warnings appear directly in VSCode's Problems panel:
 
 #### Toggle Completion
 
-Press `Cmd+Shift+C` (Mac) or `Ctrl+Shift+C` (Win/Linux) to toggle task completion:
+Press `Cmd+K Enter` (Mac) or `Ctrl+K Enter` (Win/Linux) to toggle task completion:
 
 - `[ ]` → `[x]` - Marks complete and adds `[completed: 2026-01-27]`
 - `[x]` → `[ ]` - Marks incomplete and removes completion date
@@ -222,7 +222,7 @@ See [Task Format](/guide/task-format) for complete syntax reference.
 
 | Command                | Shortcut (Mac) | Shortcut (Win/Linux) | Description           |
 | ---------------------- | -------------- | -------------------- | --------------------- |
-| Toggle Task Completion | `Cmd+Shift+C`  | `Ctrl+Shift+C`       | Toggle `[ ]` ↔ `[x]`  |
+| Toggle Task Completion | `Cmd+K Enter`  | `Ctrl+K Enter`       | Toggle `[ ]` ↔ `[x]`  |
 | Open Explorer          | `Cmd+Shift+E`  | `Ctrl+Shift+E`       | View Task Explorer    |
 | Open Problems          | `Cmd+Shift+M`  | `Ctrl+Shift+M`       | View Diagnostics      |
 | Command Palette        | `Cmd+Shift+P`  | `Ctrl+Shift+P`       | Access md2do commands |
@@ -356,7 +356,7 @@ Scan only specific directories:
 2. View Task Explorer in sidebar
 3. See all tasks grouped by file
 4. Click overdue tasks to jump to location
-5. Toggle completion with `Cmd+Shift+C`
+5. Toggle completion with `Cmd+K Enter`
 
 ### Creating New Tasks
 
@@ -443,7 +443,7 @@ See [CLI Reference](/cli/overview) for full command documentation.
 
 ### Keyboard shortcut conflicts
 
-**Problem:** `Cmd+Shift+C` doesn't toggle task completion
+**Problem:** `Cmd+K Enter` doesn't toggle task completion
 
 **Solutions:**
 
