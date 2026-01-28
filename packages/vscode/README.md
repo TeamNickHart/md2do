@@ -36,6 +36,39 @@ See task overview at a glance:
 - Overdue task warnings
 - Click to refresh all tasks
 
+## Installation
+
+### Beta Release (Recommended)
+
+1. **Download** the latest `.vsix` file from [GitHub Releases](https://github.com/TeamNickHart/md2do/releases/latest)
+2. **Open VSCode**
+3. **Go to Extensions** sidebar (`Cmd+Shift+X` / `Ctrl+Shift+X`)
+4. Click the **`...` menu** (top-right of Extensions sidebar)
+5. Select **"Install from VSIX..."**
+6. Choose the downloaded `md2do-vscode-0.1.0.vsix` file
+7. **Reload VSCode** when prompted
+
+### Command Line Install
+
+```bash
+# Download the .vsix file first, then:
+code --install-extension md2do-vscode-0.1.0.vsix
+```
+
+### Updates
+
+Beta releases do not auto-update. To get new features:
+
+1. Check [Releases](https://github.com/TeamNickHart/md2do/releases) for updates
+2. Download the new `.vsix` file
+3. Reinstall using the same process
+
+### Uninstall
+
+1. Go to Extensions sidebar
+2. Find "md2do"
+3. Click gear icon → **Uninstall**
+
 ## Requirements
 
 - Visual Studio Code 1.85.0 or higher
