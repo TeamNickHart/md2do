@@ -136,11 +136,11 @@
     }
   },
   "scripts": {
-    "build": "tsup src/extension.ts --format cjs --external vscode",
-    "dev": "tsup src/extension.ts --format cjs --external vscode --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
     "vscode:prepublish": "pnpm build",
-    "package": "vsce package",
+    "package": "vsce package --no-dependencies",
     "clean": "rm -rf dist"
   },
   "dependencies": {

@@ -166,9 +166,9 @@ Phase 3 (Planned):
 
 ## Related Packages
 
-- [@md2do/cli](../cli) - Command-line interface
-- [@md2do/core](../core) - Core task parsing and scanning
-- [@md2do/mcp](../mcp) - Model Context Protocol server
+- [@md2do/cli](https://md2do.com/cli/overview) - Command-line interface
+- [@md2do/core](https://npmjs.com/package/@md2do/core) - Core task parsing and scanning
+- [@md2do/mcp](https://md2do.com/integrations/mcp) - Model Context Protocol server
 
 ## Contributing
 
