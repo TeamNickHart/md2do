@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 /**
  * Toggle task completion at cursor position
@@ -74,7 +75,20 @@ export async function goToTask(task: {
   line: number;
 }): Promise<void> {
   try {
-    const uri = vscode.Uri.file(task.file);
+    // Get the workspace folder to resolve relative paths
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (!workspaceFolders || workspaceFolders.length === 0) {
+      throw new Error('No workspace folder open');
+    }
+
+    const rootPath = workspaceFolders[0]!.uri.fsPath;
+
+    // Resolve relative path to absolute path
+    const absolutePath = path.isAbsolute(task.file)
+      ? task.file
+      : path.join(rootPath, task.file);
+
+    const uri = vscode.Uri.file(absolutePath);
     const document = await vscode.workspace.openTextDocument(uri);
     const editor = await vscode.window.showTextDocument(document);
 
