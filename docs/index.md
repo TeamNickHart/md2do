@@ -20,6 +20,9 @@ features:
   - icon: 🔍
     title: Smart Parsing
     details: Extracts TODOs with rich metadata - assignees, priorities, due dates, and tags.
+  - icon: 💻
+    title: VSCode Extension
+    details: Task explorer, smart diagnostics, hover tooltips, and auto-completion in VSCode.
   - icon: 🎯
     title: Powerful Filtering
     details: Filter by assignee, priority, project, tags, due dates, and more.
@@ -122,11 +125,13 @@ Use Claude Code or other AI assistants to query your tasks:
 
 **📖 [Read the Guide](/guide/task-format)** - Learn about task format and features
 
+**💻 [VSCode Extension](/integrations/vscode)** - Install the VSCode extension
+
 **🔌 [Todoist Setup](/integrations/todoist)** - Set up Todoist integration
 
 **🤖 [MCP Integration](/integrations/mcp)** - Connect with Claude Code
 
-**💻 [CLI Reference](/cli/overview)** - Complete command documentation
+**📋 [CLI Reference](/cli/overview)** - Complete command documentation
 
 </div>
 

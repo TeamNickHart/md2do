@@ -90,6 +90,7 @@ export default defineConfig({
       {
         text: 'Integrations',
         items: [
+          { text: 'VSCode Extension', link: '/integrations/vscode' },
           { text: 'Todoist Setup', link: '/integrations/todoist' },
           { text: 'MCP (AI Integration)', link: '/integrations/mcp' },
         ],
