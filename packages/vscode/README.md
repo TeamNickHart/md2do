@@ -24,7 +24,7 @@ md2do validation warnings appear directly in VSCode's Problems panel:
 
 ### ⌨️ Quick Task Actions
 
-- **Toggle Completion**: Press `Cmd+Enter` (Mac) or `Ctrl+Enter` (Win/Linux) to toggle task completion
+- **Toggle Completion**: Press `Cmd+K Enter` (Mac) or `Ctrl+K Enter` (Win/Linux) to toggle task completion
 - Auto-adds completion date when checking tasks
 - Removes completion date when unchecking
 
@@ -92,7 +92,7 @@ md2do supports rich metadata in your markdown tasks:
 
 | Command                | Shortcut (Mac) | Shortcut (Win/Linux) | Description          |
 | ---------------------- | -------------- | -------------------- | -------------------- |
-| Toggle Task Completion | `Cmd+Enter`    | `Ctrl+Enter`         | Toggle `[ ]` ↔ `[x]` |
+| Toggle Task Completion | `Cmd+K Enter`  | `Ctrl+K Enter`       | Toggle `[ ]` ↔ `[x]` |
 
 ### Commands
 
