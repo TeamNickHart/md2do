@@ -1,4 +1,4 @@
-import type { WarningConfig } from './schema.js';
+import type { WarningConfig, WarningPreset } from './schema.js';
 
 /**
  * Strict preset: All warnings enabled
@@ -13,7 +13,7 @@ import type { WarningConfig } from './schema.js';
  * }
  * ```
  */
-export const PRESET_STRICT: WarningConfig = {
+export const PRESET_STRICT: WarningPreset = {
   enabled: true,
   rules: {
     // Format validation - errors
@@ -50,7 +50,7 @@ export const PRESET_STRICT: WarningConfig = {
  * }
  * ```
  */
-export const PRESET_RECOMMENDED: WarningConfig = {
+export const PRESET_RECOMMENDED: WarningPreset = {
   enabled: true,
   rules: {
     // Format warnings - help users write correct markdown

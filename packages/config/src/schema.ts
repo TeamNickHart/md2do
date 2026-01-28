@@ -68,6 +68,26 @@ export type WarningConfig = z.infer<typeof WarningConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 
 /**
+ * Non-optional warning configuration type for preset definitions
+ * Used when defining hardcoded presets (PRESET_STRICT, PRESET_RECOMMENDED)
+ */
+export type WarningPreset = {
+  enabled: boolean;
+  rules: Record<
+    | 'unsupported-bullet'
+    | 'malformed-checkbox'
+    | 'missing-space-after'
+    | 'missing-space-before'
+    | 'relative-date-no-context'
+    | 'missing-due-date'
+    | 'missing-completed-date'
+    | 'duplicate-todoist-id'
+    | 'file-read-error',
+    'error' | 'warn' | 'info' | 'off'
+  >;
+};
+
+/**
  * Default configuration values
  */
 export const DEFAULT_CONFIG: Config = {

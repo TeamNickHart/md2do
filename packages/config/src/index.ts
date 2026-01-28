@@ -14,5 +14,6 @@ export type {
   TodoistConfig,
   OutputConfig,
   WarningConfig,
+  WarningPreset,
 } from './schema.js';
 export { PRESET_STRICT, PRESET_RECOMMENDED, getPreset } from './presets.js';
