@@ -3,7 +3,7 @@
 ::: warning BETA RELEASE
 The md2do VSCode extension is currently in **beta**. It's distributed via [GitHub Releases](https://github.com/TeamNickHart/md2do/releases) as a `.vsix` file. We're gathering feedback before publishing to the VSCode Marketplace.
 
-**Current version:** v0.1.1
+**Current version:** v0.2.0
 
 [Download Latest Release](https://github.com/TeamNickHart/md2do/releases/latest) • [Report Issues](https://github.com/TeamNickHart/md2do/issues)
 :::
@@ -36,7 +36,7 @@ The md2do VSCode extension brings powerful task management features to your mark
 
 ```bash
 # Download the .vsix file first, then:
-code --install-extension md2do-vscode-0.1.1.vsix
+code --install-extension md2do-vscode-0.2.0.vsix
 ```
 
 ### Updates
@@ -57,13 +57,37 @@ Beta releases do not auto-update. To get new features:
 
 ### 📋 Task Explorer Sidebar
 
-Browse all tasks across your workspace in an organized tree view:
+Browse all tasks across your workspace with powerful organization options:
 
-- **Grouped by file** for easy navigation
-- **Shows completion status** with counts (e.g., "3/10 completed")
-- **Rich tooltips** with full task metadata on hover
-- **Click any task** to jump to its location in the file
-- **Context menu actions** for quick task management
+**Grouping Modes:**
+
+- 📁 **By File** - Default view, grouped by file location
+- 👤 **By Assignee** - See who has what tasks
+- 📅 **By Due Date** - Overdue, today, this week, later, no date
+- ⚡ **By Priority** - Urgent, high, normal, low
+- 🏷️ **By Tag** - Organized by task tags
+- 📋 **Flat List** - All tasks in a sorted list without grouping
+
+**Filters:**
+
+- ☑️ **Show Incomplete Only** - Hide completed tasks
+- ⚠️ **Show Overdue Only** - Focus on overdue tasks
+- 👥 **Show Assigned Only** - Hide unassigned tasks
+
+**Sorting Options:**
+
+- 📅 Sort by Due Date
+- ⚡ Sort by Priority
+- 🔤 Sort Alphabetically
+- 📍 Sort by Line Number
+
+**Features:**
+
+- Shows completion status and counts for each group
+- Rich tooltips with full task metadata
+- Click any task to jump to its location
+- Right-click for quick actions (toggle, edit, delete)
+- Toolbar buttons for easy access to grouping, filtering, and sorting
 
 **Location:** Appears in the Explorer sidebar panel
 
@@ -193,6 +217,50 @@ Suggestions:
 
 Type `!` and select `!!!` → `- [ ] Critical bug !!!`
 
+### 🔍 CodeLens Inline Actions
+
+Actionable links appear above each task for quick access:
+
+- **✅ Mark Complete / ⬜ Mark Incomplete** - Toggle task completion with one click
+- **📅 Due Date Info** - Shows due date with countdown or overdue warnings
+- **🔴/🟠/🟡 Priority** - Visual priority indicators
+- **🔄 Synced** - Todoist sync status
+- **🗑️ Delete** - Quick delete action
+
+**Usage:** CodeLens links appear directly above each task line in your markdown files
+
+**Example:**
+
+```markdown
+Due in 3 days • Priority: High • Delete
+
+- [ ] Review PR [due: 2026-01-30] @alice !! #review
+```
+
+Click any CodeLens link to perform the action instantly without opening menus.
+
+### 📊 Interactive Dashboard
+
+Visual overview of all incomplete tasks with smart grouping:
+
+- **Task Statistics** - Total, complete, incomplete, overdue, and due today counts
+- **By Assignee** - See who has what tasks assigned
+- **By Due Date** - Overdue, today, this week, later, no date
+- **By Priority** - Urgent, high, normal, low
+- **Click to Drill Down** - Click any group to see detailed task list with sorting options
+- **Navigate to Tasks** - Click tasks to jump to file location
+- **Auto-refresh** - Updates automatically when you edit markdown files
+
+**Open with:** `Cmd+Shift+P` → `md2do: Open Dashboard`
+
+**Features:**
+
+- Clean, visual interface for task management
+- Interactive drill-down from groups to individual tasks
+- Sort tasks by due date, priority, alphabetical, or line number
+- One-click navigation to task locations
+- Real-time updates as you edit files
+
 ### 📊 Status Bar Integration
 
 See task overview at a glance in the status bar:
@@ -231,8 +299,38 @@ See [Task Format](/guide/task-format) for complete syntax reference.
 
 Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and search for:
 
+**Dashboard:**
+
+- `md2do: Open Dashboard` - Open interactive task dashboard
+
+**Task Actions:**
+
 - `md2do: Toggle Task Completion` - Toggle task at cursor
 - `md2do: Refresh Tasks` - Refresh all tasks and diagnostics
+
+**Grouping:**
+
+- `md2do: Group by File` - Group tasks by file
+- `md2do: Group by Assignee` - Group tasks by assignee
+- `md2do: Group by Due Date` - Group tasks by due date
+- `md2do: Group by Priority` - Group tasks by priority
+- `md2do: Group by Tag` - Group tasks by tag
+- `md2do: Flat List (No Grouping)` - Show all tasks in a flat list
+
+**Filters:**
+
+- `md2do: Toggle: Show Incomplete Only` - Show/hide completed tasks
+- `md2do: Toggle: Show Overdue Only` - Show/hide non-overdue tasks
+- `md2do: Toggle: Show Assigned Only` - Show/hide unassigned tasks
+
+**Sorting:**
+
+- `md2do: Sort by Due Date` - Sort tasks by due date
+- `md2do: Sort by Priority` - Sort tasks by priority
+- `md2do: Sort Alphabetically` - Sort tasks alphabetically
+- `md2do: Sort by Line Number` - Sort tasks by line number
+
+**Tip:** Use the toolbar buttons in the Task Explorer for quick access to grouping, filtering, and sorting options!
 
 ## Extension Settings
 
@@ -478,7 +576,7 @@ See [CLI Reference](/cli/overview) for full command documentation.
 
 ## Roadmap
 
-### Phase 1 (Current - v0.1.0) ✅
+### Phase 1 (v0.1.0) ✅ Complete
 
 - ✅ Task Explorer sidebar
 - ✅ Diagnostics integration
@@ -487,19 +585,22 @@ See [CLI Reference](/cli/overview) for full command documentation.
 - ✅ Context menu actions
 - ✅ Smart auto-completion
 
-### Phase 2 (Planned)
+### Phase 2 (v0.2.0) ✅ Complete
 
-- CodeLens inline actions (toggle, edit, delete above each task)
-- Task filtering in sidebar (by assignee, priority, tags)
-- Bulk operations (mark multiple tasks complete)
-- Task dependencies visualization
+- ✅ CodeLens inline actions (toggle, due date info, priority, sync status, delete)
+- ✅ Advanced Task Explorer with filtering and sorting
+- ✅ Grouping modes (file, assignee, due date, priority, tag, flat)
+- ✅ Filter toggles (incomplete only, overdue only, assigned only)
+- ✅ Sort options (due date, priority, alphabetical, line number)
 
-### Phase 3 (Planned)
+### Phase 3 (v0.2.0+) 🚧 In Progress
 
-- Dashboard webview with task visualization and charts
-- Todoist bidirectional sync from within VSCode
-- Custom task grouping options (by priority, assignee, tag)
-- Task time tracking integration
+- ✅ Dashboard webview with task visualization and statistics
+- ✅ Interactive drill-down with grouping and sorting
+- 🔄 Todoist bidirectional sync from within VSCode (planned)
+- 🔄 Bulk operations (mark multiple tasks complete) (planned)
+- 🔄 Task dependencies visualization (planned)
+- 🔄 Task time tracking integration (planned)
 
 See [Roadmap](/development/roadmap) for the full project roadmap.
 
