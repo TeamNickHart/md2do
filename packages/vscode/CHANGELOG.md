@@ -1,5 +1,23 @@
 # md2do-vscode
 
+## 0.2.0
+
+### Minor Changes
+
+- Add CodeLens inline actions for tasks
+
+  This release completes Phase 2 of the VSCode extension roadmap with new CodeLens functionality that displays actionable links above each task:
+  - Toggle task completion with one-click actions
+  - View due date countdown and overdue warnings
+  - See priority indicators with emoji badges
+  - Check Todoist sync status
+  - Quick delete action
+
+  Phase 2 is now complete with all three features implemented:
+  - Auto-completion for dates, assignees, and tags
+  - Hover provider with rich task details
+  - CodeLens inline actions
+
 ## 0.1.3
 
 ### Patch Changes
