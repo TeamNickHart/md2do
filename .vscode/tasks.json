@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm: build - packages/vscode",
+      "type": "shell",
+      "command": "pnpm",
+      "args": ["--filter", "md2do-vscode", "build"],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent"
+      }
+    }
+  ]
+}
