@@ -22,7 +22,7 @@ features:
     details: Extracts TODOs with rich metadata - assignees, priorities, due dates, and tags.
   - icon: 💻
     title: VSCode Extension (BETA)
-    details: Task explorer, smart diagnostics, hover tooltips, and auto-completion. Beta release available via GitHub.
+    details: Task explorer with grouping/filtering/sorting, CodeLens inline actions, interactive dashboard, smart diagnostics, and auto-completion. v0.2.0 beta available via GitHub.
   - icon: 🎯
     title: Powerful Filtering
     details: Filter by assignee, priority, project, tags, due dates, and more.
