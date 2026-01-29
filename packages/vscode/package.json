@@ -32,6 +32,12 @@
         "category": "md2do"
       },
       {
+        "command": "md2do.openDashboard",
+        "title": "md2do: Open Dashboard",
+        "category": "md2do",
+        "icon": "$(dashboard)"
+      },
+      {
         "command": "md2do.refreshTasks",
         "title": "md2do: Refresh Tasks",
         "category": "md2do",

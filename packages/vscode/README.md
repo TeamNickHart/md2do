@@ -38,6 +38,20 @@ Actionable links appear above each task for quick access:
 - **🔄 Synced** - Todoist sync status
 - **🗑️ Delete** - Quick delete action
 
+### 📊 Interactive Dashboard
+
+Visual overview of all incomplete tasks with smart grouping:
+
+- **Task Statistics** - Total, complete, incomplete, overdue, and due today counts
+- **By Assignee** - See who has what tasks assigned
+- **By Due Date** - Overdue, today, this week, later, no date
+- **By Priority** - Urgent, high, normal, low
+- **Click to Drill Down** - Click any group to see detailed task list with sorting options
+- **Navigate to Tasks** - Click tasks to jump to file location
+- **Auto-refresh** - Updates automatically when you edit markdown files
+
+Open with: `Cmd+Shift+P` → `md2do: Open Dashboard`
+
 ### 📊 Status Bar Integration
 
 See task overview at a glance:
@@ -108,6 +122,7 @@ md2do supports rich metadata in your markdown tasks:
 
 Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and search for:
 
+- `md2do: Open Dashboard` - Open interactive task dashboard
 - `md2do: Toggle Task Completion` - Toggle task at cursor
 - `md2do: Refresh Tasks` - Refresh all tasks and diagnostics
 
@@ -168,9 +183,9 @@ Phase 2 (Complete):
 - ✅ Hover provider with rich task details
 - ✅ CodeLens inline actions
 
-Phase 3 (Planned):
+Phase 3 (In Progress):
 
-- Dashboard webview with task visualization
+- ✅ Dashboard webview with task visualization
 - Todoist bidirectional sync
 - Custom task grouping options
 

@@ -4,6 +4,7 @@ import { TaskTreeDataProvider } from './providers/treeDataProvider.js';
 import { TaskHoverProvider } from './providers/hoverProvider.js';
 import { TaskCompletionProvider } from './providers/completionProvider.js';
 import { TaskCodeLensProvider } from './providers/codeLensProvider.js';
+import { DashboardProvider } from './providers/dashboardProvider.js';
 import { toggleComplete, goToTask } from './commands/toggleComplete.js';
 import {
   toggleTaskFromTree,
@@ -17,6 +18,7 @@ let diagnosticProvider: DiagnosticProvider;
 let taskTreeDataProvider: TaskTreeDataProvider;
 let completionProvider: TaskCompletionProvider;
 let codeLensProvider: TaskCodeLensProvider;
+let dashboardProvider: DashboardProvider;
 
 /**
  * Activate the extension
@@ -31,6 +33,7 @@ export async function activate(
   taskTreeDataProvider = new TaskTreeDataProvider();
   completionProvider = new TaskCompletionProvider();
   codeLensProvider = new TaskCodeLensProvider();
+  dashboardProvider = new DashboardProvider(context.extensionUri);
 
   // Register tree view
   const treeView = vscode.window.createTreeView('md2doTasks', {
@@ -53,6 +56,9 @@ export async function activate(
     vscode.commands.registerCommand('md2do.goToTask', goToTask),
     vscode.commands.registerCommand('md2do.refreshTasks', async () => {
       await refreshAll();
+    }),
+    vscode.commands.registerCommand('md2do.openDashboard', async () => {
+      await dashboardProvider.show();
     }),
     vscode.commands.registerCommand(
       'md2do.toggleTaskFromTree',
@@ -168,6 +174,9 @@ async function refreshAll(): Promise<void> {
 
     // Refresh CodeLens
     codeLensProvider.refresh();
+
+    // Refresh dashboard if open
+    await dashboardProvider.refresh();
   } catch (error) {
     console.error('Error refreshing md2do:', error);
     statusBarItem.text = '$(error) md2do: Error';
@@ -181,5 +190,8 @@ async function refreshAll(): Promise<void> {
 export function deactivate(): void {
   if (statusBarItem) {
     statusBarItem.dispose();
+  }
+  if (dashboardProvider) {
+    dashboardProvider.dispose();
   }
 }
