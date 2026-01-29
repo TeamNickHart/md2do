@@ -6,12 +6,36 @@ Intelligent markdown task management for Visual Studio Code, powered by [md2do](
 
 ### 📋 Task Explorer Sidebar
 
-Browse all tasks across your workspace in an organized tree view:
+Browse all tasks across your workspace with powerful organization options:
 
-- Grouped by file for easy navigation
-- Shows completion status and counts
+**Grouping Modes:**
+
+- 📁 **By File** - Default view, grouped by file location
+- 👤 **By Assignee** - See who has what tasks
+- 📅 **By Due Date** - Overdue, today, this week, later, no date
+- ⚡ **By Priority** - Urgent, high, normal, low
+- 🏷️ **By Tag** - Organized by task tags
+- 📋 **Flat List** - All tasks in a sorted list without grouping
+
+**Filters:**
+
+- ☑️ **Show Incomplete Only** - Hide completed tasks
+- ⚠️ **Show Overdue Only** - Focus on overdue tasks
+- 👥 **Show Assigned Only** - Hide unassigned tasks
+
+**Sorting Options:**
+
+- 📅 Sort by Due Date
+- ⚡ Sort by Priority
+- 🔤 Sort Alphabetically
+- 📍 Sort by Line Number
+
+**Features:**
+
+- Shows completion status and counts for each group
 - Rich tooltips with full task metadata
 - Click any task to jump to its location
+- Right-click for quick actions (toggle, edit, delete)
 
 ### ⚠️ Smart Diagnostics
 
@@ -122,9 +146,38 @@ md2do supports rich metadata in your markdown tasks:
 
 Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`) and search for:
 
+**Dashboard:**
+
 - `md2do: Open Dashboard` - Open interactive task dashboard
+
+**Task Actions:**
+
 - `md2do: Toggle Task Completion` - Toggle task at cursor
 - `md2do: Refresh Tasks` - Refresh all tasks and diagnostics
+
+**Grouping:**
+
+- `md2do: Group by File` - Group tasks by file
+- `md2do: Group by Assignee` - Group tasks by assignee
+- `md2do: Group by Due Date` - Group tasks by due date
+- `md2do: Group by Priority` - Group tasks by priority
+- `md2do: Group by Tag` - Group tasks by tag
+- `md2do: Flat List (No Grouping)` - Show all tasks in a flat list
+
+**Filters:**
+
+- `md2do: Toggle: Show Incomplete Only` - Show/hide completed tasks
+- `md2do: Toggle: Show Overdue Only` - Show/hide non-overdue tasks
+- `md2do: Toggle: Show Assigned Only` - Show/hide unassigned tasks
+
+**Sorting:**
+
+- `md2do: Sort by Due Date` - Sort tasks by due date
+- `md2do: Sort by Priority` - Sort tasks by priority
+- `md2do: Sort Alphabetically` - Sort tasks alphabetically
+- `md2do: Sort by Line Number` - Sort tasks by line number
+
+**Tip:** Use the toolbar buttons in the Task Explorer for quick access to grouping, filtering, and sorting options!
 
 ## Extension Settings
 

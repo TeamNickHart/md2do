@@ -62,6 +62,80 @@
         "command": "md2do.deleteTask",
         "title": "Delete Task",
         "icon": "$(trash)"
+      },
+      {
+        "command": "md2do.groupByFile",
+        "title": "Group by File",
+        "category": "md2do",
+        "icon": "$(file)"
+      },
+      {
+        "command": "md2do.groupByAssignee",
+        "title": "Group by Assignee",
+        "category": "md2do",
+        "icon": "$(person)"
+      },
+      {
+        "command": "md2do.groupByDueDate",
+        "title": "Group by Due Date",
+        "category": "md2do",
+        "icon": "$(calendar)"
+      },
+      {
+        "command": "md2do.groupByPriority",
+        "title": "Group by Priority",
+        "category": "md2do",
+        "icon": "$(flame)"
+      },
+      {
+        "command": "md2do.groupByTag",
+        "title": "Group by Tag",
+        "category": "md2do",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "md2do.groupFlat",
+        "title": "Flat List (No Grouping)",
+        "category": "md2do",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "md2do.toggleIncompleteOnly",
+        "title": "Toggle: Show Incomplete Only",
+        "category": "md2do",
+        "icon": "$(circle-outline)"
+      },
+      {
+        "command": "md2do.toggleOverdueOnly",
+        "title": "Toggle: Show Overdue Only",
+        "category": "md2do",
+        "icon": "$(warning)"
+      },
+      {
+        "command": "md2do.toggleAssignedOnly",
+        "title": "Toggle: Show Assigned Only",
+        "category": "md2do",
+        "icon": "$(person)"
+      },
+      {
+        "command": "md2do.sortByDueDate",
+        "title": "Sort by Due Date",
+        "category": "md2do"
+      },
+      {
+        "command": "md2do.sortByPriority",
+        "title": "Sort by Priority",
+        "category": "md2do"
+      },
+      {
+        "command": "md2do.sortAlphabetically",
+        "title": "Sort Alphabetically",
+        "category": "md2do"
+      },
+      {
+        "command": "md2do.sortByLine",
+        "title": "Sort by Line Number",
+        "category": "md2do"
       }
     ],
     "keybindings": [
@@ -84,6 +158,71 @@
     },
     "menus": {
       "view/title": [
+        {
+          "command": "md2do.groupByFile",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@1"
+        },
+        {
+          "command": "md2do.groupByAssignee",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@2"
+        },
+        {
+          "command": "md2do.groupByDueDate",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@3"
+        },
+        {
+          "command": "md2do.groupByPriority",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@4"
+        },
+        {
+          "command": "md2do.groupByTag",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@5"
+        },
+        {
+          "command": "md2do.groupFlat",
+          "when": "view == md2doTasks",
+          "group": "1_grouping@6"
+        },
+        {
+          "command": "md2do.toggleIncompleteOnly",
+          "when": "view == md2doTasks",
+          "group": "2_filters@1"
+        },
+        {
+          "command": "md2do.toggleOverdueOnly",
+          "when": "view == md2doTasks",
+          "group": "2_filters@2"
+        },
+        {
+          "command": "md2do.toggleAssignedOnly",
+          "when": "view == md2doTasks",
+          "group": "2_filters@3"
+        },
+        {
+          "command": "md2do.sortByDueDate",
+          "when": "view == md2doTasks",
+          "group": "3_sorting@1"
+        },
+        {
+          "command": "md2do.sortByPriority",
+          "when": "view == md2doTasks",
+          "group": "3_sorting@2"
+        },
+        {
+          "command": "md2do.sortAlphabetically",
+          "when": "view == md2doTasks",
+          "group": "3_sorting@3"
+        },
+        {
+          "command": "md2do.sortByLine",
+          "when": "view == md2doTasks",
+          "group": "3_sorting@4"
+        },
         {
           "command": "md2do.refreshTasks",
           "when": "view == md2doTasks",

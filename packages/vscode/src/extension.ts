@@ -70,6 +70,48 @@ export async function activate(
     ),
     vscode.commands.registerCommand('md2do.deleteTask', deleteTask),
     vscode.commands.registerCommand('md2do.editTask', editTask),
+    // Grouping commands
+    vscode.commands.registerCommand('md2do.groupByFile', () => {
+      taskTreeDataProvider.setGroupMode('file');
+    }),
+    vscode.commands.registerCommand('md2do.groupByAssignee', () => {
+      taskTreeDataProvider.setGroupMode('assignee');
+    }),
+    vscode.commands.registerCommand('md2do.groupByDueDate', () => {
+      taskTreeDataProvider.setGroupMode('dueDate');
+    }),
+    vscode.commands.registerCommand('md2do.groupByPriority', () => {
+      taskTreeDataProvider.setGroupMode('priority');
+    }),
+    vscode.commands.registerCommand('md2do.groupByTag', () => {
+      taskTreeDataProvider.setGroupMode('tag');
+    }),
+    vscode.commands.registerCommand('md2do.groupFlat', () => {
+      taskTreeDataProvider.setGroupMode('flat');
+    }),
+    // Filter commands
+    vscode.commands.registerCommand('md2do.toggleIncompleteOnly', () => {
+      taskTreeDataProvider.toggleIncompleteOnly();
+    }),
+    vscode.commands.registerCommand('md2do.toggleOverdueOnly', () => {
+      taskTreeDataProvider.toggleOverdueOnly();
+    }),
+    vscode.commands.registerCommand('md2do.toggleAssignedOnly', () => {
+      taskTreeDataProvider.toggleAssignedOnly();
+    }),
+    // Sort commands
+    vscode.commands.registerCommand('md2do.sortByDueDate', () => {
+      taskTreeDataProvider.setSortMode('dueDate');
+    }),
+    vscode.commands.registerCommand('md2do.sortByPriority', () => {
+      taskTreeDataProvider.setSortMode('priority');
+    }),
+    vscode.commands.registerCommand('md2do.sortAlphabetically', () => {
+      taskTreeDataProvider.setSortMode('alphabetical');
+    }),
+    vscode.commands.registerCommand('md2do.sortByLine', () => {
+      taskTreeDataProvider.setSortMode('line');
+    }),
   );
 
   // Watch for file changes
