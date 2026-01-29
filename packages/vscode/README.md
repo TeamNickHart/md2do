@@ -28,6 +28,16 @@ md2do validation warnings appear directly in VSCode's Problems panel:
 - Auto-adds completion date when checking tasks
 - Removes completion date when unchecking
 
+### 🔍 CodeLens Inline Actions
+
+Actionable links appear above each task for quick access:
+
+- **✅ Mark Complete / ⬜ Mark Incomplete** - Toggle task completion with one click
+- **📅 Due Date Info** - Shows due date with countdown or overdue warnings
+- **🔴/🟠/🟡 Priority** - Visual priority indicators
+- **🔄 Synced** - Todoist sync status
+- **🗑️ Delete** - Quick delete action
+
 ### 📊 Status Bar Integration
 
 See task overview at a glance:
@@ -146,17 +156,17 @@ See [Configuration Guide](https://md2do.com/guide/configuration) for full option
 
 ## Roadmap
 
-Phase 1 (Current):
+Phase 1 (Complete):
 
 - ✅ Task Explorer sidebar
 - ✅ Diagnostics integration
 - ✅ Toggle completion command
 
-Phase 2 (Planned):
+Phase 2 (Complete):
 
-- Auto-completion for dates, assignees, tags
-- Hover provider with rich task details
-- CodeLens inline actions
+- ✅ Auto-completion for dates, assignees, tags
+- ✅ Hover provider with rich task details
+- ✅ CodeLens inline actions
 
 Phase 3 (Planned):
 

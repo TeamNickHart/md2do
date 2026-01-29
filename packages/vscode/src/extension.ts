@@ -3,6 +3,7 @@ import { DiagnosticProvider } from './providers/diagnosticProvider.js';
 import { TaskTreeDataProvider } from './providers/treeDataProvider.js';
 import { TaskHoverProvider } from './providers/hoverProvider.js';
 import { TaskCompletionProvider } from './providers/completionProvider.js';
+import { TaskCodeLensProvider } from './providers/codeLensProvider.js';
 import { toggleComplete, goToTask } from './commands/toggleComplete.js';
 import {
   toggleTaskFromTree,
@@ -15,6 +16,7 @@ let statusBarItem: vscode.StatusBarItem;
 let diagnosticProvider: DiagnosticProvider;
 let taskTreeDataProvider: TaskTreeDataProvider;
 let completionProvider: TaskCompletionProvider;
+let codeLensProvider: TaskCodeLensProvider;
 
 /**
  * Activate the extension
@@ -28,6 +30,7 @@ export async function activate(
   diagnosticProvider = new DiagnosticProvider();
   taskTreeDataProvider = new TaskTreeDataProvider();
   completionProvider = new TaskCompletionProvider();
+  codeLensProvider = new TaskCodeLensProvider();
 
   // Register tree view
   const treeView = vscode.window.createTreeView('md2doTasks', {
@@ -107,6 +110,12 @@ export async function activate(
       '!', // Trigger on priority
     );
 
+  // Register CodeLens provider
+  const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
+    'markdown',
+    codeLensProvider,
+  );
+
   // Register providers
   context.subscriptions.push(
     diagnosticProvider,
@@ -114,6 +123,7 @@ export async function activate(
     statusBarItem,
     hoverProvider,
     completionProviderDisposable,
+    codeLensProviderDisposable,
   );
 
   // Initial scan (updates caches for completion provider)
@@ -155,6 +165,9 @@ async function refreshAll(): Promise<void> {
 
     // Update completion provider cache
     await completionProvider.updateCache();
+
+    // Refresh CodeLens
+    codeLensProvider.refresh();
   } catch (error) {
     console.error('Error refreshing md2do:', error);
     statusBarItem.text = '$(error) md2do: Error';
