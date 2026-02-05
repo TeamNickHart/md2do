@@ -1,5 +1,34 @@
 # @md2do/mcp
 
+## 0.4.0
+
+### Patch Changes
+
+- 8e0f80a: Add time support to due dates with workday configuration
+
+  **New Features:**
+  - Support optional time component in due dates: `[due: 2026-02-06 17:00]`
+  - Parse both 24-hour format times (H:MM and HH:MM)
+  - Added `parseTime()` utility for time validation
+  - New workday config schema with `startTime`, `endTime`, and `defaultDueTime`
+  - When no time specified in due date, applies default from config (defaults to 17:00 end of workday)
+  - Prevents "due 8 hours ago" issues for dates without explicit times
+
+  **Configuration:**
+
+  ```json
+  {
+    "workday": {
+      "startTime": "08:00",
+      "endTime": "17:00",
+      "defaultDueTime": "end"
+    }
+  }
+  ```
+
+- Updated dependencies [8e0f80a]
+  - @md2do/core@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
