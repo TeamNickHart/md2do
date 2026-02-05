@@ -158,6 +158,18 @@ export async function activate(
       '@', // Trigger on @assignee
       '#', // Trigger on #tag
       '!', // Trigger on priority
+      // Digits and dash for progressive date autocomplete
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '-',
     );
 
   // Register CodeLens provider

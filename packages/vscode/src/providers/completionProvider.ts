@@ -302,7 +302,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
         items.push({
           label: `${year}-${monthStr}-`,
           kind: vscode.CompletionItemKind.Value,
-          insertText: `${year}-${monthStr}-`,
+          insertText: `${monthStr}-`,
           detail: monthNames[month - 1],
           documentation: `Start typing day for ${monthNames[month - 1]} ${year}`,
           sortText: monthStr,
@@ -335,7 +335,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
         items.push({
           label: `${year}-${fullDateMatch[2]}-${dayStr}`,
           kind: vscode.CompletionItemKind.Value,
-          insertText: `${year}-${fullDateMatch[2]}-${dayStr}`,
+          insertText: `${dayStr}`,
           detail: dayOfWeek,
           documentation: `${dayOfWeek}, ${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
           sortText: dayStr,

@@ -7,7 +7,7 @@
 - [x] Discuss database optimization strategy @jane !! [due: 2026-01-17]
 - [ ] Review new ORM migration approach @jane ! #database [due: 2026-01-24]
 - [ ] Evaluate database backup solutions @jane !! #infrastructure [due: 2026-01-21]
-- [ ] @nick do something [due: ]
+- [ ] @nick do something [due: 2026-02-15]
 
 ### Career Development
 
