@@ -36,6 +36,10 @@ export interface ParsingContext {
   person?: string;
   currentDate?: Date;
   currentHeading?: string;
+  // Workday configuration for time handling
+  workdayStartTime?: string; // e.g., "08:00"
+  workdayEndTime?: string; // e.g., "17:00"
+  defaultDueTime?: 'start' | 'end'; // Which time to use when no time specified
 }
 
 export interface TaskFilterCriteria {

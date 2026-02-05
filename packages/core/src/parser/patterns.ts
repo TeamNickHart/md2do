@@ -63,17 +63,20 @@ export const PRIORITY_HIGH = /!!/;
 export const PRIORITY_NORMAL = /(?<!!)!(?!!)/;
 
 /**
- * Matches absolute due date in ISO format [due: YYYY-MM-DD]
+ * Matches absolute due date in ISO format [due: YYYY-MM-DD] with optional time [due: YYYY-MM-DD HH:MM]
  *
  * Examples:
- *   "[due: 2026-01-25]" → "2026-01-25"
- *   "[due:2026-01-25]" → "2026-01-25" (spaces optional)
- *   "[due:  2026-01-25  ]" → "2026-01-25" (whitespace allowed)
+ *   "[due: 2026-01-25]" → "2026-01-25", undefined
+ *   "[due: 2026-01-25 17:00]" → "2026-01-25", "17:00"
+ *   "[due: 2026-01-25 9:00]" → "2026-01-25", "9:00"
+ *   "[due:2026-01-25]" → "2026-01-25", undefined (spaces optional)
  *
  * Groups:
  *   [1] - Date string in YYYY-MM-DD format
+ *   [2] - Optional time string in H:MM or HH:MM format (24-hour)
  */
-export const DUE_DATE_ABSOLUTE = /\[due:\s*(\d{4}-\d{2}-\d{2})\s*\]/i;
+export const DUE_DATE_ABSOLUTE =
+  /\[due:\s*(\d{4}-\d{2}-\d{2})(?:\s+(\d{1,2}:\d{2}))?\s*\]/i;
 
 /**
  * Matches relative due date keywords

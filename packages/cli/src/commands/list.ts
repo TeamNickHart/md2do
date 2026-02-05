@@ -86,11 +86,25 @@ export function createListCommand(): Command {
 
     .action(async (options: ListCommandOptions) => {
       try {
-        // Scan markdown files
+        // Load config first to get workday settings
+        const config = await loadConfig({
+          cwd: options.path || process.cwd(),
+        });
+
+        // Scan markdown files with workday config
         const scanResult = await scanMarkdownFiles({
           root: options.path || process.cwd(),
           ...(options.pattern !== undefined && { pattern: options.pattern }),
           ...(options.exclude !== undefined && { exclude: options.exclude }),
+          ...(config.workday?.startTime && {
+            workdayStartTime: config.workday.startTime,
+          }),
+          ...(config.workday?.endTime && {
+            workdayEndTime: config.workday.endTime,
+          }),
+          ...(config.workday?.defaultDueTime && {
+            defaultDueTime: config.workday.defaultDueTime,
+          }),
         });
 
         let tasks = scanResult.tasks;
@@ -212,11 +226,8 @@ export function createListCommand(): Command {
 
         console.log(output);
 
-        // Load config and apply warning filters (unless --no-warnings overrides)
+        // Apply warning filters (unless --no-warnings overrides)
         if (options.warnings !== false) {
-          const config = await loadConfig({
-            cwd: options.path || process.cwd(),
-          });
           const warningConfig = config.warnings ?? DEFAULT_CONFIG.warnings;
 
           // Apply config-based filtering

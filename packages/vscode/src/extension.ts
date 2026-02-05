@@ -153,9 +153,23 @@ export async function activate(
       'markdown',
       completionProvider,
       '[', // Trigger on [due: or [completed:
+      ':', // Trigger after [due: to show completions
+      ' ', // Trigger after space to continue completions
       '@', // Trigger on @assignee
       '#', // Trigger on #tag
       '!', // Trigger on priority
+      // Digits and dash for progressive date autocomplete
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '-',
     );
 
   // Register CodeLens provider

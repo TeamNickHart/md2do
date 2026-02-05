@@ -94,27 +94,50 @@ export function extractCompletedDate(text: string): Date | undefined {
  * Extract due date from task text with context awareness
  *
  * Handles both absolute dates ([due: 2026-01-25]) and relative dates
- * ([due: tomorrow]) which require context.
+ * ([due: tomorrow]) which require context. Supports optional time ([due: 2026-01-25 17:00]).
  *
  * @param text - Task text
- * @param context - Parsing context (for relative dates)
+ * @param context - Parsing context (for relative dates and workday config)
  * @returns Object with parsed date and optional warning
  */
 export function extractDueDate(
   text: string,
   context: ParsingContext,
 ): { date: Date | undefined; warning?: Warning } {
-  // Try absolute date first
+  // Try absolute date first (with optional time)
   const absoluteMatch = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
   if (absoluteMatch?.[1]) {
-    const date = parseAbsoluteDate(absoluteMatch[1]);
+    const dateStr = absoluteMatch[1];
+    let timeStr = absoluteMatch[2]; // May be undefined
+
+    // If no time specified, apply default from workday config
+    if (!timeStr && context.defaultDueTime) {
+      if (context.defaultDueTime === 'start' && context.workdayStartTime) {
+        timeStr = context.workdayStartTime;
+      } else if (context.defaultDueTime === 'end' && context.workdayEndTime) {
+        timeStr = context.workdayEndTime;
+      }
+    }
+
+    const date = parseAbsoluteDate(dateStr, timeStr);
     return { date: date ?? undefined };
   }
 
   // Try short format (M/D or M/D/YY)
   const shortMatch = text.match(PATTERNS.DUE_DATE_SHORT);
   if (shortMatch?.[1]) {
-    const date = parseAbsoluteDate(shortMatch[1]);
+    let timeStr: string | undefined;
+
+    // Apply default time from workday config
+    if (context.defaultDueTime) {
+      if (context.defaultDueTime === 'start' && context.workdayStartTime) {
+        timeStr = context.workdayStartTime;
+      } else if (context.defaultDueTime === 'end' && context.workdayEndTime) {
+        timeStr = context.workdayEndTime;
+      }
+    }
+
+    const date = parseAbsoluteDate(shortMatch[1], timeStr);
     return { date: date ?? undefined };
   }
 
