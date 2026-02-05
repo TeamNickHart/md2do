@@ -174,7 +174,7 @@ To add new test cases:
 1. **Choose the appropriate file** based on the feature category
 2. **Add tasks following the pattern:**
    ```markdown
-   - [ ] Description of test case @assignee !! #tag (2026-01-20)
+   - [ ] Description of test case @assignee !! #tag [due: 2026-01-20]
    ```
 3. **Include edge cases** that might break the parser
 4. **Document the expected behavior** in comments if needed
