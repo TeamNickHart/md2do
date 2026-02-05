@@ -22,6 +22,21 @@ export interface ScanOptions {
    * Whether to follow symbolic links (defaults to false)
    */
   followSymlinks?: boolean;
+
+  /**
+   * Workday start time for default due times (e.g., "08:00")
+   */
+  workdayStartTime?: string;
+
+  /**
+   * Workday end time for default due times (e.g., "17:00")
+   */
+  workdayEndTime?: string;
+
+  /**
+   * Default due time to use when no time is specified ("start" or "end")
+   */
+  defaultDueTime?: 'start' | 'end';
 }
 
 export interface ScanResult {
@@ -56,6 +71,9 @@ export async function scanMarkdownFiles(
       '**/.next/**',
     ],
     followSymlinks = false,
+    workdayStartTime,
+    workdayEndTime,
+    defaultDueTime,
   } = options;
 
   // Find all markdown files
@@ -77,7 +95,11 @@ export async function scanMarkdownFiles(
       const fullPath = `${root}/${file}`;
       const content = await readFile(fullPath, 'utf-8');
 
-      const result = scanner.scanFile(file, content);
+      const result = scanner.scanFile(file, content, {
+        ...(workdayStartTime && { workdayStartTime }),
+        ...(workdayEndTime && { workdayEndTime }),
+        ...(defaultDueTime && { defaultDueTime }),
+      });
       allTasks.push(...result.tasks);
       allWarnings.push(...result.warnings);
     } catch (error) {

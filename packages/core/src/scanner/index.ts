@@ -62,11 +62,17 @@ export class MarkdownScanner {
    *
    * @param filePath - Relative file path (for context extraction)
    * @param content - File content as string
+   * @param options - Optional scanner options including workday config
    * @returns Object containing tasks and warnings
    */
   scanFile(
     filePath: string,
     content: string,
+    options?: {
+      workdayStartTime?: string;
+      workdayEndTime?: string;
+      defaultDueTime?: 'start' | 'end';
+    },
   ): {
     tasks: Task[];
     warnings: Warning[];
@@ -85,6 +91,17 @@ export class MarkdownScanner {
 
     const person = extractPersonFromFilename(filePath);
     if (person !== undefined) context.person = person;
+
+    // Add workday config to context if provided
+    if (options?.workdayStartTime) {
+      context.workdayStartTime = options.workdayStartTime;
+    }
+    if (options?.workdayEndTime) {
+      context.workdayEndTime = options.workdayEndTime;
+    }
+    if (options?.defaultDueTime) {
+      context.defaultDueTime = options.defaultDueTime;
+    }
 
     // Process file line by line
     const lines = content.split('\n');

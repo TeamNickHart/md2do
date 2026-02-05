@@ -53,18 +53,34 @@ export const WarningConfigSchema = z
   })
   .optional();
 
+export const WorkdayConfigSchema = z
+  .object({
+    startTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}$/)
+      .optional(),
+    endTime: z
+      .string()
+      .regex(/^\d{2}:\d{2}$/)
+      .optional(),
+    defaultDueTime: z.enum(['start', 'end']).optional(),
+  })
+  .optional();
+
 export const ConfigSchema = z.object({
   markdown: MarkdownConfigSchema,
   defaultAssignee: z.string().optional(),
   todoist: TodoistConfigSchema,
   output: OutputConfigSchema,
   warnings: WarningConfigSchema,
+  workday: WorkdayConfigSchema,
 });
 
 export type MarkdownConfig = z.infer<typeof MarkdownConfigSchema>;
 export type TodoistConfig = z.infer<typeof TodoistConfigSchema>;
 export type OutputConfig = z.infer<typeof OutputConfigSchema>;
 export type WarningConfig = z.infer<typeof WarningConfigSchema>;
+export type WorkdayConfig = z.infer<typeof WorkdayConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 
 /**
@@ -124,5 +140,10 @@ export const DEFAULT_CONFIG: Config = {
       'duplicate-todoist-id': 'error',
       'file-read-error': 'error',
     },
+  },
+  workday: {
+    startTime: '08:00',
+    endTime: '17:00',
+    defaultDueTime: 'end',
   },
 };
