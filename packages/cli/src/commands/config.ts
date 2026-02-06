@@ -1,6 +1,5 @@
 import { Command } from 'commander';
 import { loadConfig, validateConfig, type Config } from '@md2do/config';
-import * as p from '@clack/prompts';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
@@ -92,6 +91,7 @@ function createConfigInitCommand(): Command {
         await configInitAction(options);
       } catch (error) {
         if (error instanceof Error && error.message === 'canceled') {
+          const p = await import('@clack/prompts');
           p.cancel('Configuration canceled');
           process.exit(0);
         }
@@ -110,6 +110,9 @@ function createConfigInitCommand(): Command {
  * Action handler for 'config init' command
  */
 async function configInitAction(options: ConfigInitOptions): Promise<void> {
+  // Dynamic import for ESM-only @clack/prompts
+  const p = await import('@clack/prompts');
+
   p.intro('Welcome to md2do configuration!');
 
   // Determine if we're in interactive mode
