@@ -61,19 +61,45 @@ Organize with hashtags:
 
 ### Due Dates
 
-Add deadlines with `(YYYY-MM-DD)`:
+Add deadlines using the `[due: ...]` format:
+
+**Absolute Dates:**
 
 ```markdown
-- [ ] Submit proposal (2026-01-25)
-- [ ] Team meeting prep (2026-01-20)
+- [ ] Submit proposal [due: 2026-01-25]
+- [ ] Team meeting prep [due: 2026-01-20]
+- [ ] Afternoon meeting [due: 2026-01-20 14:30]
+- [ ] Quick format [due: 1/25/26]
 ```
+
+**Relative Dates:**
+
+```markdown
+- [ ] Review PR [due: today]
+- [ ] Follow up [due: tomorrow]
+- [ ] Sprint planning [due: next week]
+- [ ] Quarterly review [due: next month]
+```
+
+::: tip Supported Formats
+
+- `[due: 2026-01-25]` - ISO format (YYYY-MM-DD)
+- `[due: 2026-01-25 14:30]` - With time (24-hour format)
+- `[due: 1/25/26]` or `[due: 1/25]` - Short format (M/D/YY or M/D)
+- `[due: today]`, `[due: tomorrow]` - Relative dates
+- `[due: next week]`, `[due: next month]` - Future dates
+  :::
+
+::: warning Important
+The parentheses syntax `(2026-01-25)` is **not** supported. Always use brackets: `[due: 2026-01-25]`
+:::
 
 ## Complete Example
 
 Combine all metadata:
 
 ```markdown
-- [ ] API authentication audit @alice !!! #backend #security (2026-01-25)
+- [ ] API authentication audit @alice !!! #backend #security [due: 2026-01-25]
 ```
 
 This task:
@@ -88,10 +114,10 @@ This task:
 When syncing with Todoist, md2do adds task IDs:
 
 ```markdown
-- [ ] Review pull request (2026-01-25)
+- [ ] Review pull request [due: 2026-01-25] [todoist:123456789]
 ```
 
-The `[todoist:ID]` links the task to Todoist for bidirectional sync.
+The `[todoist:ID]` marker links the task to Todoist for bidirectional sync.
 
 ## Headings as Context
 
@@ -100,12 +126,12 @@ md2do extracts context from markdown headings:
 ```markdown
 ## Sprint 24
 
-- [ ] Implement dark mode @bob !! #frontend (2026-02-01)
-- [ ] Database migration @alice !!! #backend (2026-01-28)
+- [ ] Implement dark mode @bob !! #frontend [due: 2026-02-01]
+- [ ] Database migration @alice !!! #backend [due: 2026-01-28]
 
 ## Bugs
 
-- [ ] Fix navbar on mobile @bob ! #ui (2026-01-26)
+- [ ] Fix navbar on mobile @bob ! #ui [due: 2026-01-26]
 ```
 
 Tasks inherit their heading as context for filtering.
@@ -141,13 +167,14 @@ md2do recognizes metadata in this order on each line:
 3. **Assignee**: `@username` (first match)
 4. **Priority**: `!`, `!!`, or `!!!` (first match)
 5. **Tags**: All `#hashtags` found
-6. **Due date**: `(YYYY-MM-DD)` format
-7. **Todoist ID**: `[todoist:ID]` (if present)
+6. **Due date**: `[due: YYYY-MM-DD]` format
+7. **Completion date**: `[completed: YYYY-MM-DD]` (if checked)
+8. **Todoist ID**: `[todoist:ID]` (if present)
 
 **Example parsing:**
 
 ```markdown
-- [ ] Fix bug (2026-01-25)
+- [ ] Fix bug @nick !!! #backend #urgent [due: 2026-01-25] [todoist:123]
 ```
 
 Extracts:
@@ -209,17 +236,20 @@ Create a simple tag taxonomy:
 
 ### Date Format
 
-Always use ISO 8601 format `(YYYY-MM-DD)`:
+Use the `[due: ...]` format with supported date styles:
 
 ```markdown
 ✅ Correct
 
-- [ ] Meeting (2026-01-25)
+- [ ] Meeting [due: 2026-01-25]
+- [ ] Meeting [due: 1/25/26]
+- [ ] Meeting [due: tomorrow]
 
 ❌ Wrong
 
-- [ ] Meeting (1/25/26)
-- [ ] Meeting (Jan 25)
+- [ ] Meeting (2026-01-25)
+- [ ] Meeting 2026-01-25
+- [ ] Meeting Jan 25
 ```
 
 ## Next Steps

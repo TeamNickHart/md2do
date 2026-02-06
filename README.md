@@ -80,9 +80,9 @@ That's it! md2do will scan all `.md` files and extract your TODO items.
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @nick !!! #backend #auth (2026-01-20)
-- [x] Write documentation @jane !! #docs (2026-01-15)
-- [ ] Fix bug in parser @alex ! #bug (2026-01-18)
+- [ ] Implement user authentication @nick !!! #backend #auth [due: 2026-01-20]
+- [x] Write documentation @jane !! #docs [completed: 2026-01-15]
+- [ ] Fix bug in parser @alex ! #bug [due: 2026-01-18]
 ```
 
 **Supported metadata:**
@@ -90,7 +90,8 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `(YYYY-MM-DD)` - Due date
+- `[due: YYYY-MM-DD]` - Due date (also supports `[due: tomorrow]`, `[due: 1/25/26]`, etc.)
+- `[completed: YYYY-MM-DD]` - Completion date
 - `- [x]` - Completed task
 - `- [ ]` - Incomplete task
 
@@ -280,13 +281,14 @@ Found 113 tasks
   "tasks": [
     {
       "id": "f777d4bd",
-      "text": "Fix memory leak in WebSocket connection (2026-01-18)",
+      "text": "Fix memory leak in WebSocket connection",
       "completed": false,
       "file": "bugs.md",
       "line": 7,
       "assignee": "nick",
       "priority": "urgent",
-      "tags": ["bug", "critical"]
+      "tags": ["bug", "critical"],
+      "dueDate": "2026-01-18T00:00:00.000Z"
     }
   ],
   "metadata": {

@@ -13,14 +13,14 @@ Real-world usage patterns for md2do.
 
 - [ ] Morning standup (9am)
 - [ ] Review PR #145 !! #code-review
-- [ ] Fix navbar bug !!! #frontend (2026-01-20)
+- [ ] Fix navbar bug !!! #frontend [due: 2026-01-20]
 - [ ] Team lunch (12:30pm)
 - [ ] Update documentation ! #docs
 
 # This Week
 
-- [ ] Plan sprint 24 !! (2026-01-22)
-- [ ] 1-1 with manager (2026-01-21)
+- [ ] Plan sprint 24 !! [due: 2026-01-22]
+- [ ] 1-1 with manager [due: 2026-01-21]
 - [ ] Write blog post #content
 ```
 
@@ -76,21 +76,21 @@ md2do stats --by project
 
 ### Backend (@alice)
 
-- [ ] Implement OAuth flow !!! #backend #auth (2026-01-25)
-- [ ] Add JWT validation !! #backend #auth (2026-01-27)
-- [ ] Database migration ! #backend #db (2026-02-01)
+- [ ] Implement OAuth flow !!! #backend #auth [due: 2026-01-25]
+- [ ] Add JWT validation !! #backend #auth [due: 2026-01-27]
+- [ ] Database migration ! #backend #db [due: 2026-02-01]
 
 ### Frontend (@bob)
 
-- [ ] Login UI components !!! #frontend #ui (2026-01-26)
-- [ ] Mobile responsive design !! #frontend #mobile (2026-01-28)
-- [ ] Dark mode toggle ! #frontend #ui (2026-02-02)
+- [ ] Login UI components !!! #frontend #ui [due: 2026-01-26]
+- [ ] Mobile responsive design !! #frontend #mobile [due: 2026-01-28]
+- [ ] Dark mode toggle ! #frontend #ui [due: 2026-02-02]
 
 ### DevOps (@charlie)
 
-- [ ] Set up staging environment !!! #devops (2026-01-22)
-- [ ] Configure CI/CD pipeline !! #devops (2026-01-24)
-- [ ] Production deployment checklist ! #devops (2026-02-03)
+- [ ] Set up staging environment !!! #devops [due: 2026-01-22]
+- [ ] Configure CI/CD pipeline !! #devops [due: 2026-01-24]
+- [ ] Production deployment checklist ! #devops [due: 2026-02-03]
 ```
 
 **Team queries:**
@@ -124,9 +124,9 @@ md2do stats --incomplete
 
 ### Action Items
 
-- [ ] Review Alice's design proposal @nick ! (2026-01-18)
-- [ ] Schedule team workshop @alice !! (2026-01-20)
-- [ ] Provide feedback on PR #145 @nick ! (2026-01-17)
+- [ ] Review Alice's design proposal @nick ! [due: 2026-01-18]
+- [ ] Schedule team workshop @alice !! [due: 2026-01-20]
+- [ ] Provide feedback on PR #145 @nick ! [due: 2026-01-17]
 
 ### Discussion Topics
 
@@ -160,13 +160,13 @@ md2do list --person alice --completed
 ```markdown
 # Critical Bugs
 
-- [ ] Memory leak in WebSocket !!! #backend #p0 (2026-01-19) @alice
-- [ ] Login redirect fails on Safari !!! #frontend #p0 (2026-01-20) @bob
+- [ ] Memory leak in WebSocket !!! #backend #p0 [due: 2026-01-19] @alice
+- [ ] Login redirect fails on Safari !!! #frontend #p0 [due: 2026-01-20] @bob
 
 # High Priority
 
-- [ ] API rate limiting broken !! #backend #p1 (2026-01-22) @alice
-- [ ] Mobile nav disappears !! #frontend #p1 (2026-01-23) @bob
+- [ ] API rate limiting broken !! #backend #p1 [due: 2026-01-22] @alice
+- [ ] Mobile nav disappears !! #frontend #p1 [due: 2026-01-23] @bob
 
 # Normal Priority
 
@@ -194,9 +194,9 @@ md2do list --file bugs.md --overdue
 ```markdown
 # Pending Reviews
 
-- [ ] PR #145: Authentication flow @nick !!! #backend (2026-01-19)
-- [ ] PR #148: Dark mode UI @alice !! #frontend (2026-01-20)
-- [ ] PR #151: API pagination @bob ! #backend (2026-01-22)
+- [ ] PR #145: Authentication flow @nick !!! #backend [due: 2026-01-19]
+- [ ] PR #148: Dark mode UI @alice !! #frontend [due: 2026-01-20]
+- [ ] PR #151: API pagination @bob ! #backend [due: 2026-01-22]
 
 # Completed
 
@@ -219,9 +219,9 @@ md2do list --file reviews.md --overdue
 ```markdown
 # API Documentation
 
-- [ ] Document authentication endpoints !!! #docs #api (2026-01-25) @docs-team
-- [ ] Add code examples !! #docs #examples (2026-01-28) @docs-team
-- [ ] Update getting started guide ! #docs (2026-02-01) @docs-team
+- [ ] Document authentication endpoints !!! #docs #api [due: 2026-01-25] @docs-team
+- [ ] Add code examples !! #docs #examples [due: 2026-01-28] @docs-team
+- [ ] Update getting started guide ! #docs [due: 2026-02-01] @docs-team
 
 # Internal Docs
 
@@ -253,10 +253,10 @@ Keep markdown as source of truth, sync important tasks:
 ```markdown
 # In markdown: complete task list with context
 
-- [ ] Review API docs !!! #backend (2026-01-25)
-- [ ] Fix login bug !! #frontend (2026-01-26)
-- [ ] Team meeting notes ! (2026-01-24)
-- [ ] Update slides (2026-01-27)
+- [ ] Review API docs !!! #backend [due: 2026-01-25]
+- [ ] Fix login bug !! #frontend [due: 2026-01-26]
+- [ ] Team meeting notes ! [due: 2026-01-24]
+- [ ] Update slides [due: 2026-01-27]
 ```
 
 ```bash
