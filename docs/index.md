@@ -5,6 +5,10 @@ hero:
   name: md2do
   text: Markdown Task Management
   tagline: A powerful CLI tool for scanning, filtering, and managing TODO tasks in markdown files. Built with TypeScript, designed for developers who love markdown.
+  image:
+    light: /logo-light.svg
+    dark: /logo-dark.svg
+    alt: md2do logo
   actions:
     - theme: brand
       text: Get Started
