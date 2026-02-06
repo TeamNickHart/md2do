@@ -93,6 +93,41 @@ md2do stats --tag backend --by priority
 
 See [stats command](/cli/stats) for details.
 
+### `config`
+
+Manage md2do configuration.
+
+```bash
+md2do config <subcommand> [options]
+```
+
+**Subcommands:**
+
+- `init` - Initialize configuration with interactive wizard
+- `set <key> <value>` - Set a configuration value
+- `get <key>` - Get a configuration value
+- `list` - Show all configuration values
+- `edit` - Open config file in editor
+- `validate` - Validate configuration
+
+**Examples:**
+
+```bash
+# Interactive setup
+md2do config init
+
+# Set specific value
+md2do config set workday.startTime "09:00"
+
+# View current config
+md2do config list
+
+# Edit in $EDITOR
+md2do config edit
+```
+
+See [config command](/cli/config) for details.
+
 ## Todoist Commands
 
 Sync with Todoist. Requires API token configuration.
@@ -193,7 +228,21 @@ See [todoist sync](/cli/todoist/sync) for details.
 
 ## Configuration
 
-md2do uses hierarchical configuration from multiple sources.
+md2do uses hierarchical configuration from multiple sources. Use the `config` command to manage settings interactively.
+
+### Quick Setup
+
+```bash
+# Interactive wizard
+md2do config init
+
+# Set specific values
+md2do config set workday.startTime "09:00"
+md2do config set defaultAssignee "alice"
+
+# View current config
+md2do config list
+```
 
 ### Config File Locations
 
@@ -208,6 +257,11 @@ md2do uses hierarchical configuration from multiple sources.
 ```json
 {
   "defaultAssignee": "yourname",
+  "workday": {
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "defaultDueTime": "end"
+  },
   "todoist": {
     "apiToken": "your-api-token",
     "defaultProject": "Inbox"
@@ -219,7 +273,7 @@ md2do uses hierarchical configuration from multiple sources.
 }
 ```
 
-See [Configuration Guide](/guide/configuration) for details.
+See [config command](/cli/config) and [Configuration Guide](/guide/configuration) for details.
 
 ## Exit Codes
 
