@@ -120,6 +120,31 @@ md2do list --project acme-app
 md2do list --person jane
 ```
 
+## ⚙️ Configuration
+
+Set up md2do with an interactive wizard:
+
+```bash
+# Interactive setup
+md2do config init
+
+# Or configure specific values
+md2do config set workday.startTime "09:00"
+md2do config set defaultAssignee "alice"
+
+# View current config
+md2do config list
+```
+
+**Quick config for common settings:**
+
+- Work hours (for time-based due dates)
+- Default assignee (for filtering)
+- Output preferences (format, colors)
+- Warning levels (strict/recommended/off)
+
+[Full configuration guide →](https://github.com/TeamNickHart/md2do/blob/main/docs/guide/configuration.md)
+
 ## 🔄 Todoist Integration
 
 Sync your markdown tasks with Todoist:

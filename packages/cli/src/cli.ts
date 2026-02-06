@@ -6,6 +6,7 @@ import {
   createListCommand,
   createStatsCommand,
   createTodoistCommand,
+  createConfigCommand,
 } from './commands/index.js';
 
 // Read version from package.json
@@ -33,6 +34,7 @@ program
 program.addCommand(createListCommand());
 program.addCommand(createStatsCommand());
 program.addCommand(createTodoistCommand());
+program.addCommand(createConfigCommand());
 
 // Show help if no command specified
 if (process.argv.length === 2) {

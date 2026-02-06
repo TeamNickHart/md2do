@@ -4,11 +4,29 @@ md2do uses hierarchical configuration with multiple sources that merge together.
 
 ## Quick Start
 
-Create `.md2do.json` in your project root:
+The easiest way to configure md2do is with the interactive wizard:
+
+```bash
+md2do config init
+```
+
+This will guide you through setting up:
+
+- Your username (for filtering tasks)
+- Work hours (for time-based due dates)
+- Output preferences (format, colors)
+- Warning levels (recommended/strict/off)
+
+Or manually create `.md2do.json` in your project root:
 
 ```json
 {
   "defaultAssignee": "yourname",
+  "workday": {
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "defaultDueTime": "end"
+  },
   "todoist": {
     "apiToken": "your-api-token",
     "defaultProject": "Inbox"
@@ -479,22 +497,31 @@ Error: Invalid configuration:
 - todoist.syncDirection must be 'push', 'pull', or 'both'
 ```
 
-## Debugging Config
+## Managing Configuration
 
-See what config md2do is using:
+Use the `config` command to manage settings:
 
 ```bash
-# Show effective configuration
-md2do config show
+# View merged configuration
+md2do config list
 
 # Show config sources
-md2do config sources
+md2do config list --show-origin
+
+# Set specific value
+md2do config set workday.startTime "09:00"
+
+# Get specific value
+md2do config get workday.startTime
+
+# Edit in $EDITOR
+md2do config edit
 
 # Validate current config
 md2do config validate
 ```
 
-_(Commands coming soon)_
+See [config command reference](/cli/config) for all options.
 
 ## Complete Example
 
