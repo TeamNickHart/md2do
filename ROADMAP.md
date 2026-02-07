@@ -2,9 +2,9 @@
 
 This document outlines planned features and enhancements for md2do.
 
-## Current Status (v0.1.0)
+## Current Status (v0.5.1) 🎉
 
-✅ **Core Features**
+✅ **Core Features - LIVE AND PUBLISHED**
 
 - Markdown task parsing with rich metadata
 - Powerful filtering and sorting
@@ -13,6 +13,10 @@ This document outlines planned features and enhancements for md2do.
 - Todoist integration (API client, task mapping, CLI commands)
 - Hierarchical configuration system
 - Atomic file writing for safe markdown updates
+- VSCode extension on Marketplace
+- Public website at https://md2do.com
+- Automated npm publishing with OIDC trusted publishing
+- Smart CI with conditional checks
 
 ## In Progress
 
@@ -74,31 +78,32 @@ User-defined output formatting:
 
 ### Website & Documentation
 
-**Priority**: High
+**Priority**: High ✅ **COMPLETE**
 
-Public-facing website at md2do.com:
+Public-facing website at https://md2do.com:
 
-- [ ] VitePress documentation site
-- [ ] Getting started guides
-- [ ] Interactive examples
-- [ ] API reference
-- [ ] Video tutorials
-- [ ] Blog for announcements
+- [x] VitePress documentation site
+- [x] Getting started guides
+- [x] Interactive examples
+- [x] API reference
+- [ ] Video tutorials (planned)
+- [ ] Blog for announcements (planned)
 
 ### Repository Polish
 
-**Priority**: Medium
+**Priority**: Medium ✅ **MOSTLY COMPLETE**
 
 Open source best practices:
 
-- [ ] CONTRIBUTING.md
-- [ ] CODE_OF_CONDUCT.md
-- [ ] Issue templates (bug, feature, question)
-- [ ] Pull request template
-- [ ] GitHub Actions CI/CD
-- [ ] Automated npm publishing
-- [ ] Semantic versioning automation
-- [ ] Automated changelog generation
+- [ ] CONTRIBUTING.md (planned)
+- [ ] CODE_OF_CONDUCT.md (planned)
+- [ ] Issue templates (bug, feature, question) (planned)
+- [ ] Pull request template (planned)
+- [x] GitHub Actions CI/CD with smart conditional checks
+- [x] Automated npm publishing with OIDC trusted publishing
+- [x] Semantic versioning with Changesets
+- [x] Automated VSCode Marketplace publishing
+- [ ] Automated changelog generation (planned)
 
 ## Mid-Term (6-12 Months)
 
@@ -132,17 +137,19 @@ Sync tasks with GitHub Issues:
 
 ### VS Code Extension
 
-**Priority**: High
+**Priority**: High ✅ **COMPLETE AND PUBLISHED**
 
-Native VS Code integration:
+Native VS Code integration (v0.2.2 on Marketplace):
 
-- [ ] Task tree view in sidebar
-- [ ] Inline task decorations (priorities, due dates)
-- [ ] Quick task creation
-- [ ] Task completion shortcuts
-- [ ] Sync status indicators
-- [ ] Command palette integration
-- [ ] Hover previews with task details
+- [x] Task tree view in sidebar with grouping modes
+- [x] Filtering (incomplete, overdue, assigned only)
+- [x] Sorting options (due date, priority, alphabetically, line number)
+- [x] Quick task actions (toggle completion with Cmd+K Enter)
+- [x] Interactive dashboard with drill-down
+- [x] Smart diagnostics in Problems panel
+- [x] CodeLens inline actions
+- [x] Status bar integration
+- [x] Published to VSCode Marketplace
 
 ## Long-Term (12+ Months)
 
@@ -237,4 +244,4 @@ We follow [Semantic Versioning](https://semver.org/):
 
 ---
 
-_Last updated: January 19, 2025_
+_Last updated: February 6, 2026_

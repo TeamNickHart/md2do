@@ -1,6 +1,6 @@
 # md2do Status
 
-**Current Version:** 0.5.0
+**Current Version:** 0.5.1
 **Last Updated:** 2026-02-06
 
 This document provides a quick overview of md2do's current implementation status. For detailed plans and roadmap, see [ROADMAP.md](./ROADMAP.md).
@@ -55,7 +55,7 @@ This document provides a quick overview of md2do's current implementation status
 - [x] Smart diagnostics in Problems panel
 - [x] Quick task actions (toggle completion with Cmd+K Enter)
 - [x] Status bar integration
-- [x] Version 0.2.1 available on VSCode Marketplace
+- [x] Published to VSCode Marketplace (v0.2.2)
 
 ### Date Support
 
@@ -64,6 +64,15 @@ This document provides a quick overview of md2do's current implementation status
 - [x] Relative dates: `[due: today]`, `[due: tomorrow]`, `[due: next week]`, `[due: next month]`
 - [x] Completion dates: `[completed: 2026-01-25]`
 - [x] Heading date extraction (ISO, slash, natural formats)
+
+### Publishing & CI/CD
+
+- [x] Automated npm publishing with OIDC trusted publishing
+- [x] Automated VSCode Marketplace publishing
+- [x] Smart CI with conditional job execution (3x faster for docs-only changes)
+- [x] GitHub Actions workflows for quality gates
+- [x] Changesets for version management
+- [x] Automated GitHub Releases
 
 ## 🚧 In Progress
 
@@ -79,8 +88,7 @@ See [ROADMAP.md](./ROADMAP.md) for details on upcoming features:
 
 - [ ] Watch mode for real-time monitoring
 - [ ] Custom output templates (Handlebars)
-- [ ] VSCode Marketplace publishing
-- [ ] Open VSX Registry publishing
+- [ ] Open VSX Registry publishing (optional)
 
 ### Mid-Term
 
@@ -116,26 +124,33 @@ See [ROADMAP.md](./ROADMAP.md) for details on upcoming features:
 
 ## 📦 Published Packages
 
-### npm
+### npm (Published with OIDC Trusted Publishing)
 
-- `@md2do/cli` - v0.5.0 (latest)
-- `@md2do/core` - v0.4.0
-- `@md2do/config` - v0.4.0
-- `@md2do/todoist` - v0.4.0
-- `@md2do/mcp` - v0.4.0
-- ~~`md2do-vscode`~~ - Removed from npm (should only be on VSCode Marketplace)
+- `@md2do/cli` - v0.5.1 [![npm](https://img.shields.io/npm/v/@md2do/cli)](https://www.npmjs.com/package/@md2do/cli)
+- `@md2do/core` - v0.5.0 [![npm](https://img.shields.io/npm/v/@md2do/core)](https://www.npmjs.com/package/@md2do/core)
+- `@md2do/config` - v0.5.0 [![npm](https://img.shields.io/npm/v/@md2do/config)](https://www.npmjs.com/package/@md2do/config)
+- `@md2do/todoist` - v0.5.0 [![npm](https://img.shields.io/npm/v/@md2do/todoist)](https://www.npmjs.com/package/@md2do/todoist)
+- `@md2do/mcp` - v0.5.0 [![npm](https://img.shields.io/npm/v/@md2do/mcp)](https://www.npmjs.com/package/@md2do/mcp)
 
-### VSCode Extension
+### VSCode Extension (Published Automatically)
 
-- `md2do-vscode` - v0.2.1 (VSCode Marketplace)
+- `md2do-vscode` - v0.2.2 ([VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=md2do.md2do-vscode))
 - Also available via .vsix from GitHub Releases
 
 ## 🎯 Current Focus
 
+**🎉 LIVE AND PUBLISHED!** - All packages and extensions are now published and available to the public.
+
 1. ✅ **Documentation fixes** - Correcting date syntax examples across all docs
-2. **VSCode Marketplace setup** - Publishing extension to official marketplace
-3. **Automated publishing** - GitHub Actions workflows for npm + VSCode
-4. **Public launch preparation** - Polish docs, examples, and website
+2. ✅ **VSCode Marketplace** - Extension published and available
+3. ✅ **Automated publishing** - GitHub Actions workflows with OIDC trusted publishing
+4. ✅ **Smart CI optimization** - Conditional checks for faster docs-only PRs
+
+**Next priorities:**
+
+- Community engagement and user feedback
+- Bug fixes and stability improvements
+- Feature development based on user requests
 
 ## 🤝 Contributing
 
@@ -143,7 +158,8 @@ Contributions are welcome! See [docs/development/contributing.md](./docs/develop
 
 ## 📝 Version History
 
-- **0.5.0** (2026-02-06) - Interactive config command, documentation improvements
+- **0.5.1** (2026-02-06) - Published to npm and VSCode Marketplace with automated workflows
+- **0.5.0** (2026-02-06) - Interactive config command, documentation improvements, smart CI
 - **0.4.0** (2026-01-28) - Todoist integration complete
 - **0.3.0** (2026-01-25) - MCP server for AI integration
 - **0.2.0** (2026-01-20) - VSCode extension
