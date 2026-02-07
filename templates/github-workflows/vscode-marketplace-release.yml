@@ -1,0 +1,234 @@
+# Template: VSCode Marketplace Publishing
+#
+# Based on: md2do project (v0.5.1)
+# Last updated: 2026-02-06
+# Guide: docs/guides/publishing-node-projects.md
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# SETUP CHECKLIST (do these BEFORE using this workflow):
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Create Azure DevOps Personal Access Token:
+#      - Go to: https://dev.azure.com/
+#      - User Settings → Personal Access Tokens
+#      - Name: VSCode Marketplace Publishing
+#      - Scope: Marketplace → Manage (full access)
+#      - Expiration: 90 days (or custom)
+#      - Copy the token!
+#
+# □ 2. Add GitHub Secret:
+#      - Go to: Your repo → Settings → Secrets → Actions
+#      - Name: VSCE_PAT
+#      - Value: (paste Azure PAT)
+#
+# □ 3. Create publisher ID (if needed):
+#      - Go to: https://marketplace.visualstudio.com/manage
+#      - Create publisher
+#
+# □ 4. Update extension package.json:
+#      {
+#        "publisher": "REPLACE_WITH_YOUR_PUBLISHER_ID",
+#        "private": true,  // IMPORTANT: Prevents npm publishing
+#      }
+#
+# □ 5. Search for "REPLACE_" in this file and update all placeholders
+#
+# □ 6. Test with workflow_dispatch before relying on automatic triggers
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# IMPORTANT NOTES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# • MUST build all workspace dependencies before packaging extension!
+# • Extension package.json MUST have "private": true
+# • Test with workflow_dispatch - release events can be finicky
+# • .vsix file is uploaded to GitHub release for manual distribution
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Release
+
+on:
+  # Triggers when you create a GitHub Release
+  release:
+    types: [published]
+
+  # Manual trigger for testing - HIGHLY RECOMMENDED
+  workflow_dispatch:
+
+permissions:
+  contents: write   # For uploading .vsix to releases
+  id-token: write   # Good practice to include
+
+jobs:
+  publish-vscode:
+    name: Publish VSCode Extension
+    runs-on: ubuntu-latest
+    steps:
+      # ─────────────────────────────────────────────────────────────────────
+      # Setup: Checkout and Node.js
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Package Manager Setup (pnpm example - adapt for npm/yarn)
+      # ─────────────────────────────────────────────────────────────────────
+
+      # If using pnpm:
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # REPLACE_WITH_YOUR_PNPM_VERSION
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Install and Build
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        # For npm: npm ci
+        # For yarn: yarn install --frozen-lockfile
+
+      # CRITICAL: Build ALL packages, not just the extension!
+      - name: Build all packages
+        run: pnpm build
+        # REPLACE_WITH_YOUR_BUILD_COMMAND if different
+        # This MUST build workspace dependencies if you have any
+        # For monorepo: pnpm build (builds everything in order)
+        # For single package: npm run build
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Package Extension
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Package VSCode extension
+        run: |
+          cd REPLACE_WITH_EXTENSION_DIRECTORY
+          # For single package: cd .
+          # For monorepo: cd packages/vscode (or wherever extension is)
+
+          npx @vscode/vsce package --no-dependencies
+          # --no-dependencies: Don't bundle node_modules (we built already)
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Get Version (for filename)
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Get extension version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./REPLACE_WITH_EXTENSION_DIRECTORY/package.json').version")
+          # REPLACE_WITH_EXTENSION_DIRECTORY: For monorepo: packages/vscode
+          #                                    For single: .
+
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Publish to Marketplace
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Publish to VSCode Marketplace
+        run: |
+          cd REPLACE_WITH_EXTENSION_DIRECTORY
+
+          npx @vscode/vsce publish --packagePath REPLACE_WITH_EXTENSION_NAME-${{ steps.version.outputs.VERSION }}.vsix
+          # REPLACE_WITH_EXTENSION_NAME: Should match "name" in package.json
+          # Example: md2do-vscode-0.2.2.vsix
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}  # Azure DevOps Personal Access Token
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Upload .vsix to GitHub Release (optional)
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Upload .vsix to GitHub Release
+        # Only run on actual release (not workflow_dispatch)
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: REPLACE_WITH_EXTENSION_DIRECTORY/REPLACE_WITH_EXTENSION_NAME-${{ steps.version.outputs.VERSION }}.vsix
+          tag_name: ${{ github.event.release.tag_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# FOR MONOREPOS WITH WORKSPACE DEPENDENCIES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# If your VSCode extension imports from other packages in your workspace:
+#
+# 1. Ensure extension's package.json references them:
+#    "dependencies": {
+#      "@your-scope/core": "workspace:*"
+#    }
+#
+# 2. Build command MUST build dependencies first:
+#    - Don't use: pnpm --filter vscode build
+#    - Do use: pnpm build (builds all in dependency order)
+#
+# 3. Common error without this:
+#    "Could not resolve @your-scope/core"
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# TESTING CHECKLIST:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Test with workflow_dispatch:
+#      - Go to Actions tab → Release → Run workflow
+#      - Check workflow logs for errors
+#
+# □ 2. Verify marketplace:
+#      - Wait ~5 minutes for marketplace processing
+#      - Check: https://marketplace.visualstudio.com/items?itemName=PUBLISHER.EXTENSION
+#      - Install extension in VSCode to test
+#
+# □ 3. Test actual release:
+#      - Create GitHub Release
+#      - Check if workflow triggers (may need manual trigger)
+#      - Verify .vsix file attached to release
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# TROUBLESHOOTING:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Error: "Could not resolve @package/name"
+#   → Build ALL packages first: pnpm build (not pnpm --filter vscode build)
+#
+# Error: "Extension already published"
+#   → Bump version in package.json first
+#   → Or unpublish from marketplace if this is a test
+#
+# Error: "Upload .vsix to GitHub Release" fails on workflow_dispatch
+#   → This is expected - only works on actual release events
+#   → That's why we have: if: github.event_name == 'release'
+#
+# Error: "Invalid Personal Access Token"
+#   → Regenerate Azure PAT with Marketplace → Manage scope
+#   → Update VSCE_PAT secret in GitHub
+#
+# See full troubleshooting guide at:
+# docs/guides/publishing-node-projects.md#part-6-troubleshooting-guide
+#
+# ═══════════════════════════════════════════════════════════════════════════

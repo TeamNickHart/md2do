@@ -1,0 +1,186 @@
+# Template: npm Publishing with OIDC Trusted Publishing
+#
+# Based on: md2do project (v0.5.1)
+# Last updated: 2026-02-06
+# Guide: docs/guides/publishing-node-projects.md
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# SETUP CHECKLIST (do these BEFORE using this workflow):
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Update Node.js version in package.json:
+#      "engines": { "node": ">=20.17.0", "npm": ">=11.5.1" }
+#
+# □ 2. Configure npm trusted publisher at npmjs.com:
+#      - Go to: https://www.npmjs.com/settings/YOUR_USERNAME/tokens
+#      - Add trusted publisher for each package:
+#        • Provider: GitHub
+#        • Owner: REPLACE_WITH_YOUR_GITHUB_USERNAME
+#        • Repository: REPLACE_WITH_YOUR_REPO_NAME
+#        • Workflow filename: publish.yml (exact match!)
+#        • Environment: (leave blank unless you use GitHub Environments)
+#
+# □ 3. Set up Changesets (optional but recommended):
+#      - Run: npx changeset init
+#      - Configure .changeset/config.json
+#      - Add "release": "changeset publish" to package.json scripts
+#
+# □ 4. Search for "REPLACE_" in this file and update all placeholders
+#
+# □ 5. Test with workflow_dispatch before relying on automatic triggers
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# IMPORTANT NOTES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# • This uses OIDC - NO NPM_TOKEN needed or wanted!
+# • Requires Node.js 20.17.0+ (for npm 11.5.1+ with OIDC support)
+# • If using monorepo: ensure all packages are built before publishing
+# • Test publishing: Use workflow_dispatch trigger
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Publish
+
+on:
+  push:
+    branches:
+      - main  # REPLACE_WITH_YOUR_DEFAULT_BRANCH if not 'main'
+
+  # Manual trigger for testing - KEEP THIS for debugging!
+  workflow_dispatch:
+
+# Prevent multiple publish runs from interfering
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+# CRITICAL: id-token: write enables OIDC authentication
+permissions:
+  contents: write        # For creating releases and PRs
+  pull-requests: write   # For changesets version PR
+  id-token: write        # REQUIRED for OIDC trusted publishing
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    steps:
+      # ─────────────────────────────────────────────────────────────────────
+      # Setup: Checkout and Node.js
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # MUST be 20+ for OIDC
+          registry-url: 'https://registry.npmjs.org'  # Required for OIDC
+
+      # CRITICAL: Upgrade npm to latest for OIDC support
+      - name: Upgrade npm for OIDC support
+        run: npm install -g npm@latest
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Package Manager Setup (pnpm example - adapt for npm/yarn)
+      # ─────────────────────────────────────────────────────────────────────
+
+      # If using pnpm:
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # REPLACE_WITH_YOUR_PNPM_VERSION
+          run_install: false
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Install and Build
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        # For npm: npm ci
+        # For yarn: yarn install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+        # REPLACE_WITH_YOUR_BUILD_COMMAND if different
+        # For single package: npm run build
+        # For monorepo: ensure ALL packages are built
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Publish with Changesets (recommended)
+      # ─────────────────────────────────────────────────────────────────────
+
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: pnpm version  # For npm: npm run version
+          publish: pnpm release  # For npm: npm run release
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NO NPM_TOKEN! OIDC handles authentication automatically
+
+      # ─────────────────────────────────────────────────────────────────────
+      # Alternative: Direct npm publish (without Changesets)
+      # ─────────────────────────────────────────────────────────────────────
+
+      # If NOT using Changesets, replace the above step with:
+      #
+      # - name: Publish to npm
+      #   run: npm publish --provenance --access public
+      #   # For monorepo: pnpm -r publish --provenance --access public
+      #   # The --provenance flag generates build provenance (recommended)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TESTING CHECKLIST:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Test with workflow_dispatch:
+#      - Go to Actions tab → Publish → Run workflow
+#
+# □ 2. Create a test changeset:
+#      - Run: npx changeset
+#      - Commit and push
+#      - Workflow should create "Version Packages" PR
+#
+# □ 3. Merge "Version Packages" PR:
+#      - Workflow should publish to npm
+#      - Check npmjs.com for your package
+#
+# □ 4. Verify provenance:
+#      - On npmjs.com, look for "Provenance" badge
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# TROUBLESHOOTING:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Error: "401 Unauthorized"
+#   → Check Node.js version is 20+ in logs
+#   → Verify npm trusted publisher is configured correctly
+#   → Ensure registry-url is set in setup-node
+#
+# Error: "Workflow filename mismatch"
+#   → On npmjs.com, workflow filename should be: publish.yml
+#   → NOT: .github/workflows/publish.yml
+#
+# See full troubleshooting guide at:
+# docs/guides/publishing-node-projects.md#part-6-troubleshooting-guide
+#
+# ═══════════════════════════════════════════════════════════════════════════
