@@ -24,9 +24,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
-          # Enable npm provenance
-          always-auth: true
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
