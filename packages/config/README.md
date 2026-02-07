@@ -98,7 +98,7 @@ Configure markdown file scanning:
 
 ### Todoist Settings
 
-Configure Todoist integration:
+Configure [Todoist](https://www.todoist.com) integration:
 
 ```typescript
 {

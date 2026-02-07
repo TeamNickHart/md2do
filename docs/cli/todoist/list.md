@@ -1,6 +1,6 @@
 # todoist list
 
-List tasks from your Todoist account.
+List tasks from your [Todoist](https://www.todoist.com) account.
 
 ## Usage
 

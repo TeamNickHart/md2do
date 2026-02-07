@@ -296,7 +296,7 @@ Ask naturally - Claude translates to md2do filters:
 
 ### Combining with Todoist
 
-If you have Todoist integration enabled, Claude can help sync:
+If you have [Todoist](https://www.todoist.com) integration enabled, Claude can help sync:
 
 ```
 You: "Which tasks should I sync to Todoist?"

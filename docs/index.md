@@ -41,7 +41,7 @@ features:
     details: Built with performance in mind using fast-glob and TypeScript.
   - icon: 🔄
     title: Todoist Integration
-    details: Bidirectional sync foundation with official Todoist API.
+    details: Import tasks to Todoist and sync completion status. Official Todoist API integration.
   - icon: 🤖
     title: AI-Powered
     details: MCP server integration for Claude and other AI assistants.
@@ -68,8 +68,8 @@ md2do stats --by assignee
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @nick !!! #backend #auth [due: 2026-01-20]
-- [x] Write documentation @jane !! #docs [completed: 2026-01-15]
+- [ ] Implement user authentication @jane !!! #backend #auth [due: 2026-01-20]
+- [x] Write documentation @nick !! #docs [completed: 2026-01-15]
 - [ ] Fix bug in parser @alex ! #bug [due: 2026-01-18]
 ```
 
@@ -86,9 +86,13 @@ md2do recognizes standard markdown task syntax with rich metadata:
 
 ### 🎯 Context-Aware
 
-md2do automatically extracts context from your file structure:
+md2do automatically extracts context from your file structure when run from the repository root:
 
 ```
+# Run from repository root to extract context
+md2do list
+
+# File structure:
 projects/
   acme-app/              # Project: acme-app
     sprint-planning.md
@@ -99,17 +103,21 @@ projects/
   jane.md                # Person: jane
 ```
 
-### 🔄 Todoist Sync
+::: tip Context Extraction
+Context extraction works when running `md2do list` from the repository root directory. The `--path` option currently doesn't preserve project/person context.
+:::
 
-Keep your markdown in sync with Todoist:
+### 🔄 Todoist Integration
+
+Import tasks to [Todoist](https://www.todoist.com) and sync completion status:
 
 ```bash
 # Import markdown task to Todoist
 md2do todoist import tasks.md:15
 
-# Sync completion status bidirectionally
+# Sync completion status from Todoist
 md2do todoist sync --dry-run
-md2do todoist sync
+md2do todoist sync --direction pull
 ```
 
 ### 🤖 AI Integration
@@ -132,7 +140,7 @@ Use Claude Code or other AI assistants to query your tasks:
 
 **💻 [VSCode Extension](/integrations/vscode)** - Install the VSCode extension
 
-**🔌 [Todoist Setup](/integrations/todoist)** - Set up Todoist integration
+**🔌 [Todoist Setup](/integrations/todoist)** - Set up [Todoist](https://www.todoist.com) integration
 
 **🤖 [MCP Integration](/integrations/mcp)** - Connect with Claude Code
 

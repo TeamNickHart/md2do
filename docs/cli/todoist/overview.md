@@ -1,13 +1,13 @@
 # Todoist CLI Commands
 
-Interact with Todoist from the command line.
+Interact with [Todoist](https://www.todoist.com) from the command line.
 
 ## Commands
 
 - [`todoist list`](/cli/todoist/list) - List tasks from Todoist
 - [`todoist add`](/cli/todoist/add) - Create tasks in Todoist
 - [`todoist import`](/cli/todoist/import) - Import markdown tasks to Todoist
-- [`todoist sync`](/cli/todoist/sync) - Bidirectional sync
+- [`todoist sync`](/cli/todoist/sync) - Sync completion status to markdown
 
 ## Requirements
 

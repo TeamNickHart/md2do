@@ -1,6 +1,6 @@
 # todoist import
 
-Import a markdown task to Todoist.
+Import a markdown task to [Todoist](https://www.todoist.com).
 
 ## Usage
 

@@ -140,7 +140,7 @@ Now that you have md2do installed:
 - **[Learn the task format](/guide/task-format)** - Understand all supported metadata
 - **[Explore filtering](/guide/filtering)** - Master powerful filtering options
 - **[Configure md2do](/guide/configuration)** - Set up defaults and preferences
-- **[Set up Todoist](/integrations/todoist)** - Enable Todoist synchronization
+- **[Set up Todoist](/integrations/todoist)** - Enable [Todoist](https://www.todoist.com) synchronization
 - **[Try AI integration](/integrations/mcp)** - Use Claude Code with md2do
 
 ## Getting Help

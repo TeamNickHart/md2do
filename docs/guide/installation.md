@@ -86,7 +86,7 @@ md2do list
 
 ## Optional: Todoist Integration
 
-If using Todoist, get your API token:
+If using [Todoist](https://www.todoist.com), get your API token:
 
 1. Visit [Todoist Settings](https://app.todoist.com/app/settings/integrations/developer)
 2. Copy your API token

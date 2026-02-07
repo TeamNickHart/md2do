@@ -501,7 +501,7 @@ pnpm test:coverage
 
 - **[@md2do/cli](../cli)** - Command-line interface (uses this package)
 - **[@md2do/config](../config)** - Configuration management
-- **[@md2do/todoist](../todoist)** - Todoist API integration (uses this package)
+- **[@md2do/todoist](../todoist)** - [Todoist](https://www.todoist.com) API integration (uses this package)
 - **[@md2do/mcp](../mcp)** - MCP server for AI integration (uses this package)
 
 ## Documentation

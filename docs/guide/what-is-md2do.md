@@ -44,6 +44,10 @@ projects/
   bob.md              # Person: bob
 ```
 
+::: tip Context Extraction
+Run `md2do list` from your repository root directory for context extraction to work. The `--path` option currently doesn't preserve project/person context.
+:::
+
 ### Powerful Filtering
 
 Find exactly what you need:
@@ -91,10 +95,14 @@ md2do list --due-this-week --project backend
 
 ### 🔄 Todoist Integration
 
-- Bidirectional sync with Todoist
-- Import markdown tasks to Todoist
-- Sync completion status
+- Import markdown tasks to [Todoist](https://www.todoist.com)
+- Sync completion status from Todoist to markdown
 - Preserve all metadata
+- Official Todoist API integration
+
+::: info Coming Soon
+Full bidirectional sync (pushing markdown changes back to Todoist) is planned for a future release.
+:::
 
 ### 🤖 AI-Powered (MCP)
 

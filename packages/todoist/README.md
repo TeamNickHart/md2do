@@ -4,7 +4,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/@md2do/todoist.svg)](https://www.npmjs.com/package/@md2do/todoist)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Todoist API integration for md2do, providing bidirectional task synchronization between markdown files and Todoist.
+[Todoist](https://www.todoist.com) API integration for md2do, providing bidirectional task synchronization between markdown files and Todoist.
 
 ## Features
 

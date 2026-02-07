@@ -6,7 +6,8 @@
 
 **Turn your markdown files into a powerful task management system.**
 
-md2do scans your markdown notes for TODO items and gives you a CLI to filter, sort, and sync them with Todoist. Perfect for developers who live in plain text but want the power of a real task manager.
+md2do scans your markdown notes for TODO items and gives you a CLI to filter, sort, and sync them with [Todoist](https://www.todoist.com).
+Perfect for developers who live in plain text but want the power of a real task manager.
 
 ## ⚡ Quick Start
 
@@ -37,8 +38,8 @@ That's it! md2do will scan all `.md` files in your current directory and show yo
 md2do recognizes standard markdown tasks with optional metadata:
 
 ```markdown
-- [ ] Implement user authentication @nick !!! #backend #auth (2026-01-20)
-- [x] Write documentation @jane !! #docs (2026-01-15)
+- [ ] Implement user authentication @jane !!! #backend #auth (2026-01-20)
+- [x] Write documentation @nick !! #docs (2026-01-15)
 - [ ] Fix bug in parser @alex ! #bug (2026-01-18)
 ```
 

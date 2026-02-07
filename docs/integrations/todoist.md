@@ -4,13 +4,18 @@ Sync your markdown tasks with Todoist for mobile access, notifications, and cros
 
 ## Overview
 
-md2do provides **bidirectional sync** with Todoist:
+md2do integrates with Todoist for task management:
 
-- **Push** - Send markdown tasks to Todoist
-- **Pull** - Update markdown from Todoist changes
-- **Sync** - Keep both in sync automatically
+- **Import** - Send markdown tasks to Todoist (one-time)
+- **Sync** - Update markdown from Todoist changes (completion status, metadata)
 
-Your markdown files remain the source of truth, while Todoist provides mobile apps and real-time notifications.
+::: info Current Implementation
+md2do currently supports **one-way sync** (Todoist → markdown). You can import tasks to Todoist and pull updates back to markdown.
+
+**Coming Soon:** Full bidirectional sync (pushing markdown changes back to Todoist) is planned for a future release.
+:::
+
+Your markdown files remain the source of truth, while Todoist provides mobile apps and notifications.
 
 ## Quick Start
 
@@ -94,14 +99,14 @@ md2do todoist import tasks.md:15
 md2do todoist import notes.md:42 --project Personal
 ```
 
-## Bidirectional Sync
+## Sync Workflow
 
 ### How Sync Works
 
 md2do links tasks using IDs:
 
 ```markdown
-- [ ] Review PR (2026-01-25)
+- [ ] Review PR [due: 2026-01-25] [todoist:123456789]
 ```
 
 The `[todoist:ID]` marker connects your markdown to Todoist.
@@ -112,36 +117,27 @@ The `[todoist:ID]` marker connects your markdown to Todoist.
 # Dry run - see what would change
 md2do todoist sync --dry-run
 
-# Actually sync
-md2do todoist sync
+# Pull updates from Todoist
+md2do todoist sync --direction pull
 
 # Sync specific directory
 md2do todoist sync --path ./work-notes
-
-# Pull only (update markdown from Todoist)
-md2do todoist sync --direction pull
-
-# Push only (update Todoist from markdown)
-md2do todoist sync --direction push
 ```
 
 ### What Gets Synced
 
-**From Markdown → Todoist:**
+**From Todoist → Markdown (Current):**
 
-- Task text (description)
-- Completion status (`[ ]` vs `[x]`)
-- Priority (`!!!` → P1, `!!` → P2, etc.)
-- Tags → Labels
-- Due dates
+- Completion status (checked/unchecked)
+- Task updates and metadata
 
-**From Todoist → Markdown:**
+**From Markdown → Todoist (Coming Soon):**
 
-- Task text
-- Completion status
-- Priority
-- Labels → Tags
-- Due dates
+- Task text updates
+- Completion status changes
+- Priority updates
+- Tag/label changes
+- Due date changes
 
 ## Priority Mapping
 
@@ -210,14 +206,14 @@ md2do todoist sync --direction pull
 
 ### Daily Review
 
-Review markdown locally, push updates:
+Review markdown locally, sync completion status:
 
 ```bash
 # Check markdown tasks
 md2do list --assignee me --incomplete
 
-# Push changes to Todoist
-md2do todoist sync --direction push
+# Pull completion updates from Todoist
+md2do todoist sync --direction pull
 ```
 
 ### Team Collaboration
@@ -240,9 +236,7 @@ Complete Todoist configuration options:
 {
   "todoist": {
     "apiToken": "your-token",
-    "defaultProject": "Inbox",
-    "autoSync": false,
-    "syncDirection": "both"
+    "defaultProject": "Inbox"
   }
 }
 ```
@@ -251,8 +245,6 @@ Complete Todoist configuration options:
 
 - `apiToken` - Your Todoist API token
 - `defaultProject` - Default project name for new tasks
-- `autoSync` - Auto-sync after changes (default: `false`)
-- `syncDirection` - `"push"`, `"pull"`, or `"both"` (default: `"both"`)
 
 See [Configuration Guide](/guide/configuration) for details.
 
@@ -292,12 +284,14 @@ If a task appears twice after sync:
 
 ### Different completion status
 
-The last-modified wins. If you:
+If you mark a task complete in Todoist, run sync to update your markdown:
 
-- Mark done in markdown → Push syncs to Todoist
-- Mark done in Todoist → Pull syncs to markdown
+```bash
+md2do todoist sync --dry-run  # Preview
+md2do todoist sync            # Apply
+```
 
-Run `md2do todoist sync --dry-run` to preview changes.
+To mark tasks complete in markdown and sync to Todoist, use the import command for now (bidirectional sync coming soon).
 
 ## Advanced Usage
 

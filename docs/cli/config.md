@@ -496,5 +496,5 @@ Use global config for personal settings, project config for project-specific:
 ## See Also
 
 - [Configuration Guide](/guide/configuration) - Detailed config reference
-- [Todoist Setup](/integrations/todoist) - Configure Todoist integration
+- [Todoist Setup](/integrations/todoist) - Configure [Todoist](https://www.todoist.com) integration
 - [CLI Overview](/cli/overview) - All CLI commands

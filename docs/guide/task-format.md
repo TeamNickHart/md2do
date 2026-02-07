@@ -111,7 +111,7 @@ This task:
 
 ## Todoist Integration
 
-When syncing with Todoist, md2do adds task IDs:
+When syncing with [Todoist](https://www.todoist.com), md2do adds task IDs:
 
 ```markdown
 - [ ] Review pull request [due: 2026-01-25] [todoist:123456789]
