@@ -262,7 +262,7 @@ await updateTask({
   line: 5,
   updates: {
     completed: true,
-    text: 'Fix bug @nick !!! #backend [due: 2026-01-25] [todoist:123456] [completed: 2026-01-26]',
+    text: 'Fix bug @nick !!! #backend [due: 2026-01-25] [todoist: 123456] [completed: 2026-01-26]',
   },
 });
 ```

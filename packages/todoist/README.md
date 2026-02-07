@@ -293,7 +293,7 @@ import { todoistToMd2do } from '@md2do/todoist';
 
 const update = todoistToMd2do(todoistTask, 'nick');
 // {
-//   text: 'Fix bug @nick !!! #backend #urgent (2026-01-25) [todoist:123456]',
+//   text: 'Fix bug @nick !!! #backend #urgent [due: 2026-01-25] [todoist: 123456]',
 //   completed: false,
 //   todoistId: '123456',
 //   priority: 'urgent',
@@ -340,7 +340,7 @@ Extract clean task content by removing all metadata.
 ```typescript
 import { extractTaskContent } from '@md2do/todoist';
 
-const text = 'Fix bug @nick !!! #backend (2026-01-25) [todoist:123456]';
+const text = 'Fix bug @nick !!! #backend [due: 2026-01-25] [todoist: 123456]';
 extractTaskContent(text); // 'Fix bug'
 ```
 
@@ -358,7 +358,7 @@ formatTaskContent('Fix bug', {
   due: new Date('2026-01-25'),
   todoistId: '123456',
 });
-// 'Fix bug @nick !!! #backend (2026-01-25) [todoist:123456]'
+// 'Fix bug @nick !!! #backend [due: 2026-01-25] [todoist: 123456]'
 ```
 
 ## CLI Usage Examples

@@ -72,7 +72,7 @@ Add deadlines using the `[due: ...]` format:
 - [ ] Quick format [due: 1/25/26]
 ```
 
-**Relative Dates:**
+**Relative Dates (Experimental):**
 
 ```markdown
 - [ ] Review PR [due: today]
@@ -81,17 +81,23 @@ Add deadlines using the `[due: ...]` format:
 - [ ] Quarterly review [due: next month]
 ```
 
+::: warning Experimental Feature
+Semantic dates like `[due: tomorrow]` require a **heading with a date** above the task to provide context. Without a heading date, they won't parse correctly.
+
+**Recommended:** Use VSCode autocomplete (type `[due:`) which shows semantic labels but inserts concrete dates automatically.
+
+**Future:** We're planning `md2do lint --fix` to convert semantic dates to concrete dates automatically.
+:::
+
 ::: tip Supported Formats
 
-- `[due: 2026-01-25]` - ISO format (YYYY-MM-DD)
+- `[due: 2026-01-25]` - ISO format (YYYY-MM-DD) - recommended
 - `[due: 2026-01-25 14:30]` - With time (24-hour format)
 - `[due: 1/25/26]` or `[due: 1/25]` - Short format (M/D/YY or M/D)
-- `[due: today]`, `[due: tomorrow]` - Relative dates
-- `[due: next week]`, `[due: next month]` - Future dates
-  :::
+- `[due: today]`, `[due: tomorrow]` - Relative dates (experimental)
+- `[due: next week]`, `[due: next month]` - Future dates (experimental)
 
-::: warning Important
-The parentheses syntax `(2026-01-25)` is **not** supported. Always use brackets: `[due: 2026-01-25]`
+**Note:** Parser accepts both `[due: ...]` (with space) and `[due:...]` (without space)
 :::
 
 ## Complete Example
@@ -114,10 +120,10 @@ This task:
 When syncing with [Todoist](https://www.todoist.com), md2do adds task IDs:
 
 ```markdown
-- [ ] Review pull request [due: 2026-01-25] [todoist:123456789]
+- [ ] Review pull request [due: 2026-01-25] [todoist: 123456789]
 ```
 
-The `[todoist:ID]` marker links the task to Todoist for bidirectional sync.
+The `[todoist: ID]` marker links the task to Todoist for sync.
 
 ## Headings as Context
 
@@ -169,12 +175,12 @@ md2do recognizes metadata in this order on each line:
 5. **Tags**: All `#hashtags` found
 6. **Due date**: `[due: YYYY-MM-DD]` format
 7. **Completion date**: `[completed: YYYY-MM-DD]` (if checked)
-8. **Todoist ID**: `[todoist:ID]` (if present)
+8. **Todoist ID**: `[todoist: ID]` (if present)
 
 **Example parsing:**
 
 ```markdown
-- [ ] Fix bug @nick !!! #backend #urgent [due: 2026-01-25] [todoist:123]
+- [ ] Fix bug @nick !!! #backend #urgent [due: 2026-01-25] [todoist: 123]
 ```
 
 Extracts:
