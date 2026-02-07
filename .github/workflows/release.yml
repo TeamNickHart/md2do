@@ -91,8 +91,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build VSCode extension
-        run: pnpm --filter md2do-vscode build
+      - name: Build all packages
+        run: pnpm build
 
       - name: Package VSCode extension
         run: |
