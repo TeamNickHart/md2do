@@ -472,6 +472,7 @@ This project maintains high code quality standards:
 - ✅ Husky for git hooks
 - ✅ lint-staged for pre-commit checks
 - ✅ Comprehensive test coverage
+- ✅ Smart CI - Skips code quality checks for docs-only changes (30s vs 90s)
 
 ## 📄 License
 
