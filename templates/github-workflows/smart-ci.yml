@@ -1,0 +1,434 @@
+# Template: Smart CI with Conditional Job Execution
+#
+# Based on: md2do project (v0.5.1)
+# Last updated: 2026-02-06
+# Guide: docs/guides/publishing-node-projects.md
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# WHAT THIS DOES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Skips unnecessary code quality checks when only docs or workflows change:
+#
+# • Docs-only PR: Runs format check only (~30s)
+# • Code change PR: Runs all quality checks (~90s)
+#
+# Result: 3x speedup for docs-only PRs!
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# SETUP CHECKLIST:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Customize file patterns in detect-changes job below
+# □ 2. Add your build/lint/test commands
+# □ 3. Update ci-success job dependencies to match your jobs
+# □ 4. Configure branch protection to require "CI Success" check
+# □ 5. Test with both docs-only and code-change PRs
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: CI
+
+on:
+  push:
+    branches: [main]  # REPLACE_WITH_YOUR_DEFAULT_BRANCH
+  pull_request:
+    branches: [main]  # REPLACE_WITH_YOUR_DEFAULT_BRANCH
+
+# Cancel in-progress runs for the same workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Permissions for coverage reporting (adjust as needed)
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 0: Detect which files changed
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+      code: ${{ steps.filter.outputs.code }}
+      config: ${{ steps.filter.outputs.config }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check which files changed
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - 'examples/**'
+              # ADD MORE PATHS that should be considered "docs"
+
+            workflows:
+              - '.github/workflows/**'
+
+            code:
+              - 'src/**'
+              - '**/*.ts'
+              - '**/*.tsx'
+              - '**/*.js'
+              - '**/*.jsx'
+              # ADD MORE PATHS for your source code
+
+            config:
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - '**/package.json'
+              - '**/tsconfig.json'
+              - '.prettierrc*'
+              - '.eslintrc*'
+              # ADD MORE CONFIG FILES
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 1: Install (conditional - only for code/config changes)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  install:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    # CONDITIONAL: Only run if code or config changed
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # REPLACE_WITH_YOUR_NODE_VERSION
+
+      # Package manager setup (pnpm example)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # REPLACE_WITH_YOUR_PNPM_VERSION
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        # For npm: npm ci
+        # For yarn: yarn install --frozen-lockfile
+
+      # Cache for other jobs to use
+      - name: Cache node_modules
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 2: Format Check (ALWAYS runs - checks all file types)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  format:
+    name: Format Check
+    runs-on: ubuntu-latest
+    needs: detect-changes  # NOT conditional!
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Run format check
+        run: pnpm format:check
+        # REPLACE_WITH_YOUR_FORMAT_COMMAND
+        # Examples: npm run format:check, npx prettier --check .
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 3: Build (conditional)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [detect-changes, install]
+    # CONDITIONAL: Only run if code or config changed
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Build packages
+        run: pnpm build
+        # REPLACE_WITH_YOUR_BUILD_COMMAND
+
+      # Cache build artifacts for other jobs
+      - name: Cache build output
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            dist
+            build
+            # REPLACE_WITH_YOUR_BUILD_OUTPUT_DIRECTORIES
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*', 'package.json') }}
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 4: Lint (conditional)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  lint:
+    name: Lint Check
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    # CONDITIONAL: Only run if code or config changed
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            dist
+            build
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*', 'package.json') }}
+
+      - name: Run lint
+        run: pnpm lint
+        # REPLACE_WITH_YOUR_LINT_COMMAND
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 5: Type Check (conditional)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    # CONDITIONAL: Only run if code or config changed
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            dist
+            build
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*', 'package.json') }}
+
+      - name: Run typecheck
+        run: pnpm typecheck
+        # REPLACE_WITH_YOUR_TYPECHECK_COMMAND
+        # Example: tsc --noEmit
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # JOB 6: Test (conditional)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    # CONDITIONAL: Only run if code or config changed
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Restore build cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            dist
+            build
+          key: ${{ runner.os }}-build-${{ hashFiles('src/**/*', 'package.json') }}
+
+      - name: Run tests
+        run: pnpm test
+        # REPLACE_WITH_YOUR_TEST_COMMAND
+        # Examples: npm test, jest, vitest run
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # FINAL JOB: CI Success (handles skipped jobs)
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    # List ALL jobs that should complete before merge
+    needs: [format, lint, build, typecheck, test]
+    # CRITICAL: if: always() ensures this runs even when jobs are skipped
+    if: always()
+    steps:
+      - name: Check job results
+        run: |
+          # Format always runs and must succeed
+          if [ "${{ needs.format.result }}" != "success" ]; then
+            echo "❌ Format check failed or was cancelled"
+            exit 1
+          fi
+
+          # Code quality jobs are conditional - allow success OR skipped
+          if [ "${{ needs.lint.result }}" != "success" ] && [ "${{ needs.lint.result }}" != "skipped" ]; then
+            echo "❌ Lint check failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.build.result }}" != "success" ] && [ "${{ needs.build.result }}" != "skipped" ]; then
+            echo "❌ Build failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.typecheck.result }}" != "success" ] && [ "${{ needs.typecheck.result }}" != "skipped" ]; then
+            echo "❌ Type check failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
+            echo "❌ Tests failed or were cancelled"
+            exit 1
+          fi
+
+          echo "✅ All CI checks passed!"
+
+# ═══════════════════════════════════════════════════════════════════════════
+# IMPORTANT NOTES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 1. Add/remove jobs as needed for your project
+# 2. Update ci-success `needs:` array to match your jobs
+# 3. Jobs that should always run: Don't add `if` condition
+# 4. Jobs that are conditional: Add `if: needs.detect-changes.outputs.code...`
+# 5. Configure branch protection to require "CI Success" check
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# TESTING:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Test 1: Docs-only PR
+#   - Change only README.md
+#   - Should see: detect-changes ✅, format ✅, ci-success ✅
+#   - All other jobs: skipped
+#   - Total time: ~30 seconds
+#
+# Test 2: Code change PR
+#   - Change a source file
+#   - Should see: ALL jobs run
+#   - Total time: ~90 seconds
+#
+# Test 3: Branch protection
+#   - Configure: Settings → Branches → Protect main
+#   - Require: CI Success
+#   - Docs-only PR should be mergeable (not stuck on "Expected")
+#
+# ═══════════════════════════════════════════════════════════════════════════

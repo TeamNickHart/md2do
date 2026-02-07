@@ -1,0 +1,129 @@
+# Template: Test Coverage Reporting
+#
+# Based on: md2do project (v0.5.1)
+# Last updated: 2026-02-06
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# WHAT THIS DOES:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# • Runs test suite with coverage on PRs
+# • Comments coverage summary on PR
+# • Uploads to Codecov (optional)
+# • Generates coverage artifacts
+#
+# ═══════════════════════════════════════════════════════════════════════════
+# SETUP:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# □ 1. Configure test framework to generate coverage (lcov format)
+# □ 2. Add CODECOV_TOKEN to GitHub secrets (if using Codecov)
+# □ 3. Update paths to match your project structure
+# □ 4. Test on a PR to verify comments work
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+name: Coverage Report
+
+on:
+  pull_request:
+    branches: [main]  # REPLACE_WITH_YOUR_DEFAULT_BRANCH
+
+permissions:
+  contents: read
+  pull-requests: write  # Required for commenting on PRs
+
+jobs:
+  coverage:
+    name: Generate Coverage Report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'  # REPLACE_WITH_YOUR_NODE_VERSION
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9  # REPLACE_WITH_YOUR_PNPM_VERSION
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        # For npm: npm ci
+        # For yarn: yarn install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+        # REPLACE_WITH_YOUR_BUILD_COMMAND
+
+      - name: Generate coverage
+        run: pnpm test:coverage
+        # REPLACE_WITH_YOUR_COVERAGE_COMMAND
+        # Must generate lcov.info file
+        # Examples:
+        #   - Vitest: vitest run --coverage
+        #   - Jest: jest --coverage
+
+      # Comment coverage summary on PR
+      - name: Coverage Summary Comment
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: ./coverage/lcov.info
+          # REPLACE_WITH_PATH_TO_LCOV_FILE
+          # For monorepo: ./packages/core/coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          delete-old-comments: true
+          title: '📊 Coverage Report'
+
+      # Upload to Codecov (optional)
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage/lcov.info
+          # REPLACE_WITH_YOUR_COVERAGE_FILES
+          # For monorepo: ./packages/*/coverage/lcov.info
+          flags: unittests
+          name: codecov-pr
+          fail_ci_if_error: false  # Don't fail CI if Codecov is down
+
+      # Upload coverage artifacts (optional)
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            coverage/
+            # REPLACE_WITH_YOUR_COVERAGE_DIRECTORIES
+          retention-days: 30
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CONFIGURATION TIPS:
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# Vitest configuration (vitest.config.ts):
+#   export default defineConfig({
+#     test: {
+#       coverage: {
+#         provider: 'v8',
+#         reporter: ['text', 'lcov', 'html'],
+#         include: ['src/**/*.ts'],
+#       },
+#     },
+#   });
+#
+# Jest configuration (jest.config.js):
+#   module.exports = {
+#     collectCoverage: true,
+#     coverageReporters: ['text', 'lcov', 'html'],
+#     coverageDirectory: 'coverage',
+#   };
+#
+# ═══════════════════════════════════════════════════════════════════════════
