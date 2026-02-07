@@ -45,7 +45,7 @@ This document provides a quick overview of md2do's current implementation status
 - [x] Prompts: `daily_standup`, `sprint_summary`, `overdue_review`
 - [x] Claude Code integration guide
 
-### VSCode Extension (BETA)
+### VSCode Extension
 
 - [x] Task explorer sidebar with grouping modes (file, assignee, due date, priority, tag, flat)
 - [x] Filtering: incomplete only, overdue only, assigned only
@@ -55,7 +55,7 @@ This document provides a quick overview of md2do's current implementation status
 - [x] Smart diagnostics in Problems panel
 - [x] Quick task actions (toggle completion with Cmd+K Enter)
 - [x] Status bar integration
-- [x] Version 0.2.1 available via .vsix (not on marketplace yet)
+- [x] Version 0.2.1 available on VSCode Marketplace
 
 ### Date Support
 
@@ -127,8 +127,8 @@ See [ROADMAP.md](./ROADMAP.md) for details on upcoming features:
 
 ### VSCode Extension
 
-- `md2do-vscode` - v0.2.1 (BETA, .vsix only)
-- Not yet on VSCode Marketplace (coming soon)
+- `md2do-vscode` - v0.2.1 (VSCode Marketplace)
+- Also available via .vsix from GitHub Releases
 
 ## 🎯 Current Focus
 
@@ -146,7 +146,7 @@ Contributions are welcome! See [docs/development/contributing.md](./docs/develop
 - **0.5.0** (2026-02-06) - Interactive config command, documentation improvements
 - **0.4.0** (2026-01-28) - Todoist integration complete
 - **0.3.0** (2026-01-25) - MCP server for AI integration
-- **0.2.0** (2026-01-20) - VSCode extension (BETA)
+- **0.2.0** (2026-01-20) - VSCode extension
 - **0.1.0** (2026-01-15) - Initial release
 
 ---

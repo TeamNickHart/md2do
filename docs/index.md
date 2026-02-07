@@ -25,8 +25,8 @@ features:
     title: Smart Parsing
     details: Extracts TODOs with rich metadata - assignees, priorities, due dates, and tags.
   - icon: 💻
-    title: VSCode Extension (BETA)
-    details: Task explorer with grouping/filtering/sorting, CodeLens inline actions, interactive dashboard, smart diagnostics, and auto-completion. v0.2.0 beta available via GitHub.
+    title: VSCode Extension
+    details: Task explorer with grouping/filtering/sorting, CodeLens inline actions, interactive dashboard, smart diagnostics, and auto-completion. Available on the VSCode Marketplace.
   - icon: 🎯
     title: Powerful Filtering
     details: Filter by assignee, priority, project, tags, due dates, and more.
@@ -130,7 +130,7 @@ Use Claude Code or other AI assistants to query your tasks:
 
 **📖 [Read the Guide](/guide/task-format)** - Learn about task format and features
 
-**💻 [VSCode Extension](/integrations/vscode)** - Install the VSCode extension (BETA)
+**💻 [VSCode Extension](/integrations/vscode)** - Install the VSCode extension
 
 **🔌 [Todoist Setup](/integrations/todoist)** - Set up Todoist integration
 
