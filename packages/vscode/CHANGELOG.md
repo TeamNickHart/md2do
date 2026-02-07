@@ -1,5 +1,13 @@
 # md2do-vscode
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`ce65eaf`](https://github.com/TeamNickHart/md2do/commit/ce65eaf588c702254fb564f748a5841241cc5c97)]:
+  - @md2do/core@0.5.1
+  - @md2do/config@0.5.1
+
 ## 0.2.1
 
 ### Patch Changes

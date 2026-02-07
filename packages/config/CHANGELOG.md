@@ -1,5 +1,17 @@
 # @md2do/config
 
+## 0.5.1
+
+### Patch Changes
+
+- [#47](https://github.com/TeamNickHart/md2do/pull/47) [`ce65eaf`](https://github.com/TeamNickHart/md2do/commit/ce65eaf588c702254fb564f748a5841241cc5c97) Thanks [@nickhart](https://github.com/nickhart)! - Documentation improvements and standardization
+  - Standardized bracket syntax across all docs (use space after colon: `[due: ...]`)
+  - Marked semantic/relative dates as experimental with clear warnings
+  - Clarified Todoist sync is one-way (pull only), not bidirectional
+  - Documented context extraction limitation (must run from repo root)
+  - Updated code examples in READMEs to match best practices
+  - Removed unhelpful parentheses syntax warning
+
 ## 0.4.0
 
 ### Minor Changes
