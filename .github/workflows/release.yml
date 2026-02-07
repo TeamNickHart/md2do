@@ -58,7 +58,6 @@ jobs:
   publish-vscode:
     name: Publish VSCode Extension
     runs-on: ubuntu-latest
-    if: secrets.VSCE_PAT != ''
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -123,7 +122,7 @@ jobs:
   publish-openvsx:
     name: Publish to Open VSX Registry
     runs-on: ubuntu-latest
-    if: secrets.OPENVSX_TOKEN != ''
+    if: false  # Disabled - OpenVSX not supported yet
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
