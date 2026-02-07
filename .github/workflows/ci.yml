@@ -17,10 +17,51 @@ permissions:
   pull-requests: write
 
 jobs:
+  # Job 0: Detect which files changed to determine what to run
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs: ${{ steps.filter.outputs.docs }}
+      workflows: ${{ steps.filter.outputs.workflows }}
+      code: ${{ steps.filter.outputs.code }}
+      config: ${{ steps.filter.outputs.config }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check which files changed
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+              - 'examples/**'
+              - '.private/**'
+            workflows:
+              - '.github/workflows/**'
+            code:
+              - 'packages/*/src/**'
+              - 'packages/**/*.ts'
+              - 'packages/**/*.tsx'
+              - '*.ts'
+              - '*.tsx'
+            config:
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - '**/package.json'
+              - '**/tsconfig.json'
+              - '.prettierrc*'
+              - '.eslintrc*'
+
   # Job 1: Install dependencies (required by all other jobs)
   install:
     name: Install Dependencies
     runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -61,11 +102,11 @@ jobs:
             ~/.pnpm-store
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-  # Job 2: Format check (parallel, no build needed)
+  # Job 2: Format check (always runs - checks all file types)
   format:
     name: Format Check
     runs-on: ubuntu-latest
-    needs: install
+    needs: detect-changes
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -97,11 +138,12 @@ jobs:
       - name: Run format check
         run: pnpm format:check
 
-  # Job 3: Lint check (after build, needs type definitions)
+  # Job 3: Lint check (after build, needs type definitions) - only for code changes
   lint:
     name: Lint Check
     runs-on: ubuntu-latest
-    needs: build
+    needs: [detect-changes, build]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -146,11 +188,12 @@ jobs:
       - name: Run lint
         run: pnpm lint
 
-  # Job 4: Build (after install, before typecheck and test)
+  # Job 4: Build (after install, before typecheck and test) - only for code changes
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: install
+    needs: [detect-changes, install]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -190,11 +233,12 @@ jobs:
             packages/*/tsconfig.tsbuildinfo
           key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
 
-  # Job 5: Type check (after build, needs .d.ts files)
+  # Job 5: Type check (after build, needs .d.ts files) - only for code changes
   typecheck:
     name: Type Check
     runs-on: ubuntu-latest
-    needs: build
+    needs: [detect-changes, build]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -239,11 +283,12 @@ jobs:
       - name: Run typecheck
         run: pnpm typecheck
 
-  # Job 6: Test (after build, needs built packages)
+  # Job 6: Test (after build, needs built packages) - only for code changes
   test:
     name: Test
     runs-on: ubuntu-latest
-    needs: build
+    needs: [detect-changes, build]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -288,11 +333,12 @@ jobs:
       - name: Run tests
         run: pnpm test:run
 
-  # Job 7: Coverage (after build, checks coverage thresholds)
+  # Job 7: Coverage (after build, checks coverage thresholds) - only for code changes
   coverage:
     name: Coverage Check
     runs-on: ubuntu-latest
-    needs: build
+    needs: [detect-changes, build]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -364,11 +410,45 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           delete-old-comments: true
 
-  # Final status check (all jobs must pass)
+  # Final status check (all jobs must pass or be skipped)
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
     needs: [format, lint, build, typecheck, test, coverage]
+    if: always()
     steps:
-      - name: Report success
-        run: echo "✅ All CI checks passed!"
+      - name: Check job results
+        run: |
+          # Format always runs and must succeed
+          if [ "${{ needs.format.result }}" != "success" ]; then
+            echo "❌ Format check failed or was cancelled"
+            exit 1
+          fi
+
+          # Code quality jobs are conditional - allow success or skipped
+          if [ "${{ needs.lint.result }}" != "success" ] && [ "${{ needs.lint.result }}" != "skipped" ]; then
+            echo "❌ Lint check failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.build.result }}" != "success" ] && [ "${{ needs.build.result }}" != "skipped" ]; then
+            echo "❌ Build failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.typecheck.result }}" != "success" ] && [ "${{ needs.typecheck.result }}" != "skipped" ]; then
+            echo "❌ Type check failed or was cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
+            echo "❌ Tests failed or were cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.coverage.result }}" != "success" ] && [ "${{ needs.coverage.result }}" != "skipped" ]; then
+            echo "❌ Coverage check failed or was cancelled"
+            exit 1
+          fi
+
+          echo "✅ All CI checks passed!"
