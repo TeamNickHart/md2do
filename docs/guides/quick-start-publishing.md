@@ -169,7 +169,7 @@ Full troubleshooting: [Part 6 of comprehensive guide](./publishing-node-projects
 
 ## Templates
 
-All templates: [`templates/github-workflows/`](../../templates/github-workflows/)
+All templates: [`templates/github-workflows/`](https://github.com/TeamNickHart/md2do/tree/main/templates/github-workflows)
 
 - `npm-oidc-publish.yml` - npm with OIDC
 - `vscode-marketplace-release.yml` - VSCode Marketplace
@@ -178,7 +178,7 @@ All templates: [`templates/github-workflows/`](../../templates/github-workflows/
 
 ## Working Examples
 
-All working workflows: [`.github/workflows/`](../../.github/workflows/)
+All working workflows: [`.github/workflows/`](https://github.com/TeamNickHart/md2do/tree/main/.github/workflows)
 
 - `publish.yml` - npm OIDC in production
 - `release.yml` - VSCode publishing in production

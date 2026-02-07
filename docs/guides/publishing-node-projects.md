@@ -188,7 +188,7 @@ jobs:
           # NO NPM_TOKEN needed! OIDC handles authentication
 ```
 
-**Working example:** [`.github/workflows/publish.yml`](../../.github/workflows/publish.yml)
+**Working example:** [`.github/workflows/publish.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/publish.yml)
 
 ### Step 4: Add Release Script
 
@@ -373,7 +373,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**Working example:** [`.github/workflows/release.yml`](../../.github/workflows/release.yml)
+**Working example:** [`.github/workflows/release.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/release.yml)
 
 ### Step 4: Test with Manual Trigger
 
@@ -585,7 +585,7 @@ ci-success:
         echo "✅ All CI checks passed!"
 ```
 
-**Working example:** [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml)
+**Working example:** [`.github/workflows/ci.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/ci.yml)
 
 ### Results
 
@@ -1094,7 +1094,7 @@ test:
 
 ## Appendix: Template Files
 
-All workflow templates are available in [`templates/github-workflows/`](../../templates/github-workflows/).
+All workflow templates are available in [`templates/github-workflows/`](https://github.com/TeamNickHart/md2do/tree/main/templates/github-workflows).
 
 ### Available Templates
 
@@ -1115,10 +1115,10 @@ All workflow templates are available in [`templates/github-workflows/`](../../te
 
 For fully-configured, production-ready examples, see md2do's actual workflows:
 
-- [`.github/workflows/publish.yml`](../../.github/workflows/publish.yml) - npm OIDC publishing
-- [`.github/workflows/release.yml`](../../.github/workflows/release.yml) - VSCode publishing
-- [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) - Smart CI
-- [`.github/workflows/coverage-report.yml`](../../.github/workflows/coverage-report.yml) - Coverage
+- [`.github/workflows/publish.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/publish.yml) - npm OIDC publishing
+- [`.github/workflows/release.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/release.yml) - VSCode publishing
+- [`.github/workflows/ci.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/ci.yml) - Smart CI
+- [`.github/workflows/coverage-report.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/coverage-report.yml) - Coverage
 
 ---
 
@@ -1135,8 +1135,8 @@ For fully-configured, production-ready examples, see md2do's actual workflows:
 ### Related Guides
 
 - [Quick Start Guide](./quick-start-publishing.md) - TL;DR version for experienced developers
-- [md2do ROADMAP](../../ROADMAP.md) - See our implementation timeline
-- [md2do STATUS](../../STATUS.md) - Current publishing status
+- [md2do ROADMAP](https://github.com/TeamNickHart/md2do/blob/main/ROADMAP.md) - See our implementation timeline
+- [md2do STATUS](https://github.com/TeamNickHart/md2do/blob/main/STATUS.md) - Current publishing status
 
 ---
 
