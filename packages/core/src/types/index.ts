@@ -104,3 +104,24 @@ export interface Warning {
   /** @deprecated Use message instead */
   reason?: string;
 }
+
+export interface Fix {
+  // Position
+  file: string;
+  line: number;
+
+  // Classification
+  ruleId: WarningCode;
+
+  // Content
+  originalLine: string;
+  fixedLine: string;
+  message: string; // Description of what was fixed
+}
+
+export interface FixResult {
+  fixes: Fix[];
+  success: boolean;
+  filesModified: number;
+  error?: string;
+}

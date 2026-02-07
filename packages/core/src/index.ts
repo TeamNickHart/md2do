@@ -22,6 +22,10 @@ export * as sorting from './sorting/index.js';
 // Warnings
 export * from './warnings/filter.js';
 
+// Fixer
+export * from './fixer/index.js';
+export * from './fixer/rules.js';
+
 // Utilities
 export * from './utils/dates.js';
 export * from './utils/id.js';
