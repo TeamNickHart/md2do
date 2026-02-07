@@ -130,7 +130,7 @@ See [config command](/cli/config) for details.
 
 ## Todoist Commands
 
-Sync with Todoist. Requires API token configuration.
+Sync with [Todoist](https://www.todoist.com). Requires API token configuration.
 
 ### `todoist list`
 
@@ -199,7 +199,7 @@ See [todoist import](/cli/todoist/import) for details.
 
 ### `todoist sync`
 
-Bidirectional sync between markdown and Todoist.
+Sync completion status from Todoist to markdown.
 
 ```bash
 md2do todoist sync [options]
@@ -208,7 +208,7 @@ md2do todoist sync [options]
 **Options:**
 
 - `--dry-run` - Preview changes without applying
-- `--direction <mode>` - Sync direction: push, pull, both (default: both)
+- `--direction <mode>` - Sync direction: pull (default)
 - `--path <dir>` - Directory to sync
 
 **Examples:**
@@ -223,6 +223,10 @@ md2do todoist sync --direction pull
 # Sync specific directory
 md2do todoist sync --path ./work-notes
 ```
+
+::: info Note
+Currently supports one-way sync (Todoist → markdown). Bidirectional sync is planned for a future release.
+:::
 
 See [todoist sync](/cli/todoist/sync) for details.
 

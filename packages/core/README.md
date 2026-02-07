@@ -66,15 +66,15 @@ Parse markdown content and extract all tasks.
 import { parseMarkdown } from '@md2do/core';
 
 const content = `
-- [ ] Fix bug @nick !!! #backend (2026-01-25)
-- [x] Write docs @jane !! #docs
+- [ ] Fix bug @nick !!! #backend [due: 2026-01-25]
+- [x] Write docs @jane !! #docs [completed: 2026-01-20]
 `;
 
 const tasks = parseMarkdown(content, 'tasks.md');
 // [
 //   {
 //     id: 'abc123',
-//     text: 'Fix bug @nick !!! #backend (2026-01-25)',
+//     text: 'Fix bug',
 //     completed: false,
 //     file: 'tasks.md',
 //     line: 2,
@@ -96,7 +96,7 @@ Parse a single markdown task line.
 import { parseTaskLine } from '@md2do/core';
 
 const task = parseTaskLine(
-  '- [ ] Fix bug @nick !!! #backend (2026-01-25)',
+  '- [ ] Fix bug @nick !!! #backend [due: 2026-01-25]',
   5,
   'tasks.md',
 );
@@ -262,7 +262,7 @@ await updateTask({
   line: 5,
   updates: {
     completed: true,
-    text: 'Fix bug @nick !!! #backend (2026-01-25) [todoist:123456]',
+    text: 'Fix bug @nick !!! #backend [due: 2026-01-25] [todoist: 123456] [completed: 2026-01-26]',
   },
 });
 ```
@@ -501,7 +501,7 @@ pnpm test:coverage
 
 - **[@md2do/cli](../cli)** - Command-line interface (uses this package)
 - **[@md2do/config](../config)** - Configuration management
-- **[@md2do/todoist](../todoist)** - Todoist API integration (uses this package)
+- **[@md2do/todoist](../todoist)** - [Todoist](https://www.todoist.com) API integration (uses this package)
 - **[@md2do/mcp](../mcp)** - MCP server for AI integration (uses this package)
 
 ## Documentation

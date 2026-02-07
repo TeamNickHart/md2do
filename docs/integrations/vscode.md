@@ -1,14 +1,10 @@
 # VSCode Extension
 
-::: warning BETA RELEASE
-The md2do VSCode extension is currently in **beta**. It's distributed via [GitHub Releases](https://github.com/TeamNickHart/md2do/releases) as a `.vsix` file. We're gathering feedback before publishing to the VSCode Marketplace.
-
-**Current version:** v0.2.0
-
-[Download Latest Release](https://github.com/TeamNickHart/md2do/releases/latest) • [Report Issues](https://github.com/TeamNickHart/md2do/issues)
-:::
-
 Intelligent markdown task management directly in Visual Studio Code, powered by [md2do](https://md2do.com).
+
+**Current version:** v0.2.1
+
+[Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=md2do.md2do-vscode) • [Report Issues](https://github.com/TeamNickHart/md2do/issues)
 
 ## What is it?
 
@@ -22,7 +18,24 @@ The md2do VSCode extension brings powerful task management features to your mark
 
 ## Installation
 
-### Beta Release (Recommended)
+### VSCode Marketplace (Recommended)
+
+1. **Open VSCode**
+2. **Go to Extensions** sidebar (`Cmd+Shift+X` / `Ctrl+Shift+X`)
+3. **Search for "md2do"**
+4. Click **Install**
+
+Or [install directly from the marketplace](https://marketplace.visualstudio.com/items?itemName=md2do.md2do-vscode).
+
+### Command Line Install
+
+```bash
+code --install-extension md2do.md2do-vscode
+```
+
+### Manual Install (Alternative)
+
+If you prefer to install manually:
 
 1. **Download** the latest `.vsix` file from [GitHub Releases](https://github.com/TeamNickHart/md2do/releases/latest)
 2. **Open VSCode**
@@ -32,20 +45,9 @@ The md2do VSCode extension brings powerful task management features to your mark
 6. Choose the downloaded `md2do-vscode-X.X.X.vsix` file
 7. **Reload VSCode** when prompted
 
-### Command Line Install
-
-```bash
-# Download the .vsix file first, then:
-code --install-extension md2do-vscode-0.2.0.vsix
-```
-
 ### Updates
 
-Beta releases do not auto-update. To get new features:
-
-1. Check [Releases](https://github.com/TeamNickHart/md2do/releases) for updates
-2. Download the new `.vsix` file
-3. Reinstall using the same process
+Extensions installed from the marketplace auto-update automatically. You can also manually check for updates in the Extensions sidebar.
 
 ### Uninstall
 

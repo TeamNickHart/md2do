@@ -19,7 +19,7 @@ Your tasks live in markdown files - no proprietary formats, no databases, no loc
 md2do understands markdown task syntax and extends it with rich metadata:
 
 ```markdown
-- [ ] Task description @assignee !!! #tag (2026-01-20)
+- [ ] Task description @assignee !!! #tag [due: 2026-01-20]
 ```
 
 Extract:
@@ -27,7 +27,7 @@ Extract:
 - **Assignees** - `@username`
 - **Priorities** - `!!!` (urgent), `!!` (high), `!` (normal)
 - **Tags** - `#tag`
-- **Due dates** - `(YYYY-MM-DD)`
+- **Due dates** - `[due: YYYY-MM-DD]`
 - **Completion status** - `[x]` vs `[ ]`
 
 ### Context-Aware
@@ -43,6 +43,10 @@ projects/
   alice.md            # Person: alice
   bob.md              # Person: bob
 ```
+
+::: tip Context Extraction
+Run `md2do list` from your repository root directory for context extraction to work. The `--path` option currently doesn't preserve project/person context.
+:::
 
 ### Powerful Filtering
 
@@ -91,10 +95,14 @@ md2do list --due-this-week --project backend
 
 ### 🔄 Todoist Integration
 
-- Bidirectional sync with Todoist
-- Import markdown tasks to Todoist
-- Sync completion status
+- Import markdown tasks to [Todoist](https://www.todoist.com)
+- Sync completion status from Todoist to markdown
 - Preserve all metadata
+- Official Todoist API integration
+
+::: info Coming Soon
+Full bidirectional sync (pushing markdown changes back to Todoist) is planned for a future release.
+:::
 
 ### 🤖 AI-Powered (MCP)
 
@@ -131,9 +139,9 @@ Track team tasks in a shared repository:
 ```markdown
 ## Sprint 23
 
-- [ ] API endpoints @alice !! #backend (2026-01-25)
-- [ ] UI mockups @bob ! #design (2026-01-22)
-- [ ] Database migration @charlie !!! #backend (2026-01-20)
+- [ ] API endpoints @alice !! #backend [due: 2026-01-25]
+- [ ] UI mockups @bob ! #design [due: 2026-01-22]
+- [ ] Database migration @charlie !!! #backend [due: 2026-01-20]
 ```
 
 ```bash
@@ -153,8 +161,8 @@ Keep action items in 1-1 notes:
 
 ## Action Items
 
-- [ ] Review performance doc @alice ! (2026-01-20)
-- [ ] Schedule team offsite @nick !! (2026-01-18)
+- [ ] Review performance doc @alice ! [due: 2026-01-20]
+- [ ] Schedule team offsite @nick !! [due: 2026-01-18]
 ```
 
 ```bash
@@ -169,7 +177,7 @@ Track TODOs in technical docs:
 ```markdown
 ## API Documentation
 
-- [ ] Document authentication @backend !!! #docs (2026-01-25)
+- [ ] Document authentication @backend !!! #docs [due: 2026-01-25]
 - [ ] Add code examples @docs-team ! #examples
 - [x] API reference @alice !! #api-docs
 ```

@@ -1,6 +1,6 @@
 # todoist add
 
-Create a new task in Todoist.
+Create a new task in [Todoist](https://www.todoist.com).
 
 ## Usage
 

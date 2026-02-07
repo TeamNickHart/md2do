@@ -71,9 +71,9 @@ Create a file called `tasks.md`:
 ```markdown
 # My Tasks
 
-- [ ] Review pull request @nick !! #code-review (2026-01-25)
+- [ ] Review pull request @nick !! #code-review [due: 2026-01-25]
 - [ ] Update documentation @jane ! #docs
-- [x] Fix bug in parser @alex !!! #bug (2026-01-18)
+- [x] Fix bug in parser @alex !!! #bug [completed: 2026-01-18]
 ```
 
 ### 2. List Your Tasks
@@ -88,13 +88,14 @@ You should see:
 Found 3 tasks
   ✓ 1 completed | ○ 2 incomplete
 
-  ○ !! Review pull request (2026-01-25) @nick #code-review
+  ○ !! Review pull request @nick #code-review
+    due in 19 days
     file:///path/to/tasks.md:3
 
   ○ ! Update documentation @jane #docs
     file:///path/to/tasks.md:4
 
-  ✓ !!! Fix bug in parser (2026-01-18) @alex #bug
+  ✓ !!! Fix bug in parser @alex #bug
     file:///path/to/tasks.md:5
 ```
 
@@ -139,7 +140,7 @@ Now that you have md2do installed:
 - **[Learn the task format](/guide/task-format)** - Understand all supported metadata
 - **[Explore filtering](/guide/filtering)** - Master powerful filtering options
 - **[Configure md2do](/guide/configuration)** - Set up defaults and preferences
-- **[Set up Todoist](/integrations/todoist)** - Enable Todoist synchronization
+- **[Set up Todoist](/integrations/todoist)** - Enable [Todoist](https://www.todoist.com) synchronization
 - **[Try AI integration](/integrations/mcp)** - Use Claude Code with md2do
 
 ## Getting Help

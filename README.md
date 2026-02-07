@@ -9,7 +9,7 @@
 [![codecov](https://codecov.io/gh/TeamNickHart/md2do/branch/main/graph/badge.svg)](https://codecov.io/gh/TeamNickHart/md2do)
 [![CI](https://github.com/TeamNickHart/md2do/workflows/CI/badge.svg)](https://github.com/TeamNickHart/md2do/actions)
 
-Manage TODO items in markdown files with powerful filtering, sorting, and Todoist sync.
+Manage TODO items in markdown files with powerful filtering, sorting, and [Todoist](https://www.todoist.com) sync.
 Built with TypeScript, designed for developers who love markdown.
 
 ## ✨ Features
@@ -22,7 +22,7 @@ Built with TypeScript, designed for developers who love markdown.
 - ⚡ **Fast** - Built with performance in mind using fast-glob
 - 🔧 **Flexible** - Output in pretty, table, or JSON formats
 - 📁 **Context-aware** - Automatically extracts project and person context from folder structure
-- 🔄 **Todoist integration** - Bidirectional sync foundation with official Todoist API
+- 🔄 **Todoist integration** - Import tasks and sync completion status with official [Todoist](https://www.todoist.com) API
 - ⚙️ **Configurable** - Hierarchical config support (global, project, environment)
 - 🤖 **AI-powered** - MCP server integration for Claude and other AI assistants
 
@@ -80,9 +80,9 @@ That's it! md2do will scan all `.md` files and extract your TODO items.
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @nick !!! #backend #auth (2026-01-20)
-- [x] Write documentation @jane !! #docs (2026-01-15)
-- [ ] Fix bug in parser @alex ! #bug (2026-01-18)
+- [ ] Implement user authentication @jane !!! #backend #auth [due: 2026-01-20]
+- [x] Write documentation @nick !! #docs [completed: 2026-01-15]
+- [ ] Fix bug in parser @alex ! #bug [due: 2026-01-18]
 ```
 
 **Supported metadata:**
@@ -90,7 +90,8 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `(YYYY-MM-DD)` - Due date
+- `[due: YYYY-MM-DD]` - Due date (also supports `[due: tomorrow]`, `[due: 1/25/26]`, etc.)
+- `[completed: YYYY-MM-DD]` - Completion date
 - `- [x]` - Completed task
 - `- [ ]` - Incomplete task
 
@@ -247,6 +248,8 @@ personal/
 Tasks in `projects/acme-app/*.md` automatically get `project: acme-app`
 Tasks in `1-1s/nick.md` automatically get `person: nick`
 
+> **Note:** Context extraction works when running `md2do list` from the repository root directory. The `--path` option currently doesn't preserve project/person context.
+
 ## 🎨 Output Examples
 
 ### Pretty Format (Default)
@@ -280,13 +283,14 @@ Found 113 tasks
   "tasks": [
     {
       "id": "f777d4bd",
-      "text": "Fix memory leak in WebSocket connection (2026-01-18)",
+      "text": "Fix memory leak in WebSocket connection",
       "completed": false,
       "file": "bugs.md",
       "line": 7,
       "assignee": "nick",
       "priority": "urgent",
-      "tags": ["bug", "critical"]
+      "tags": ["bug", "critical"],
+      "dueDate": "2026-01-18T00:00:00.000Z"
     }
   ],
   "metadata": {
@@ -440,10 +444,10 @@ pnpm --filter @md2do/core test:ui
 
 ## 📖 Additional Documentation
 
-- [Todoist Setup Guide](docs/todoist-setup.md) - Complete guide to configuring Todoist integration
+- [Todoist Setup Guide](docs/todoist-setup.md) - Complete guide to configuring [Todoist](https://www.todoist.com) integration
 - [Todoist Implementation Plan](docs/todoist-implementation-plan.md) - Technical roadmap and architecture
 - [Config Package](packages/config/README.md) - Configuration management documentation
-- [Todoist Package](packages/todoist/README.md) - Todoist API integration documentation
+- [Todoist Package](packages/todoist/README.md) - [Todoist](https://www.todoist.com) API integration documentation
 - [MCP Package](packages/mcp/README.md) - Model Context Protocol server documentation
 
 ## 🤝 Contributing

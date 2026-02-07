@@ -3,6 +3,7 @@
   "displayName": "md2do",
   "description": "Intelligent markdown task management with Todoist integration",
   "version": "0.2.1",
+  "private": true,
   "publisher": "md2do",
   "icon": "icon.png",
   "engines": {
