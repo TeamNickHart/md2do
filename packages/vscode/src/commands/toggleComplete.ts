@@ -42,17 +42,14 @@ export async function toggleComplete(): Promise<void> {
 
   if (!isCompleted) {
     // Completing: add completion date if not present
-    if (!suffix.includes('[completed:')) {
-      // Insert completion date before any existing metadata
-      const metadataMatch = suffix.match(/^(.*?)(\s+\[.*\])?$/);
-      if (metadataMatch) {
-        const [, text, metadata] = metadataMatch;
-        newSuffix = `${text} [completed: ${today}]${metadata || ''}`;
-      }
+    if (!suffix.includes('{completed:') && !suffix.includes('[completed:')) {
+      newSuffix = `${suffix.trimEnd()} {completed:${today}}`;
     }
   } else {
-    // Uncompleting: remove completion date
-    newSuffix = suffix.replace(/\s*\[completed:\s*[^\]]+\]/, '');
+    // Uncompleting: remove completion date (both new and legacy syntax)
+    newSuffix = suffix
+      .replace(/\s*\{completed:\d{4}-\d{2}-\d{2}\}/, '')
+      .replace(/\s*\[completed:\s*[^\]]+\]/, '');
   }
 
   const newLineText = `${prefix}${newState}${newSuffix}`;

@@ -66,11 +66,13 @@ export function extractTags(text: string): string[] {
  * @returns Todoist ID string or undefined
  *
  * @example
- * extractTodoistId("Task [todoist:123456]") // => "123456"
+ * extractTodoistId("Task {todoist:123456}") // => "123456"
+ * extractTodoistId("Task [todoist:123456]") // => "123456" (legacy)
  */
 export function extractTodoistId(text: string): string | undefined {
   const match = text.match(PATTERNS.TODOIST_ID);
-  return match?.[1];
+  if (!match) return undefined;
+  return match[1] || match[2];
 }
 
 /**
@@ -80,13 +82,16 @@ export function extractTodoistId(text: string): string | undefined {
  * @returns Parsed Date or undefined
  *
  * @example
- * extractCompletedDate("[completed: 2026-01-18]") // => Date(2026-01-18)
+ * extractCompletedDate("{completed:2026-01-18}") // => Date(2026-01-18)
+ * extractCompletedDate("[completed: 2026-01-18]") // => Date(2026-01-18) (legacy)
  */
 export function extractCompletedDate(text: string): Date | undefined {
   const match = text.match(PATTERNS.COMPLETED_DATE);
-  if (!match?.[1]) return undefined;
+  if (!match) return undefined;
+  const dateStr = match[1] || match[2];
+  if (!dateStr) return undefined;
 
-  const date = parseAbsoluteDate(match[1]);
+  const date = parseAbsoluteDate(dateStr);
   return date ?? undefined;
 }
 
@@ -104,23 +109,27 @@ export function extractDueDate(
   text: string,
   context: ParsingContext,
 ): { date: Date | undefined; warning?: Warning } {
-  // Try absolute date first (with optional time)
+  // Try absolute date first (new #due: syntax or legacy [due:] syntax)
   const absoluteMatch = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-  if (absoluteMatch?.[1]) {
-    const dateStr = absoluteMatch[1];
-    let timeStr = absoluteMatch[2]; // May be undefined
+  if (absoluteMatch) {
+    // group 1 = new #due: syntax, group 2 = legacy [due:] syntax
+    const dateStr = absoluteMatch[1] || absoluteMatch[2];
+    if (dateStr) {
+      // group 3 = optional time (legacy syntax only)
+      let timeStr = absoluteMatch[3];
 
-    // If no time specified, apply default from workday config
-    if (!timeStr && context.defaultDueTime) {
-      if (context.defaultDueTime === 'start' && context.workdayStartTime) {
-        timeStr = context.workdayStartTime;
-      } else if (context.defaultDueTime === 'end' && context.workdayEndTime) {
-        timeStr = context.workdayEndTime;
+      // If no time specified, apply default from workday config
+      if (!timeStr && context.defaultDueTime) {
+        if (context.defaultDueTime === 'start' && context.workdayStartTime) {
+          timeStr = context.workdayStartTime;
+        } else if (context.defaultDueTime === 'end' && context.workdayEndTime) {
+          timeStr = context.workdayEndTime;
+        }
       }
-    }
 
-    const date = parseAbsoluteDate(dateStr, timeStr);
-    return { date: date ?? undefined };
+      const date = parseAbsoluteDate(dateStr, timeStr);
+      return { date: date ?? undefined };
+    }
   }
 
   // Try short format (M/D or M/D/YY)
@@ -191,15 +200,16 @@ export function extractDueDate(
 export function cleanTaskText(text: string): string {
   return (
     text
-      // Remove metadata in brackets
+      // Remove due dates (new and legacy) — must happen BEFORE tag removal
       .replace(PATTERNS.DUE_DATE_ABSOLUTE, '')
       .replace(PATTERNS.DUE_DATE_RELATIVE, '')
       .replace(PATTERNS.DUE_DATE_SHORT, '')
+      // Remove todoist ID and completed date (new and legacy)
       .replace(PATTERNS.TODOIST_ID, '')
       .replace(PATTERNS.COMPLETED_DATE, '')
       // Remove assignee
       .replace(PATTERNS.ASSIGNEE, '')
-      // Remove tags
+      // Remove tags (after due date removal so #due: is already gone)
       .replace(PATTERNS.TAG, '')
       // Remove priority markers
       .replace(/!!!/g, '')
@@ -341,9 +351,9 @@ export function parseTask(
       line: lineNumber,
       text: fullText.trim(),
       message:
-        'Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.',
+        'Task has no due date. Add #due:YYYY-MM-DD or place under a heading with a date.',
       reason:
-        'Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.',
+        'Task has no due date. Add #due:YYYY-MM-DD or place under a heading with a date.',
     });
   }
 
@@ -357,9 +367,9 @@ export function parseTask(
       line: lineNumber,
       text: fullText.trim(),
       message:
-        'Completed task missing completion date. Add [completed: YYYY-MM-DD].',
+        'Completed task missing completion date. Add {completed:YYYY-MM-DD}.',
       reason:
-        'Completed task missing completion date. Add [completed: YYYY-MM-DD].',
+        'Completed task missing completion date. Add {completed:YYYY-MM-DD}.',
     });
   }
 

@@ -137,26 +137,47 @@ describe('Tag Pattern', () => {
     const matches = Array.from(text.matchAll(PATTERNS.TAG));
     expect(matches).toHaveLength(0);
   });
+
+  it('should not match #due: as a tag', () => {
+    const text = 'Task #due:2026-01-25 #backend';
+    const matches = Array.from(text.matchAll(PATTERNS.TAG));
+    expect(matches).toHaveLength(1);
+    expect(matches[0]?.[1]).toBe('backend');
+  });
 });
 
 describe('Due Date Patterns', () => {
-  describe('Absolute dates', () => {
+  describe('New #due: syntax', () => {
+    it('should match #due: tag syntax', () => {
+      const text = 'Task #due:2026-01-25';
+      const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
+      expect(match?.[1]).toBe('2026-01-25');
+    });
+
+    it('should match #due: in middle of text', () => {
+      const text = 'Task #due:2026-01-25 #backend';
+      const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
+      expect(match?.[1]).toBe('2026-01-25');
+    });
+  });
+
+  describe('Legacy absolute dates', () => {
     it('should match ISO format date', () => {
       const text = 'Task [due: 2026-01-25]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
 
     it('should match case-insensitive', () => {
       const text = 'Task [DUE: 2026-01-25]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
 
     it('should match with extra whitespace', () => {
       const text = 'Task [due:   2026-01-25  ]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
   });
 
@@ -208,16 +229,22 @@ describe('Due Date Patterns', () => {
 });
 
 describe('Todoist ID Pattern', () => {
-  it('should extract numeric ID', () => {
-    const text = 'Task [todoist:123456]';
+  it('should extract ID from new brace syntax', () => {
+    const text = 'Task {todoist:123456}';
     const match = text.match(PATTERNS.TODOIST_ID);
     expect(match?.[1]).toBe('123456');
   });
 
-  it('should extract long ID', () => {
-    const text = 'Task [todoist:7891234567]';
+  it('should extract long ID from new syntax', () => {
+    const text = 'Task {todoist:7891234567}';
     const match = text.match(PATTERNS.TODOIST_ID);
     expect(match?.[1]).toBe('7891234567');
+  });
+
+  it('should extract ID from legacy bracket syntax', () => {
+    const text = 'Task [todoist:123456]';
+    const match = text.match(PATTERNS.TODOIST_ID);
+    expect(match?.[2]).toBe('123456');
   });
 
   it('should return null if no ID', () => {
@@ -228,16 +255,22 @@ describe('Todoist ID Pattern', () => {
 });
 
 describe('Completed Date Pattern', () => {
-  it('should extract completion date', () => {
-    const text = '[completed: 2026-01-18]';
+  it('should extract completion date from new brace syntax', () => {
+    const text = '{completed:2026-01-18}';
     const match = text.match(PATTERNS.COMPLETED_DATE);
     expect(match?.[1]).toBe('2026-01-18');
   });
 
-  it('should match case-insensitive', () => {
+  it('should extract completion date from legacy bracket syntax', () => {
+    const text = '[completed: 2026-01-18]';
+    const match = text.match(PATTERNS.COMPLETED_DATE);
+    expect(match?.[2]).toBe('2026-01-18');
+  });
+
+  it('should match legacy case-insensitive', () => {
     const text = '[COMPLETED: 2026-01-18]';
     const match = text.match(PATTERNS.COMPLETED_DATE);
-    expect(match?.[1]).toBe('2026-01-18');
+    expect(match?.[2]).toBe('2026-01-18');
   });
 
   it('should return null if no completion date', () => {

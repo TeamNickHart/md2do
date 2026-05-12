@@ -43,8 +43,18 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return undefined;
     }
 
-    // Progressive date completion: [due: 2, [due: 2026-, [due: 2026-02-
-    // Handle auto-paired brackets: [due: 2] with cursor before ]
+    // Progressive date completion for new syntax: #due:2, #due:2026-
+    const newDuePartialMatch = lineText.match(/#due:(\d[\d-]*)$/);
+    if (newDuePartialMatch && newDuePartialMatch[1]) {
+      return this.getProgressiveDateCompletions(newDuePartialMatch[1]);
+    }
+
+    // Date trigger for new syntax: #due: (just typed)
+    if (lineText.match(/#due:$/)) {
+      return this.getDateCompletions();
+    }
+
+    // Progressive date completion for legacy syntax: [due: 2, [due: 2026-
     const partialDateMatch = lineText.match(
       /\[(due|completed):\s*(\d{1,4}-?\d{0,2}-?\d{0,2})\]?$/i,
     );
@@ -53,8 +63,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return this.getProgressiveDateCompletions(partial);
     }
 
-    // Date completion: [due: | or [due: ] with cursor before ]
-    // Handle auto-paired brackets
+    // Date completion for legacy syntax: [due: | or [due: ]
     if (lineText.match(/\[(due|completed):\s*\]?$/i)) {
       return this.getDateCompletions();
     }

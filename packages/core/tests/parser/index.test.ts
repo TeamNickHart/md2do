@@ -94,15 +94,19 @@ describe('extractTags', () => {
 });
 
 describe('extractTodoistId', () => {
-  it('should extract numeric ID', () => {
+  it('should extract ID from new brace syntax', () => {
+    expect(extractTodoistId('Task {todoist:123456}')).toBe('123456');
+  });
+
+  it('should extract long ID from new syntax', () => {
+    expect(extractTodoistId('Task {todoist:7891234567}')).toBe('7891234567');
+  });
+
+  it('should extract ID from legacy bracket syntax', () => {
     expect(extractTodoistId('Task [todoist:123456]')).toBe('123456');
   });
 
-  it('should extract long ID', () => {
-    expect(extractTodoistId('Task [todoist:7891234567]')).toBe('7891234567');
-  });
-
-  it('should handle whitespace', () => {
+  it('should handle legacy whitespace', () => {
     expect(extractTodoistId('Task [todoist: 123456]')).toBe('123456');
   });
 
@@ -112,7 +116,15 @@ describe('extractTodoistId', () => {
 });
 
 describe('extractCompletedDate', () => {
-  it('should extract completion date', () => {
+  it('should extract completion date from new brace syntax', () => {
+    const result = extractCompletedDate('{completed:2026-01-18}');
+    expect(result).toBeInstanceOf(Date);
+    expect(result?.getFullYear()).toBe(2026);
+    expect(result?.getMonth()).toBe(0);
+    expect(result?.getDate()).toBe(18);
+  });
+
+  it('should extract completion date from legacy bracket syntax', () => {
     const result = extractCompletedDate('[completed: 2026-01-18]');
     expect(result).toBeInstanceOf(Date);
     expect(result?.getFullYear()).toBe(2026);
@@ -120,7 +132,7 @@ describe('extractCompletedDate', () => {
     expect(result?.getDate()).toBe(18);
   });
 
-  it('should handle case-insensitive', () => {
+  it('should handle legacy case-insensitive', () => {
     const result = extractCompletedDate('[COMPLETED: 2026-01-18]');
     expect(result).toBeInstanceOf(Date);
   });
@@ -138,7 +150,24 @@ describe('extractDueDate', () => {
   const baseDate = new Date('2026-01-18T12:00:00Z');
   const context: ParsingContext = { currentDate: baseDate };
 
-  describe('Absolute dates', () => {
+  describe('New #due: syntax', () => {
+    it('should extract date from #due: tag', () => {
+      const result = extractDueDate('#due:2026-01-25', {});
+      expect(result.date).toBeInstanceOf(Date);
+      expect(result.date?.getFullYear()).toBe(2026);
+      expect(result.date?.getMonth()).toBe(0);
+      expect(result.date?.getDate()).toBe(25);
+      expect(result.warning).toBeUndefined();
+    });
+
+    it('should extract #due: alongside other tags', () => {
+      const result = extractDueDate('Task #due:2026-01-25 #backend', {});
+      expect(result.date).toBeInstanceOf(Date);
+      expect(result.date?.getDate()).toBe(25);
+    });
+  });
+
+  describe('Legacy absolute dates', () => {
     it('should extract ISO format date', () => {
       const result = extractDueDate('[due: 2026-01-25]', {});
       expect(result.date).toBeInstanceOf(Date);
@@ -156,7 +185,6 @@ describe('extractDueDate', () => {
     });
 
     it('should not parse M/D format without year', () => {
-      // parseAbsoluteDate doesn't support M/D without year
       const result = extractDueDate('[due: 1/25]', {});
       expect(result.date).toBeUndefined();
       expect(result.warning).toBeUndefined();
@@ -220,7 +248,11 @@ describe('cleanTaskText', () => {
     expect(cleanTaskText('@nick Review PR')).toBe('Review PR');
   });
 
-  it('should remove due date', () => {
+  it('should remove new #due: syntax', () => {
+    expect(cleanTaskText('Task #due:2026-01-25')).toBe('Task');
+  });
+
+  it('should remove legacy due date', () => {
     expect(cleanTaskText('Task [due: 2026-01-25]')).toBe('Task');
   });
 
@@ -234,15 +266,28 @@ describe('cleanTaskText', () => {
     expect(cleanTaskText('Task #backend #urgent')).toBe('Task');
   });
 
-  it('should remove Todoist ID', () => {
+  it('should remove new brace Todoist ID', () => {
+    expect(cleanTaskText('Task {todoist:123456}')).toBe('Task');
+  });
+
+  it('should remove legacy Todoist ID', () => {
     expect(cleanTaskText('Task [todoist:123456]')).toBe('Task');
   });
 
-  it('should remove completion date', () => {
+  it('should remove new brace completion date', () => {
+    expect(cleanTaskText('Task {completed:2026-01-18}')).toBe('Task');
+  });
+
+  it('should remove legacy completion date', () => {
     expect(cleanTaskText('Task [completed: 2026-01-18]')).toBe('Task');
   });
 
-  it('should remove all metadata at once', () => {
+  it('should remove all new syntax metadata at once', () => {
+    const text = '@nick Review PR !! #backend #due:2026-01-25 {todoist:123}';
+    expect(cleanTaskText(text)).toBe('Review PR');
+  });
+
+  it('should remove all legacy metadata at once', () => {
     const text = '@nick Review PR !! #backend [due: 2026-01-25] [todoist:123]';
     expect(cleanTaskText(text)).toBe('Review PR');
   });
@@ -260,6 +305,10 @@ describe('cleanTaskText', () => {
   it('should handle short format dates', () => {
     expect(cleanTaskText('Task [due: 1/25/26]')).toBe('Task');
     expect(cleanTaskText('Task [due: 1/25]')).toBe('Task');
+  });
+
+  it('should not treat #due: as a tag', () => {
+    expect(cleanTaskText('Task #due:2026-01-25 #backend')).toBe('Task');
   });
 });
 
@@ -316,18 +365,39 @@ describe('parseTask', () => {
       expect(result.task?.tags).toEqual(['backend', 'urgent']);
     });
 
-    it('should extract due date', () => {
+    it('should extract due date with new syntax', () => {
+      const result = parseTask('- [ ] Task #due:2026-01-25', 1, file, {});
+      expect(result.task?.dueDate).toBeInstanceOf(Date);
+      expect(result.task?.dueDate?.getDate()).toBe(25);
+    });
+
+    it('should extract due date with legacy syntax', () => {
       const result = parseTask('- [ ] Task [due: 2026-01-25]', 1, file, {});
       expect(result.task?.dueDate).toBeInstanceOf(Date);
       expect(result.task?.dueDate?.getDate()).toBe(25);
     });
 
-    it('should extract Todoist ID', () => {
+    it('should extract Todoist ID with new syntax', () => {
+      const result = parseTask('- [ ] Task {todoist:123456}', 1, file, {});
+      expect(result.task?.todoistId).toBe('123456');
+    });
+
+    it('should extract Todoist ID with legacy syntax', () => {
       const result = parseTask('- [ ] Task [todoist:123456]', 1, file, {});
       expect(result.task?.todoistId).toBe('123456');
     });
 
-    it('should extract completion date', () => {
+    it('should extract completion date with new syntax', () => {
+      const result = parseTask(
+        '- [x] Task {completed:2026-01-18}',
+        1,
+        file,
+        {},
+      );
+      expect(result.task?.completedDate).toBeInstanceOf(Date);
+    });
+
+    it('should extract completion date with legacy syntax', () => {
       const result = parseTask(
         '- [x] Task [completed: 2026-01-18]',
         1,
@@ -337,7 +407,20 @@ describe('parseTask', () => {
       expect(result.task?.completedDate).toBeInstanceOf(Date);
     });
 
-    it('should extract all metadata at once', () => {
+    it('should extract all new syntax metadata at once', () => {
+      const text =
+        '- [ ] @nick Fix bug !! #backend #urgent #due:2026-01-25 {todoist:123}';
+      const result = parseTask(text, 1, file, {});
+
+      expect(result.task?.assignee).toBe('nick');
+      expect(result.task?.priority).toBe('high');
+      expect(result.task?.tags).toEqual(['backend', 'urgent']);
+      expect(result.task?.dueDate).toBeInstanceOf(Date);
+      expect(result.task?.todoistId).toBe('123');
+      expect(result.task?.text).toBe('Fix bug');
+    });
+
+    it('should extract all legacy metadata at once', () => {
       const text =
         '- [ ] @nick Fix bug !! #backend #urgent [due: 2026-01-25] [todoist:123]';
       const result = parseTask(text, 1, file, {});
@@ -510,7 +593,21 @@ describe('parseTask', () => {
       expect(result.warnings).toHaveLength(0);
     });
 
-    it('should parse 1-1 task', () => {
+    it('should parse 1-1 task with new syntax', () => {
+      const context: ParsingContext = {
+        person: 'jane-doe',
+        currentDate: new Date('2026-01-13'),
+      };
+      const text = '- [ ] Discuss Q1 goals #due:2026-01-20';
+      const result = parseTask(text, 8, '1-1s/jane-doe.md', context);
+
+      expect(result.task?.text).toBe('Discuss Q1 goals');
+      expect(result.task?.person).toBe('jane-doe');
+      expect(result.task?.dueDate?.getDate()).toBe(20);
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should parse 1-1 task with legacy syntax', () => {
       const context: ParsingContext = {
         person: 'jane-doe',
         currentDate: new Date('2026-01-13'),
@@ -524,7 +621,18 @@ describe('parseTask', () => {
       expect(result.warnings).toHaveLength(0);
     });
 
-    it('should parse completed task with Todoist sync', () => {
+    it('should parse completed task with new syntax', () => {
+      const text =
+        '- [x] Fix payment bug {todoist:987654} {completed:2026-01-17}';
+      const result = parseTask(text, 42, 'backlog.md', {});
+
+      expect(result.task?.completed).toBe(true);
+      expect(result.task?.text).toBe('Fix payment bug');
+      expect(result.task?.todoistId).toBe('987654');
+      expect(result.task?.completedDate).toBeInstanceOf(Date);
+    });
+
+    it('should parse completed task with legacy syntax', () => {
       const text =
         '- [x] Fix payment bug [todoist:987654] [completed: 2026-01-17]';
       const result = parseTask(text, 42, 'backlog.md', {});
@@ -598,7 +706,13 @@ describe('parseTask', () => {
       expect(result.warnings[0]?.reason).toContain('Task has no due date');
     });
 
-    it('should not warn on task with explicit due date', () => {
+    it('should not warn on task with new #due: syntax', () => {
+      const result = parseTask('- [ ] Task #due:2026-01-30', 1, file, {});
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should not warn on task with legacy due date', () => {
       const result = parseTask('- [ ] Task [due: 2026-01-30]', 1, file, {});
       expect(result.task).not.toBeNull();
       expect(result.warnings).toHaveLength(0);
@@ -630,7 +744,18 @@ describe('parseTask', () => {
       );
     });
 
-    it('should not warn on completed task with completion date', () => {
+    it('should not warn on completed task with new completion date', () => {
+      const result = parseTask(
+        '- [x] Task {completed:2026-01-25}',
+        1,
+        file,
+        {},
+      );
+      expect(result.task).not.toBeNull();
+      expect(result.warnings).toHaveLength(0);
+    });
+
+    it('should not warn on completed task with legacy completion date', () => {
       const result = parseTask(
         '- [x] Task [completed: 2026-01-25]',
         1,
