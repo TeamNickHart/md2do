@@ -46,12 +46,26 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
     // Progressive date completion for new syntax: #due:2, #due:2026-
     const newDuePartialMatch = lineText.match(/#due:(\d[\d-]*)$/);
     if (newDuePartialMatch && newDuePartialMatch[1]) {
-      return this.getProgressiveDateCompletions(newDuePartialMatch[1]);
+      const partialStart = position.character - newDuePartialMatch[1].length;
+      const range = new vscode.Range(
+        position.line,
+        partialStart,
+        position.line,
+        position.character,
+      );
+      return this.getProgressiveDateCompletions(newDuePartialMatch[1]).map(
+        (item) => ({ ...item, range, filterText: item.insertText as string }),
+      );
     }
 
     // Date trigger for new syntax: #due: (just typed)
     if (lineText.match(/#due:$/)) {
-      return this.getDateCompletions();
+      const range = new vscode.Range(position, position);
+      return this.getDateCompletions().map((item) => ({
+        ...item,
+        range,
+        filterText: item.label as string,
+      }));
     }
 
     // Progressive date completion for legacy syntax: [due: 2, [due: 2026-
