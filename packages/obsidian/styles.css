@@ -199,3 +199,19 @@
 .md2do-status-overdue {
   color: var(--color-red);
 }
+
+/* Suggestion popup */
+.md2do-suggestion {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.md2do-suggestion-label {
+  font-weight: 500;
+}
+
+.md2do-suggestion-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+}

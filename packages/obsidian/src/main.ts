@@ -6,6 +6,8 @@ import {
   type Md2doSettings,
 } from './settings';
 import { TaskListView, TASK_LIST_VIEW_TYPE } from './views/task-list-view';
+import { DiagnosticProvider } from './providers/diagnostic-provider';
+import { TaskSuggestProvider } from './providers/suggest-provider';
 import { scanVault, type ScanResult } from './utils/scanner';
 import { registerCommands } from './commands/index';
 
@@ -13,8 +15,11 @@ export default class Md2doPlugin extends Plugin {
   settings: Md2doSettings = DEFAULT_SETTINGS;
   tasks: Task[] = [];
   warnings: Warning[] = [];
+  warningsByFile: Map<string, Warning[]> = new Map();
   private statusBarEl: HTMLElement | null = null;
   private taskListView: TaskListView | null = null;
+  private diagnosticProvider: DiagnosticProvider | null = null;
+  private suggestProvider: TaskSuggestProvider | null = null;
 
   async onload(): Promise<void> {
     await this.loadSettings();
@@ -30,6 +35,13 @@ export default class Md2doPlugin extends Plugin {
 
     // Register commands
     registerCommands(this);
+
+    // Register diagnostic provider
+    this.diagnosticProvider = new DiagnosticProvider(this);
+
+    // Register autocomplete suggest provider
+    this.suggestProvider = new TaskSuggestProvider(this);
+    this.registerEditorSuggest(this.suggestProvider);
 
     // Add ribbon icon
     this.addRibbonIcon('check-square', 'md2do Tasks', async () => {
@@ -109,6 +121,11 @@ export default class Md2doPlugin extends Plugin {
       this.warnings = result.warnings;
 
       this.updateStatusBar();
+
+      // Update diagnostics
+      if (this.diagnosticProvider) {
+        this.diagnosticProvider.updateDiagnostics(this.warnings);
+      }
 
       // Refresh the task list view if it's open
       if (this.taskListView) {

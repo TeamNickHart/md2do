@@ -76,6 +76,27 @@ export function registerCommands(plugin: Md2doPlugin): void {
     },
   });
 
+  // Show diagnostics summary
+  plugin.addCommand({
+    id: 'show-diagnostics',
+    name: 'Show diagnostics summary',
+    callback: () => {
+      const warnings = plugin.warnings;
+      if (warnings.length === 0) {
+        new Notice('md2do: No warnings found');
+        return;
+      }
+      const errors = warnings.filter((w) => w.severity === 'error').length;
+      const warns = warnings.filter((w) => w.severity === 'warning').length;
+      const infos = warnings.filter((w) => w.severity === 'info').length;
+      const parts: string[] = [];
+      if (errors > 0) parts.push(`${errors} error(s)`);
+      if (warns > 0) parts.push(`${warns} warning(s)`);
+      if (infos > 0) parts.push(`${infos} info`);
+      new Notice(`md2do Diagnostics\n${parts.join('\n')}`);
+    },
+  });
+
   // Show task stats
   plugin.addCommand({
     id: 'show-stats',

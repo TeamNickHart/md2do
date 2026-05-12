@@ -35,12 +35,20 @@ export async function toggleTaskCompletion(
     }
 
     const isCompleted = /- \[x\]/i.test(originalLine);
+    const today = new Date().toISOString().split('T')[0];
 
     let updatedLine: string;
     if (isCompleted) {
-      updatedLine = originalLine.replace(/- \[x\]/i, '- [ ]');
+      // Uncompleting: remove completion date
+      updatedLine = originalLine
+        .replace(/- \[x\]/i, '- [ ]')
+        .replace(/\s*\[completed:\s*[^\]]+\]/, '');
     } else {
+      // Completing: add completion date
       updatedLine = originalLine.replace(/- \[ \]/, '- [x]');
+      if (!updatedLine.includes('[completed:')) {
+        updatedLine = updatedLine.trimEnd() + ` [completed: ${today}]`;
+      }
     }
 
     lines[lineIndex] = updatedLine;
