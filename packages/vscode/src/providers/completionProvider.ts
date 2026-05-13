@@ -46,25 +46,38 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
     // Progressive date completion for new syntax: #due:2, #due:2026-
     const newDuePartialMatch = lineText.match(/#due:(\d[\d-]*)$/);
     if (newDuePartialMatch && newDuePartialMatch[1]) {
-      const partialStart = position.character - newDuePartialMatch[1].length;
+      const hashPos = position.character - newDuePartialMatch[0].length;
       const range = new vscode.Range(
         position.line,
-        partialStart,
+        hashPos,
         position.line,
         position.character,
       );
       return this.getProgressiveDateCompletions(newDuePartialMatch[1]).map(
-        (item) => ({ ...item, range, filterText: item.insertText as string }),
+        (item) => ({
+          ...item,
+          range,
+          insertText: `#due:${item.insertText as string}`,
+          filterText: `#due:${item.insertText as string}`,
+        }),
       );
     }
 
     // Date trigger for new syntax: #due: (just typed)
-    if (lineText.match(/#due:$/)) {
-      const range = new vscode.Range(position, position);
+    const dueColonMatch = lineText.match(/#due:$/);
+    if (dueColonMatch) {
+      const hashPos = position.character - dueColonMatch[0].length;
+      const range = new vscode.Range(
+        position.line,
+        hashPos,
+        position.line,
+        position.character,
+      );
       return this.getDateCompletions().map((item) => ({
         ...item,
         range,
-        filterText: item.label as string,
+        insertText: `#due:${item.insertText as string}`,
+        filterText: `#due:${item.label as string}`,
       }));
     }
 
