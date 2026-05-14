@@ -72,7 +72,7 @@ Tests Todoist integration markers:
 
 **Features Tested:**
 
-- Todoist ID parsing
+- Todoist ID parsing (`{todoist:NNN}` brace syntax)
 - Sync marker preservation
 - Integration workflows
 
@@ -164,7 +164,7 @@ pnpm cli -- list --path examples/test-cases/tags.md --tag bug
 | Priority levels    | `priorities.md`     | `--priority urgent\|high\|normal\|low`        |
 | Assignee filtering | `assignees.md`      | `--assignee alice`                            |
 | Tag filtering      | `tags.md`           | `--tag backend`                               |
-| Todoist sync       | `todoist-sync.md`   | Check `[todoist:ID]` markers                  |
+| Todoist sync       | `todoist-sync.md`   | Check `{todoist:ID}` markers                  |
 | Edge cases         | `edge-cases.md`     | Various special scenarios                     |
 
 ## Adding New Test Cases

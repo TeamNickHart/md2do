@@ -71,9 +71,9 @@ Create a file called `tasks.md`:
 ```markdown
 # My Tasks
 
-- [ ] Review pull request @nick !! #code-review [due: 2026-01-25]
+- [ ] Review pull request @nick !! #code-review #due:2026-01-25
 - [ ] Update documentation @jane ! #docs
-- [x] Fix bug in parser @alex !!! #bug [completed: 2026-01-18]
+- [x] Fix bug in parser @alex !!! #bug {completed:2026-01-18}
 ```
 
 ### 2. List Your Tasks

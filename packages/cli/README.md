@@ -49,7 +49,7 @@ md2do recognizes standard markdown tasks with optional metadata:
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
 - `(YYYY-MM-DD)` - Due date
-- `[todoist:ID]` - Todoist sync marker
+- `{todoist:ID}` - Todoist sync marker
 
 ## 🎯 Common Use Cases
 

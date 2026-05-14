@@ -51,7 +51,7 @@ md2do todoist sync
 
 ## How It Works
 
-1. Scans markdown files for tasks with `[todoist:ID]` markers
+1. Scans markdown files for tasks with `{todoist:ID}` markers (legacy `[todoist:ID]` also supported)
 2. Queries Todoist API for those tasks
 3. Compares completion status and metadata
 4. Updates markdown files with changes from Todoist
