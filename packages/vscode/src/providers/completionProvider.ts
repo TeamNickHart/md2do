@@ -37,11 +37,6 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
   ): vscode.CompletionItem[] | undefined {
     const line = document.lineAt(position.line);
     const lineText = line.text.substring(0, position.character);
-    console.log(
-      '[md2do] completion triggered, lineText:',
-      JSON.stringify(lineText),
-    );
-
     // Only provide completions on task lines
     if (!lineText.match(/^\s*-\s*\[([ x])\]/)) {
       return undefined;
@@ -69,24 +64,20 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
 
     // Date trigger for new syntax: #due: (with optional alpha for shortcut filtering)
     const dueColonMatch = lineText.match(/#due:[a-z ]*$/i);
-    console.log('[md2do] dueColonMatch:', dueColonMatch);
     if (dueColonMatch) {
       const wordPos = position.character - dueColonMatch[0].length + 1;
-      console.log('[md2do] dueColonMatch hit, wordPos:', wordPos);
       const range = new vscode.Range(
         position.line,
         wordPos,
         position.line,
         position.character,
       );
-      return [...this.getDueShortcuts(), ...this.getDateCompletions()].map(
-        (item) => ({
-          ...item,
-          range,
-          insertText: `due:${item.insertText as string}`,
-          filterText: `due:${item.filterText ?? (item.label as string)}`,
-        }),
-      );
+      return this.getDueShortcuts().map((item) => ({
+        ...item,
+        range,
+        insertText: `due:${item.insertText as string}`,
+        filterText: `due:${item.filterText ?? (item.label as string)}`,
+      }));
     }
 
     // Progressive date completion for legacy syntax: [due: 2, [due: 2026-
@@ -504,6 +495,14 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return d;
     };
 
+    const endOfWeek = new Date(today);
+    const currentDay = today.getDay();
+    const daysUntilFriday =
+      currentDay <= 5 ? 5 - currentDay : 7 - currentDay + 5;
+    endOfWeek.setDate(
+      endOfWeek.getDate() + (daysUntilFriday === 0 ? 7 : daysUntilFriday),
+    );
+
     const nextMonth = new Date(today);
     nextMonth.setMonth(nextMonth.getMonth() + 1);
 
@@ -563,16 +562,22 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
         sort: '!due8',
       },
       {
+        label: 'end of week',
+        date: endOfWeek,
+        doc: 'Due end of week (Friday)',
+        sort: '!due9a',
+      },
+      {
         label: 'next week',
         date: makeDate(7),
         doc: 'Due in one week',
-        sort: '!due9a',
+        sort: '!due9b',
       },
       {
         label: 'next month',
         date: nextMonth,
         doc: 'Due in one month',
-        sort: '!due9b',
+        sort: '!due9c',
       },
     ];
 
