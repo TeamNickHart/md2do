@@ -2,6 +2,26 @@
 
 Real-world usage patterns for md2do.
 
+## Adding Tasks from the CLI
+
+### Quick Capture
+
+```bash
+# Add a task with metadata
+md2do add "Review PR #200" --file tasks.md --assignee nick --priority high --due tomorrow --tag code-review
+
+# Preview without writing (stdout mode)
+md2do add "Deploy v2" --due friday --priority urgent
+
+# Pipe into a file
+md2do add "Write tests" --due "next week" --tag backend >> sprint.md
+
+# Batch-add tasks from a script
+for task in "Write docs" "Update changelog" "Tag release"; do
+  md2do add "$task" --file release.md --tag release --due friday
+done
+```
+
 ## Personal Task Management
 
 ### Daily TODO List

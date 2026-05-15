@@ -53,6 +53,12 @@ features:
 # Install globally
 npm install -g @md2do/cli
 
+# Add a task
+md2do add "Fix login bug" --file tasks.md --assignee nick --priority high --due tomorrow
+
+# Or print to stdout for previewing / piping
+md2do add "Deploy hotfix" --due today --priority urgent
+
 # List all tasks
 md2do list
 
