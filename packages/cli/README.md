@@ -53,6 +53,22 @@ md2do recognizes standard markdown tasks with optional metadata:
 
 ## 🎯 Common Use Cases
 
+### Add a task
+
+```bash
+# Basic task
+md2do add "Buy milk" --file tasks.md
+
+# With metadata
+md2do add "Fix login bug" --file tasks.md --assignee nick --priority high --due tomorrow --tag backend
+
+# Relative dates: today, tomorrow, monday-sunday, next week
+md2do add "Weekly review" --file tasks.md --due "next week"
+
+# Insert at a specific line
+md2do add "Urgent fix" --file tasks.md --line 3 --priority urgent
+```
+
 ### Filter tasks by assignee
 
 ```bash

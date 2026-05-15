@@ -3,6 +3,7 @@ import { Command } from 'commander';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import {
+  createAddCommand,
   createListCommand,
   createStatsCommand,
   createTodoistCommand,
@@ -32,6 +33,7 @@ program
   .version(getVersion());
 
 // Add commands
+program.addCommand(createAddCommand());
 program.addCommand(createListCommand());
 program.addCommand(createStatsCommand());
 program.addCommand(createTodoistCommand());
