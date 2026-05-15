@@ -80,9 +80,9 @@ That's it! md2do will scan all `.md` files and extract your TODO items.
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @jane !!! #backend #auth [due: 2026-01-20]
-- [x] Write documentation @nick !! #docs [completed: 2026-01-15]
-- [ ] Fix bug in parser @alex ! #bug [due: 2026-01-18]
+- [ ] Implement user authentication @jane !!! #backend #auth #due:2026-01-20
+- [x] Write documentation @nick !! #docs {completed:2026-01-15}
+- [ ] Fix bug in parser @alex ! #bug #due:2026-01-18
 ```
 
 **Supported metadata:**
@@ -90,10 +90,13 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `[due: YYYY-MM-DD]` - Due date (also supports `[due: tomorrow]`, `[due: 1/25/26]`, etc.)
-- `[completed: YYYY-MM-DD]` - Completion date
+- `#due:YYYY-MM-DD` - Due date
+- `{completed:YYYY-MM-DD}` - Completion date
+- `{todoist:ID}` - Todoist sync ID
 - `- [x]` - Completed task
 - `- [ ]` - Incomplete task
+
+> **Note:** Legacy bracket syntax (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`) is still parsed for backward compatibility.
 
 ### List Command
 
@@ -495,7 +498,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   - [ ] CLI commands (`md2do todoist sync`, `md2do todoist push`, etc.)
   - [ ] Bidirectional sync logic
   - [ ] Interactive token setup
-  - [ ] Validation warnings for `[todoist:ID]` markers
+  - [ ] Validation warnings for `{todoist:ID}` markers
     - [ ] Detect malformed IDs
     - [ ] Verify ID exists in Todoist
     - [ ] Warn about orphaned/deleted tasks

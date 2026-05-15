@@ -61,43 +61,73 @@ Organize with hashtags:
 
 ### Due Dates
 
-Add deadlines using the `[due: ...]` format:
-
-**Absolute Dates:**
+Add deadlines using the `#due:` tag syntax:
 
 ```markdown
-- [ ] Submit proposal [due: 2026-01-25]
-- [ ] Team meeting prep [due: 2026-01-20]
-- [ ] Afternoon meeting [due: 2026-01-20 14:30]
-- [ ] Quick format [due: 1/25/26]
+- [ ] Submit proposal #due:2026-01-25
+- [ ] Team meeting prep #due:2026-01-20
 ```
 
-**Relative Dates (Experimental):**
+::: tip Supported Format
+The new `#due:` syntax accepts **ISO dates only** (YYYY-MM-DD), with no space after the colon:
 
 ```markdown
-- [ ] Review PR [due: today]
-- [ ] Follow up [due: tomorrow]
-- [ ] Sprint planning [due: next week]
-- [ ] Quarterly review [due: next month]
+- [ ] Task with due date #due:2026-01-25
 ```
 
-::: warning Experimental Feature
-Semantic dates like `[due: tomorrow]` require a **heading with a date** above the task to provide context. Without a heading date, they won't parse correctly.
-
-**Recommended:** Use VSCode autocomplete (type `[due:`) which shows semantic labels but inserts concrete dates automatically.
-
-**Future:** We're planning `md2do lint --fix` to convert semantic dates to concrete dates automatically.
+Relative dates (`today`, `tomorrow`, `next week`, `next month`), time components (`14:30`), and short date formats (`1/25/26`) are **not supported** in the new syntax. These are recognized only in the legacy `[due: ...]` bracket syntax for backward compatibility.
 :::
 
-::: tip Supported Formats
+::: details Legacy Syntax (Backward Compatible)
+md2do still parses the older bracket-based due date syntax during the transition period:
 
-- `[due: 2026-01-25]` - ISO format (YYYY-MM-DD) - recommended
-- `[due: 2026-01-25 14:30]` - With time (24-hour format)
-- `[due: 1/25/26]` or `[due: 1/25]` - Short format (M/D/YY or M/D)
-- `[due: today]`, `[due: tomorrow]` - Relative dates (experimental)
-- `[due: next week]`, `[due: next month]` - Future dates (experimental)
+```markdown
+- [ ] Task [due: 2026-01-25] # ISO date
+- [ ] Task [due: 2026-01-25 14:30] # With time (time is ignored)
+- [ ] Task [due: 1/25/26] # Short format
+- [ ] Task [due: today] # Relative date
+- [ ] Task [due: tomorrow] # Relative date
+- [ ] Task [due: next week] # Relative date
+- [ ] Task [due: next month] # Relative date
+```
 
-**Note:** Parser accepts both `[due: ...]` (with space) and `[due:...]` (without space)
+Both `[due: ...]` (with space) and `[due:...]` (without space) are accepted. Use `md2do migrate` to convert legacy syntax to the new format.
+:::
+
+### Completion Dates
+
+When a task is completed, md2do tracks the completion date using `{completed:}` brace syntax:
+
+```markdown
+- [x] Finished report {completed:2026-01-20}
+```
+
+::: details Legacy Syntax (Backward Compatible)
+The older bracket syntax is still parsed:
+
+```markdown
+- [x] Finished report [completed: 2026-01-20]
+```
+
+:::
+
+### Todoist Integration
+
+When syncing with [Todoist](https://www.todoist.com), md2do links tasks using `{todoist:}` brace syntax:
+
+```markdown
+- [ ] Review pull request #due:2026-01-25 {todoist:123456789}
+```
+
+The `{todoist:ID}` marker links the task to Todoist for sync.
+
+::: details Legacy Syntax (Backward Compatible)
+The older bracket syntax is still parsed:
+
+```markdown
+- [ ] Review pull request [todoist: 123456789]
+```
+
 :::
 
 ## Complete Example
@@ -105,7 +135,7 @@ Semantic dates like `[due: tomorrow]` require a **heading with a date** above th
 Combine all metadata:
 
 ```markdown
-- [ ] API authentication audit @alice !!! #backend #security [due: 2026-01-25]
+- [ ] API authentication audit @alice !!! #backend #security #due:2026-01-25
 ```
 
 This task:
@@ -114,33 +144,6 @@ This task:
 - **Urgent** priority
 - Tagged with **backend** and **security**
 - Due **January 25, 2026**
-
-## Todoist Integration
-
-When syncing with [Todoist](https://www.todoist.com), md2do adds task IDs:
-
-```markdown
-- [ ] Review pull request [due: 2026-01-25] [todoist: 123456789]
-```
-
-The `[todoist: ID]` marker links the task to Todoist for sync.
-
-## Headings as Context
-
-md2do extracts context from markdown headings:
-
-```markdown
-## Sprint 24
-
-- [ ] Implement dark mode @bob !! #frontend [due: 2026-02-01]
-- [ ] Database migration @alice !!! #backend [due: 2026-01-28]
-
-## Bugs
-
-- [ ] Fix navbar on mobile @bob ! #ui [due: 2026-01-26]
-```
-
-Tasks inherit their heading as context for filtering.
 
 ## File Structure as Projects
 
@@ -173,14 +176,16 @@ md2do recognizes metadata in this order on each line:
 3. **Assignee**: `@username` (first match)
 4. **Priority**: `!`, `!!`, or `!!!` (first match)
 5. **Tags**: All `#hashtags` found
-6. **Due date**: `[due: YYYY-MM-DD]` format
-7. **Completion date**: `[completed: YYYY-MM-DD]` (if checked)
-8. **Todoist ID**: `[todoist: ID]` (if present)
+6. **Due date**: `#due:YYYY-MM-DD` tag syntax
+7. **Completion date**: `{completed:YYYY-MM-DD}` (if checked)
+8. **Todoist ID**: `{todoist:ID}` (if present)
+
+Both new and legacy syntax are parsed during the transition period. See [Syntax Migration](#syntax-migration) for details.
 
 **Example parsing:**
 
 ```markdown
-- [ ] Fix bug @nick !!! #backend #urgent [due: 2026-01-25] [todoist: 123]
+- [ ] Fix bug @nick !!! #backend #urgent #due:2026-01-25 {todoist:123}
 ```
 
 Extracts:
@@ -191,6 +196,31 @@ Extracts:
 - Tags: `["backend", "urgent"]`
 - Due: `2026-01-25`
 - Todoist ID: `"123"`
+
+## Syntax Migration
+
+md2do has migrated from bracket syntax to a hybrid tag/brace syntax. Both old and new syntax are parsed during the transition, but the new syntax is recommended for all new tasks.
+
+| Metadata   | New Syntax               | Legacy Syntax             |
+| ---------- | ------------------------ | ------------------------- |
+| Due date   | `#due:2026-01-25`        | `[due: 2026-01-25]`       |
+| Completion | `{completed:2026-01-25}` | `[completed: 2026-01-25]` |
+| Todoist ID | `{todoist:123}`          | `[todoist: 123]`          |
+
+**What changed:**
+
+- **Due dates** use the `#due:` tag prefix (no space after the colon). This integrates naturally with the existing `#tag` syntax.
+- **Completion dates** and **Todoist IDs** use `{braces}` (no space after the colon). Braces indicate system-managed metadata that users typically don't edit by hand.
+- **Relative dates** (`today`, `tomorrow`, `next week`, `next month`), **time components** (`14:30`), and **short date formats** (`1/25/26`) are legacy-only and not supported in the new syntax.
+
+**Migrating existing files:**
+
+Use the CLI migration command to convert legacy syntax automatically:
+
+```bash
+md2do migrate --path ./my-notes        # convert in place
+md2do migrate --path ./my-notes --dry-run  # preview changes
+```
 
 ## Best Practices
 
@@ -209,13 +239,13 @@ Start with basic checkboxes, add metadata as needed:
 Use consistent naming:
 
 ```markdown
-✅ Good - consistent naming
+Good - consistent naming
 
 - [ ] Task 1 @alice
 - [ ] Task 2 @alice
 - [ ] Task 3 @bob
 
-❌ Avoid - inconsistent naming
+Avoid - inconsistent naming
 
 - [ ] Task 1 @alice
 - [ ] Task 2 @Alice
@@ -242,16 +272,14 @@ Create a simple tag taxonomy:
 
 ### Date Format
 
-Use the `[due: ...]` format with supported date styles:
+Use the `#due:` syntax with ISO dates:
 
 ```markdown
-✅ Correct
+Correct
 
-- [ ] Meeting [due: 2026-01-25]
-- [ ] Meeting [due: 1/25/26]
-- [ ] Meeting [due: tomorrow]
+- [ ] Meeting #due:2026-01-25
 
-❌ Wrong
+Wrong
 
 - [ ] Meeting (2026-01-25)
 - [ ] Meeting 2026-01-25

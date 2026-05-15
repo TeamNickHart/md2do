@@ -22,6 +22,9 @@ export * as sorting from './sorting/index.js';
 // Warnings
 export * from './warnings/filter.js';
 
+// Migrator
+export * from './migrator/index.js';
+
 // Utilities
 export * from './utils/dates.js';
 export * from './utils/id.js';

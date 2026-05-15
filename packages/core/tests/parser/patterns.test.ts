@@ -137,26 +137,47 @@ describe('Tag Pattern', () => {
     const matches = Array.from(text.matchAll(PATTERNS.TAG));
     expect(matches).toHaveLength(0);
   });
+
+  it('should not match #due: as a tag', () => {
+    const text = 'Task #due:2026-01-25 #backend';
+    const matches = Array.from(text.matchAll(PATTERNS.TAG));
+    expect(matches).toHaveLength(1);
+    expect(matches[0]?.[1]).toBe('backend');
+  });
 });
 
 describe('Due Date Patterns', () => {
-  describe('Absolute dates', () => {
+  describe('New #due: syntax', () => {
+    it('should match #due: tag syntax', () => {
+      const text = 'Task #due:2026-01-25';
+      const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
+      expect(match?.[1]).toBe('2026-01-25');
+    });
+
+    it('should match #due: in middle of text', () => {
+      const text = 'Task #due:2026-01-25 #backend';
+      const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
+      expect(match?.[1]).toBe('2026-01-25');
+    });
+  });
+
+  describe('Legacy absolute dates', () => {
     it('should match ISO format date', () => {
       const text = 'Task [due: 2026-01-25]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
 
     it('should match case-insensitive', () => {
       const text = 'Task [DUE: 2026-01-25]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
 
     it('should match with extra whitespace', () => {
       const text = 'Task [due:   2026-01-25  ]';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
-      expect(match?.[1]).toBe('2026-01-25');
+      expect(match?.[2]).toBe('2026-01-25');
     });
   });
 
@@ -208,16 +229,22 @@ describe('Due Date Patterns', () => {
 });
 
 describe('Todoist ID Pattern', () => {
-  it('should extract numeric ID', () => {
-    const text = 'Task [todoist:123456]';
+  it('should extract ID from new brace syntax', () => {
+    const text = 'Task {todoist:123456}';
     const match = text.match(PATTERNS.TODOIST_ID);
     expect(match?.[1]).toBe('123456');
   });
 
-  it('should extract long ID', () => {
-    const text = 'Task [todoist:7891234567]';
+  it('should extract long ID from new syntax', () => {
+    const text = 'Task {todoist:7891234567}';
     const match = text.match(PATTERNS.TODOIST_ID);
     expect(match?.[1]).toBe('7891234567');
+  });
+
+  it('should extract ID from legacy bracket syntax', () => {
+    const text = 'Task [todoist:123456]';
+    const match = text.match(PATTERNS.TODOIST_ID);
+    expect(match?.[2]).toBe('123456');
   });
 
   it('should return null if no ID', () => {
@@ -228,116 +255,27 @@ describe('Todoist ID Pattern', () => {
 });
 
 describe('Completed Date Pattern', () => {
-  it('should extract completion date', () => {
-    const text = '[completed: 2026-01-18]';
+  it('should extract completion date from new brace syntax', () => {
+    const text = '{completed:2026-01-18}';
     const match = text.match(PATTERNS.COMPLETED_DATE);
     expect(match?.[1]).toBe('2026-01-18');
   });
 
-  it('should match case-insensitive', () => {
+  it('should extract completion date from legacy bracket syntax', () => {
+    const text = '[completed: 2026-01-18]';
+    const match = text.match(PATTERNS.COMPLETED_DATE);
+    expect(match?.[2]).toBe('2026-01-18');
+  });
+
+  it('should match legacy case-insensitive', () => {
     const text = '[COMPLETED: 2026-01-18]';
     const match = text.match(PATTERNS.COMPLETED_DATE);
-    expect(match?.[1]).toBe('2026-01-18');
+    expect(match?.[2]).toBe('2026-01-18');
   });
 
   it('should return null if no completion date', () => {
     const text = 'Task without completion date';
     const match = text.match(PATTERNS.COMPLETED_DATE);
     expect(match).toBeNull();
-  });
-});
-
-describe('Heading Date Patterns', () => {
-  describe('Slash format', () => {
-    it('should match M/D/YY format', () => {
-      const heading = '## Meeting 1/13/26';
-      const match = heading.match(PATTERNS.HEADING_DATE_SLASH);
-      expect(match?.[1]).toBe('1/13/26');
-    });
-
-    it('should match M/D/YYYY format', () => {
-      const heading = '### Sprint Planning 1/13/2026';
-      const match = heading.match(PATTERNS.HEADING_DATE_SLASH);
-      expect(match?.[1]).toBe('1/13/2026');
-    });
-
-    it('should match with trailing text', () => {
-      const heading = '## 1/13/26 - Weekly Sync';
-      const match = heading.match(PATTERNS.HEADING_DATE_SLASH);
-      expect(match?.[1]).toBe('1/13/26');
-    });
-  });
-
-  describe('ISO format', () => {
-    it('should match YYYY-MM-DD format', () => {
-      const heading = '## 2026-01-13 Sprint Planning';
-      const match = heading.match(PATTERNS.HEADING_DATE_ISO);
-      expect(match?.[1]).toBe('2026-01-13');
-    });
-
-    it('should match in middle of heading', () => {
-      const heading = '### Meeting on 2026-01-13';
-      const match = heading.match(PATTERNS.HEADING_DATE_ISO);
-      expect(match?.[1]).toBe('2026-01-13');
-    });
-  });
-
-  describe('Natural format', () => {
-    it('should match full month name', () => {
-      const heading = '## January 13, 2026';
-      const match = heading.match(PATTERNS.HEADING_DATE_NATURAL);
-      // Pattern captures only 3-letter abbreviation, rest matched by [a-z]*
-      expect(match?.[1]).toBe('Jan');
-      expect(match?.[2]).toBe('13');
-      expect(match?.[3]).toBe('2026');
-    });
-
-    it('should match abbreviated month', () => {
-      const heading = '### Jan 13, 2026 - Planning';
-      const match = heading.match(PATTERNS.HEADING_DATE_NATURAL);
-      expect(match?.[1]).toBe('Jan');
-      expect(match?.[2]).toBe('13');
-      expect(match?.[3]).toBe('2026');
-    });
-
-    it('should match various months', () => {
-      const monthAbbrs = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
-      const fullMonths = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
-      ];
-
-      for (let i = 0; i < fullMonths.length; i++) {
-        const heading = `## ${fullMonths[i]} 15, 2026`;
-        const match = heading.match(PATTERNS.HEADING_DATE_NATURAL);
-        // Pattern captures only 3-letter abbreviation
-        expect(match?.[1]).toBe(monthAbbrs[i]);
-        expect(match?.[2]).toBe('15');
-        expect(match?.[3]).toBe('2026');
-      }
-    });
   });
 });

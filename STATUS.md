@@ -57,12 +57,13 @@ This document provides a quick overview of md2do's current implementation status
 - [x] Status bar integration
 - [x] Published to VSCode Marketplace (v0.2.2)
 
-### Date Support
+### Metadata Syntax
 
-- [x] Absolute dates: `[due: 2026-01-25]`, `[due: 2026-01-25 14:30]`
-- [x] Short formats: `[due: 1/25/26]`, `[due: 1/25]`
-- [x] Relative dates: `[due: today]`, `[due: tomorrow]`, `[due: next week]`, `[due: next month]`
-- [x] Completion dates: `[completed: 2026-01-25]`
+- [x] Due dates: `#due:2026-01-25` (tag-style)
+- [x] Completion dates: `{completed:2026-01-25}` (brace-style)
+- [x] Todoist IDs: `{todoist:123456}` (brace-style)
+- [x] Legacy bracket syntax still parsed for backward compatibility (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`)
+- [x] CLI migration command: `md2do migrate --dry-run --path <dir>`
 - [x] Heading date extraction (ISO, slash, natural formats)
 
 ### Publishing & CI/CD

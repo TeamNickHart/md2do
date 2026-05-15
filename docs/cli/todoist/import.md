@@ -30,7 +30,7 @@ md2do todoist import ./work/tasks.md:8 --project Work
 1. Reads the task from the specified line in your markdown file
 2. Extracts metadata (priority, tags, due date)
 3. Creates the task in Todoist
-4. Adds `[todoist:ID]` marker to your markdown for future syncs
+4. Adds `{todoist:ID}` marker to your markdown for future syncs
 
 ## Related
 

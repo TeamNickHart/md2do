@@ -37,7 +37,7 @@ export function todoistToMd2doPriority(priority: number): string | undefined {
 
 /**
  * Extract task content without metadata for Todoist
- * Removes: assignee, priority markers, tags, dates, todoist ID
+ * Removes: assignee, priority markers, tags, dates, todoist ID (both new and legacy syntax)
  */
 export function extractTaskContent(text: string): string {
   return (
@@ -46,12 +46,18 @@ export function extractTaskContent(text: string): string {
       .replace(/@\w+/g, '')
       // Remove priority markers
       .replace(/!+/g, '')
+      // Remove due dates (new syntax #due:YYYY-MM-DD) — before tag removal
+      .replace(/#due:\d{4}-\d{2}-\d{2}/g, '')
       // Remove tags
-      .replace(/#\w+/g, '')
+      .replace(/#[\w-]+/g, '')
       // Remove dates in parentheses
       .replace(/\(\d{4}-\d{2}-\d{2}\)/g, '')
-      // Remove Todoist ID
+      // Remove Todoist ID (new and legacy)
+      .replace(/\{todoist:\d+\}/gi, '')
       .replace(/\[todoist:\s*\d+\]/gi, '')
+      // Remove completed date (new and legacy)
+      .replace(/\{completed:\d{4}-\d{2}-\d{2}\}/gi, '')
+      .replace(/\[completed:\s*\d{4}-\d{2}-\d{2}\]/gi, '')
       // Clean up extra whitespace
       .replace(/\s+/g, ' ')
       .trim()
@@ -99,12 +105,12 @@ export function formatTaskContent(
     const year = options.due.getUTCFullYear();
     const month = String(options.due.getUTCMonth() + 1).padStart(2, '0');
     const day = String(options.due.getUTCDate()).padStart(2, '0');
-    result += ` (${year}-${month}-${day})`;
+    result += ` #due:${year}-${month}-${day}`;
   }
 
   // Add Todoist ID
   if (options.todoistId) {
-    result += ` [todoist:${options.todoistId}]`;
+    result += ` {todoist:${options.todoistId}}`;
   }
 
   return result;

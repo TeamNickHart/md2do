@@ -4,15 +4,28 @@ See the complete roadmap at [ROADMAP.md](https://github.com/TeamNickHart/md2do/b
 
 This page highlights the major upcoming features and their current status.
 
-## Current Version: v0.1.0
+## Current Version: v0.2.x
 
-✅ Core task parsing and filtering
-✅ CLI commands (list, stats)
-✅ Todoist integration
-✅ MCP server for AI
-✅ Hierarchical configuration
+### Completed
+
+- Core task parsing and filtering
+- CLI commands (list, stats, config, migrate)
+- Todoist integration (import, sync, list, add)
+- MCP server for AI
+- Hierarchical configuration
+- VitePress docs site at [md2do.com](https://md2do.com)
+- **Syntax migration** - New `#due:YYYY-MM-DD`, `{completed:YYYY-MM-DD}`, `{todoist:NNN}` format with backward-compatible legacy parsing
+- **`md2do migrate` command** - Automated migration from legacy bracket syntax
+- **VS Code extension** (v0.2.1) - Task Explorer, CodeLens, diagnostics, dashboard, smart `#due:` autocomplete
+- **Obsidian plugin** (beta) - Task list view, grouping, sorting, commands
 
 ## In Progress
+
+### Obsidian Plugin Polish
+
+- [ ] Syntax migration updates (suggest provider, task writer)
+- [ ] Community plugin submission
+- [ ] Auto-completion for `#due:`, `@`, `#`
 
 ### Advanced Sync Logic
 
@@ -28,7 +41,7 @@ This page highlights the major upcoming features and their current status.
 - [ ] Better error messages
 - [ ] First-run experience
 
-## Near-Term (Next 3-6 Months)
+## Near-Term
 
 ### Watch Mode
 
@@ -38,21 +51,13 @@ Real-time monitoring and auto-sync
 - Auto-sync on save
 - Desktop notifications
 
-### Website & Docs
-
-- [ ] VitePress site at md2do.com
-- [ ] Interactive examples
-- [ ] Video tutorials
-- [ ] Blog
-
 ### Repository Polish
 
-- [ ] CONTRIBUTING.md
 - [ ] Issue/PR templates
 - [ ] GitHub Actions CI/CD
 - [ ] Automated releases
 
-## Mid-Term (6-12 Months)
+## Mid-Term
 
 ### MCP + Todoist
 
@@ -69,15 +74,7 @@ Sync with GitHub Issues
 - Bidirectional sync
 - Issue linking
 
-### VS Code Extension
-
-Native VS Code integration
-
-- Task tree view
-- Inline decorations
-- Quick actions
-
-## Long-Term (12+ Months)
+## Long-Term
 
 ### Web Dashboard
 

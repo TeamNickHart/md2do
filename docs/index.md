@@ -68,9 +68,9 @@ md2do stats --by assignee
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @jane !!! #backend #auth [due: 2026-01-20]
-- [x] Write documentation @nick !! #docs [completed: 2026-01-15]
-- [ ] Fix bug in parser @alex ! #bug [due: 2026-01-18]
+- [ ] Implement user authentication @jane !!! #backend #auth #due:2026-01-20
+- [x] Write documentation @nick !! #docs {completed:2026-01-15}
+- [ ] Fix bug in parser @alex ! #bug #due:2026-01-18
 ```
 
 **Supported metadata:**
@@ -78,9 +78,11 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `[due: YYYY-MM-DD]` - Due date
-- `[completed: YYYY-MM-DD]` - Completion date
-- `[todoist:ID]` - Todoist sync ID
+- `#due:YYYY-MM-DD` - Due date
+- `{completed:YYYY-MM-DD}` - Completion date
+- `{todoist:ID}` - Todoist sync ID
+
+> Legacy bracket syntax (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`) is still parsed for backward compatibility.
 
 ## What Makes md2do Special?
 

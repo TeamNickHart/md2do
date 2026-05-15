@@ -37,14 +37,50 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
   ): vscode.CompletionItem[] | undefined {
     const line = document.lineAt(position.line);
     const lineText = line.text.substring(0, position.character);
-
     // Only provide completions on task lines
     if (!lineText.match(/^\s*-\s*\[([ x])\]/)) {
       return undefined;
     }
 
-    // Progressive date completion: [due: 2, [due: 2026-, [due: 2026-02-
-    // Handle auto-paired brackets: [due: 2] with cursor before ]
+    // Progressive date completion for new syntax: #due:2, #due:2026-
+    const newDuePartialMatch = lineText.match(/#due:(\d[\d-]*)$/);
+    if (newDuePartialMatch && newDuePartialMatch[1]) {
+      const wordPos = position.character - newDuePartialMatch[0].length + 1;
+      const range = new vscode.Range(
+        position.line,
+        wordPos,
+        position.line,
+        position.character,
+      );
+      return this.getProgressiveDateCompletions(newDuePartialMatch[1]).map(
+        (item) => ({
+          ...item,
+          range,
+          insertText: `due:${item.insertText as string}`,
+          filterText: `due:${item.insertText as string}`,
+        }),
+      );
+    }
+
+    // Date trigger for new syntax: #due: (with optional alpha for shortcut filtering)
+    const dueColonMatch = lineText.match(/#due:[a-z ]*$/i);
+    if (dueColonMatch) {
+      const wordPos = position.character - dueColonMatch[0].length + 1;
+      const range = new vscode.Range(
+        position.line,
+        wordPos,
+        position.line,
+        position.character,
+      );
+      return this.getDueShortcuts().map((item) => ({
+        ...item,
+        range,
+        insertText: `due:${item.insertText as string}`,
+        filterText: `due:${item.filterText ?? (item.label as string)}`,
+      }));
+    }
+
+    // Progressive date completion for legacy syntax: [due: 2, [due: 2026-
     const partialDateMatch = lineText.match(
       /\[(due|completed):\s*(\d{1,4}-?\d{0,2}-?\d{0,2})\]?$/i,
     );
@@ -53,8 +89,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return this.getProgressiveDateCompletions(partial);
     }
 
-    // Date completion: [due: | or [due: ] with cursor before ]
-    // Handle auto-paired brackets
+    // Date completion for legacy syntax: [due: | or [due: ]
     if (lineText.match(/\[(due|completed):\s*\]?$/i)) {
       return this.getDateCompletions();
     }
@@ -65,8 +100,24 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
     }
 
     // Tag completion: #|
-    if (lineText.match(/#\w*$/)) {
-      return this.getTagCompletions();
+    const tagMatch = lineText.match(/#([\w-]*)$/);
+    if (tagMatch) {
+      const items = this.getTagCompletions();
+      // Add a "due:" entry so typing #du suggests #due: which triggers date completions
+      const dueItem: vscode.CompletionItem = {
+        label: 'due:',
+        kind: vscode.CompletionItemKind.Value,
+        insertText: 'due:',
+        detail: 'Set a due date',
+        documentation:
+          'Type #due: to see date shortcuts (today, tomorrow, monday...)',
+        sortText: '!due',
+        command: {
+          command: 'editor.action.triggerSuggest',
+          title: 'Trigger completions',
+        },
+      };
+      return [dueItem, ...items];
     }
 
     // Priority completion: !|
@@ -418,6 +469,130 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       });
 
     return items;
+  }
+
+  /**
+   * Get due date shortcut completions for the #due: trigger path.
+   * Returns items with label='today', insertText='YYYY-MM-DD', filterText='today'.
+   * The caller prefixes insertText/filterText with 'due:'.
+   */
+  private getDueShortcuts(): vscode.CompletionItem[] {
+    const today = new Date();
+    const formatDate = (date: Date): string =>
+      date.toISOString().split('T')[0]!;
+
+    const makeDate = (daysFromNow: number): Date => {
+      const d = new Date(today);
+      d.setDate(d.getDate() + daysFromNow);
+      return d;
+    };
+
+    const nextDayOfWeek = (targetDay: number): Date => {
+      const d = new Date(today);
+      let daysToAdd = (targetDay - today.getDay() + 7) % 7;
+      if (daysToAdd === 0) daysToAdd = 7;
+      d.setDate(d.getDate() + daysToAdd);
+      return d;
+    };
+
+    const endOfWeek = new Date(today);
+    const currentDay = today.getDay();
+    const daysUntilFriday =
+      currentDay <= 5 ? 5 - currentDay : 7 - currentDay + 5;
+    endOfWeek.setDate(
+      endOfWeek.getDate() + (daysUntilFriday === 0 ? 7 : daysUntilFriday),
+    );
+
+    const nextMonth = new Date(today);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+    const shortcuts: {
+      label: string;
+      date: Date;
+      doc: string;
+      sort: string;
+    }[] = [
+      { label: 'today', date: today, doc: 'Due today', sort: '!due0' },
+      {
+        label: 'tomorrow',
+        date: makeDate(1),
+        doc: 'Due tomorrow',
+        sort: '!due1',
+      },
+      {
+        label: 'monday',
+        date: nextDayOfWeek(1),
+        doc: 'Next Monday',
+        sort: '!due2',
+      },
+      {
+        label: 'tuesday',
+        date: nextDayOfWeek(2),
+        doc: 'Next Tuesday',
+        sort: '!due3',
+      },
+      {
+        label: 'wednesday',
+        date: nextDayOfWeek(3),
+        doc: 'Next Wednesday',
+        sort: '!due4',
+      },
+      {
+        label: 'thursday',
+        date: nextDayOfWeek(4),
+        doc: 'Next Thursday',
+        sort: '!due5',
+      },
+      {
+        label: 'friday',
+        date: nextDayOfWeek(5),
+        doc: 'Next Friday',
+        sort: '!due6',
+      },
+      {
+        label: 'saturday',
+        date: nextDayOfWeek(6),
+        doc: 'Next Saturday',
+        sort: '!due7',
+      },
+      {
+        label: 'sunday',
+        date: nextDayOfWeek(0),
+        doc: 'Next Sunday',
+        sort: '!due8',
+      },
+      {
+        label: 'end of week',
+        date: endOfWeek,
+        doc: 'Due end of week (Friday)',
+        sort: '!due9a',
+      },
+      {
+        label: 'next week',
+        date: makeDate(7),
+        doc: 'Due in one week',
+        sort: '!due9b',
+      },
+      {
+        label: 'next month',
+        date: nextMonth,
+        doc: 'Due in one month',
+        sort: '!due9c',
+      },
+    ];
+
+    return shortcuts.map(({ label, date, doc, sort }) => {
+      const dateStr = formatDate(date);
+      return {
+        label,
+        kind: vscode.CompletionItemKind.Value,
+        insertText: dateStr,
+        filterText: label,
+        detail: dateStr,
+        documentation: doc,
+        sortText: sort,
+      };
+    });
   }
 
   /**

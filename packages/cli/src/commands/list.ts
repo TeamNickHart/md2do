@@ -65,7 +65,7 @@ export function createListCommand(): Command {
     // Sorting
     .option(
       '-s, --sort <field>',
-      'Sort by field (due|priority|created|file|project|assignee)',
+      'Sort by field (due|priority|file|project|assignee)',
       'file',
     )
     .option('--reverse', 'Reverse sort order')
@@ -78,7 +78,7 @@ export function createListCommand(): Command {
     )
     .option('--no-colors', 'Disable colors in output')
     .option('--no-paths', 'Hide file paths')
-    .option('--context', 'Show context information (project, person, heading)')
+    .option('--context', 'Show context information (project, person)')
 
     // Warning options
     .option('--no-warnings', 'Hide all warnings')
@@ -175,9 +175,6 @@ export function createListCommand(): Command {
             break;
           case 'priority':
             comparator = sorting.byPriority();
-            break;
-          case 'created':
-            comparator = sorting.byCreatedDate();
             break;
           case 'file':
             comparator = sorting.byFile();

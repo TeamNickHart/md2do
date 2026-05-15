@@ -15,8 +15,6 @@ export interface JsonOutput {
     tags: string[];
     todoistId?: string;
     completedDate?: string; // ISO string
-    contextDate?: string; // ISO string
-    contextHeading?: string;
   }>;
   metadata: {
     total: number;
@@ -49,10 +47,6 @@ export function formatAsJson(tasks: Task[]): string {
       ...(task.completedDate && {
         completedDate: task.completedDate.toISOString(),
       }),
-      ...(task.contextDate && {
-        contextDate: task.contextDate.toISOString(),
-      }),
-      ...(task.contextHeading && { contextHeading: task.contextHeading }),
     })),
     metadata: {
       total: tasks.length,

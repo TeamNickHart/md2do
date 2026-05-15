@@ -79,8 +79,8 @@ Found 3 tasks
   tasks.md:3 - Unsupported bullet marker (* or +). Use dash (-) for task lists.
   tasks.md:4 - Missing space after checkbox. Use "- [x] Task" format.
   tasks.md:5 - Missing space before checkbox. Use "- [x] Task" format.
-  tasks.md:6 - Task has no due date. Add [due: YYYY-MM-DD] or place under a heading with a date.
-  tasks.md:7 - Completed task missing completion date. Add [completed: YYYY-MM-DD].
+  tasks.md:6 - Task has no due date. Add #due:YYYY-MM-DD.
+  tasks.md:7 - Completed task missing completion date. Add {completed:YYYY-MM-DD}.
   ... and 1 more warning (use --all-warnings to see all)
 "
 `;

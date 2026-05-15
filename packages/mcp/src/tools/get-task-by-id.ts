@@ -58,7 +58,5 @@ function formatTask(task: Task) {
   if (task.dueDate) formatted.dueDate = task.dueDate.toISOString();
   if (task.completedDate)
     formatted.completedDate = task.completedDate.toISOString();
-  if (task.contextHeading) formatted.contextHeading = task.contextHeading;
-
   return formatted;
 }

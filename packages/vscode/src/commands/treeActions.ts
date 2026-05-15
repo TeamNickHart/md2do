@@ -37,16 +37,14 @@ export async function toggleTaskFromTree(task: Task): Promise<void> {
 
     if (!isCompleted) {
       // Completing: add completion date if not present
-      if (!suffix.includes('[completed:')) {
-        const metadataMatch = suffix.match(/^(.*?)(\s+\[.*\])?$/);
-        if (metadataMatch) {
-          const [, text, metadata] = metadataMatch;
-          newSuffix = `${text} [completed: ${today}]${metadata || ''}`;
-        }
+      if (!suffix.includes('{completed:') && !suffix.includes('[completed:')) {
+        newSuffix = `${suffix.trimEnd()} {completed:${today}}`;
       }
     } else {
-      // Uncompleting: remove completion date
-      newSuffix = suffix.replace(/\s*\[completed:\s*[^\]]+\]/, '');
+      // Uncompleting: remove completion date (both new and legacy syntax)
+      newSuffix = suffix
+        .replace(/\s*\{completed:\d{4}-\d{2}-\d{2}\}/, '')
+        .replace(/\s*\[completed:\s*[^\]]+\]/, '');
     }
 
     const newLineText = `${prefix}${newState}${newSuffix}`;
@@ -81,12 +79,12 @@ export async function copyTaskAsMarkdown(task: Task): Promise<void> {
     // Add metadata
     if (task.dueDate) {
       const dateStr = task.dueDate.toISOString().split('T')[0];
-      markdown += ` [due: ${dateStr}]`;
+      markdown += ` #due:${dateStr}`;
     }
 
     if (task.completedDate) {
       const dateStr = task.completedDate.toISOString().split('T')[0];
-      markdown += ` [completed: ${dateStr}]`;
+      markdown += ` {completed:${dateStr}}`;
     }
 
     if (task.priority) {
@@ -108,7 +106,7 @@ export async function copyTaskAsMarkdown(task: Task): Promise<void> {
     }
 
     if (task.todoistId) {
-      markdown += ` [todoist:${task.todoistId}]`;
+      markdown += ` {todoist:${task.todoistId}}`;
     }
 
     await vscode.env.clipboard.writeText(markdown);

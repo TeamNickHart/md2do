@@ -65,14 +65,14 @@ Tests assignee-based filtering:
 
 Tests Todoist integration markers:
 
-- Tasks with Todoist IDs `[todoist:123]`
+- Tasks with Todoist IDs `{todoist:123}`
 - Tasks pending sync
 - Various ID formats (short, long, medium)
 - Mixed sync status
 
 **Features Tested:**
 
-- Todoist ID parsing
+- Todoist ID parsing (`{todoist:NNN}` brace syntax)
 - Sync marker preservation
 - Integration workflows
 
@@ -164,7 +164,7 @@ pnpm cli -- list --path examples/test-cases/tags.md --tag bug
 | Priority levels    | `priorities.md`     | `--priority urgent\|high\|normal\|low`        |
 | Assignee filtering | `assignees.md`      | `--assignee alice`                            |
 | Tag filtering      | `tags.md`           | `--tag backend`                               |
-| Todoist sync       | `todoist-sync.md`   | Check `[todoist:ID]` markers                  |
+| Todoist sync       | `todoist-sync.md`   | Check `{todoist:ID}` markers                  |
 | Edge cases         | `edge-cases.md`     | Various special scenarios                     |
 
 ## Adding New Test Cases
@@ -173,9 +173,11 @@ To add new test cases:
 
 1. **Choose the appropriate file** based on the feature category
 2. **Add tasks following the pattern:**
-   ```markdown
-   - [ ] Description of test case @assignee !! #tag [due: 2026-01-20]
-   ```
+
+```markdown
+- [ ] Description of test case @assignee !! #tag #due:2026-01-20
+```
+
 3. **Include edge cases** that might break the parser
 4. **Document the expected behavior** in comments if needed
 5. **Run tests** to validate: `pnpm test:e2e`

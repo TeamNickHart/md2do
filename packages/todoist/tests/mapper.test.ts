@@ -75,12 +75,27 @@ describe('extractTaskContent', () => {
     expect(extractTaskContent(text)).toBe('Fix bug');
   });
 
-  it('should remove Todoist ID', () => {
+  it('should remove new syntax Todoist ID', () => {
+    const text = 'Fix bug {todoist:123456}';
+    expect(extractTaskContent(text)).toBe('Fix bug');
+  });
+
+  it('should remove legacy Todoist ID', () => {
     const text = 'Fix bug [todoist:123456]';
     expect(extractTaskContent(text)).toBe('Fix bug');
   });
 
-  it('should remove all metadata', () => {
+  it('should remove #due: syntax', () => {
+    const text = 'Fix bug #due:2026-01-20';
+    expect(extractTaskContent(text)).toBe('Fix bug');
+  });
+
+  it('should remove all metadata (new syntax)', () => {
+    const text = 'Fix bug @nick !!! #backend #due:2026-01-20 {todoist:123456}';
+    expect(extractTaskContent(text)).toBe('Fix bug');
+  });
+
+  it('should remove all metadata (legacy syntax)', () => {
     const text = 'Fix bug @nick !!! #backend (2026-01-20) [todoist:123456]';
     expect(extractTaskContent(text)).toBe('Fix bug');
   });
@@ -123,12 +138,12 @@ describe('formatTaskContent', () => {
     const result = formatTaskContent('Fix bug', {
       due: new Date('2026-01-20T00:00:00.000Z'),
     });
-    expect(result).toBe('Fix bug (2026-01-20)');
+    expect(result).toBe('Fix bug #due:2026-01-20');
   });
 
   it('should format content with Todoist ID', () => {
     const result = formatTaskContent('Fix bug', { todoistId: '123456' });
-    expect(result).toBe('Fix bug [todoist:123456]');
+    expect(result).toBe('Fix bug {todoist:123456}');
   });
 
   it('should format content with all metadata', () => {
@@ -140,7 +155,7 @@ describe('formatTaskContent', () => {
       todoistId: '123456',
     });
     expect(result).toBe(
-      'Fix bug @nick !!! #backend (2026-01-20) [todoist:123456]',
+      'Fix bug @nick !!! #backend #due:2026-01-20 {todoist:123456}',
     );
   });
 });
@@ -149,7 +164,7 @@ describe('md2doToTodoist', () => {
   it('should convert md2do task to Todoist params', () => {
     const task: Task = {
       id: 'test-id',
-      text: 'Fix bug @nick !!! #backend (2026-01-20)',
+      text: 'Fix bug @nick !!! #backend #due:2026-01-20',
       completed: false,
       file: 'test.md',
       line: 1,
@@ -224,7 +239,7 @@ describe('todoistToMd2do', () => {
     const update = todoistToMd2do(todoistTask, 'nick');
 
     expect(update).toEqual({
-      text: 'Fix bug @nick !!! #backend (2026-01-20) [todoist:123456]',
+      text: 'Fix bug @nick !!! #backend #due:2026-01-20 {todoist:123456}',
       completed: false,
       priority: 'urgent',
       tags: ['backend'],
@@ -252,7 +267,7 @@ describe('todoistToMd2do', () => {
     const update = todoistToMd2do(todoistTask);
 
     expect(update.completed).toBe(true);
-    expect(update.text).toBe('Fix bug [todoist:123456]');
+    expect(update.text).toBe('Fix bug {todoist:123456}');
   });
 
   it('should handle task without optional fields', () => {
@@ -274,7 +289,7 @@ describe('todoistToMd2do', () => {
     const update = todoistToMd2do(todoistTask);
 
     expect(update).toEqual({
-      text: 'Fix bug [todoist:123456]',
+      text: 'Fix bug {todoist:123456}',
       completed: false,
       priority: 'low',
       todoistId: '123456',

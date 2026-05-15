@@ -74,6 +74,7 @@ export default defineConfig({
           { text: 'Overview', link: '/cli/overview' },
           { text: 'list', link: '/cli/list' },
           { text: 'stats', link: '/cli/stats' },
+          { text: 'migrate', link: '/cli/migrate' },
           {
             text: 'todoist',
             collapsed: false,
@@ -91,6 +92,7 @@ export default defineConfig({
         text: 'Integrations',
         items: [
           { text: 'VSCode Extension', link: '/integrations/vscode' },
+          { text: 'Obsidian Plugin', link: '/integrations/obsidian' },
           { text: 'Todoist Setup', link: '/integrations/todoist' },
           { text: 'MCP (AI Integration)', link: '/integrations/mcp' },
         ],

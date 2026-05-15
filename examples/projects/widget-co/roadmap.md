@@ -6,26 +6,26 @@
 
 ### Analytics Dashboard
 
-- [ ] Design dashboard wireframes @emma !!! #design #analytics [due: 2026-01-25]
-- [ ] Implement data visualization library @chris !! #frontend #charts [due: 2026-01-28]
-- [ ] Build backend aggregation service @mike !! #backend #analytics [due: 2026-02-01]
-- [ ] Add export to CSV functionality @chris ! #frontend [due: 2026-02-05]
-- [x] Research chart libraries @emma ! #research [due: 2026-01-12]
+- [ ] Design dashboard wireframes @emma !!! #design #analytics #due:2026-01-25
+- [ ] Implement data visualization library @chris !! #frontend #charts #due:2026-01-28
+- [ ] Build backend aggregation service @mike !! #backend #analytics #due:2026-02-01
+- [ ] Add export to CSV functionality @chris ! #frontend #due:2026-02-05
+- [x] Research chart libraries @emma ! #research #due:2026-01-12
 
 ### Mobile App
 
-- [ ] Set up React Native project @lisa !!! #mobile [due: 2026-01-22]
-- [ ] Design mobile UI mockups @emma !! #design #mobile [due: 2026-01-24]
-- [ ] Implement authentication flow @lisa !! #mobile #auth [due: 2026-01-27]
-- [ ] Add offline mode support @chris !! #mobile #feature [due: 2026-02-03]
-- [ ] Test on iOS and Android devices @lisa ! #mobile #testing [due: 2026-02-08]
+- [ ] Set up React Native project @lisa !!! #mobile #due:2026-01-22
+- [ ] Design mobile UI mockups @emma !! #design #mobile #due:2026-01-24
+- [ ] Implement authentication flow @lisa !! #mobile #auth #due:2026-01-27
+- [ ] Add offline mode support @chris !! #mobile #feature #due:2026-02-03
+- [ ] Test on iOS and Android devices @lisa ! #mobile #testing #due:2026-02-08
 
 ### API Improvements
 
-- [x] Migrate to GraphQL @mike !!! #backend #api [due: 2026-01-10]
-- [ ] Add API versioning @mike !! #backend #api [due: 2026-01-20]
-- [ ] Implement API rate limiting @chris !! #backend #security [due: 2026-01-23]
-- [ ] Write GraphQL schema documentation @mike ! #backend #docs [due: 2026-01-29]
+- [x] Migrate to GraphQL @mike !!! #backend #api #due:2026-01-10
+- [ ] Add API versioning @mike !! #backend #api #due:2026-01-20
+- [ ] Implement API rate limiting @chris !! #backend #security #due:2026-01-23
+- [ ] Write GraphQL schema documentation @mike ! #backend #docs #due:2026-01-29
 
 ## Q2 2026 (Future)
 

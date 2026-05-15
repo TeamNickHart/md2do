@@ -128,6 +128,35 @@ md2do config edit
 
 See [config command](/cli/config) for details.
 
+### `migrate`
+
+Migrate markdown files from legacy bracket syntax to the new tag/brace syntax.
+
+```bash
+md2do migrate [options]
+```
+
+**Options:**
+
+- `--path <dir>` - Root directory to scan (default: current directory)
+- `--pattern <pattern>` - Glob pattern for markdown files (default: `**/*.md`)
+- `--dry-run` - Preview changes without modifying files
+
+**Examples:**
+
+```bash
+# Preview what would change
+md2do migrate --dry-run
+
+# Apply migration
+md2do migrate
+
+# Migrate specific directory
+md2do migrate --path ./work-notes
+```
+
+See [migrate command](/cli/migrate) for details.
+
 ## Todoist Commands
 
 Sync with [Todoist](https://www.todoist.com). Requires API token configuration.

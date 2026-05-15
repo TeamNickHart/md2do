@@ -19,7 +19,7 @@ Your tasks live in markdown files - no proprietary formats, no databases, no loc
 md2do understands markdown task syntax and extends it with rich metadata:
 
 ```markdown
-- [ ] Task description @assignee !!! #tag [due: 2026-01-20]
+- [ ] Task description @assignee !!! #tag #due:2026-01-20
 ```
 
 Extract:
@@ -27,8 +27,13 @@ Extract:
 - **Assignees** - `@username`
 - **Priorities** - `!!!` (urgent), `!!` (high), `!` (normal)
 - **Tags** - `#tag`
-- **Due dates** - `[due: YYYY-MM-DD]`
+- **Due dates** - `#due:YYYY-MM-DD`
+- **Completion dates** - `{completed:YYYY-MM-DD}`
 - **Completion status** - `[x]` vs `[ ]`
+
+::: tip Legacy Syntax
+The older bracket syntax (`[due: YYYY-MM-DD]`, `[completed: YYYY-MM-DD]`, `[todoist: NNN]`) is still parsed for backward compatibility.
+:::
 
 ### Context-Aware
 
@@ -139,9 +144,9 @@ Track team tasks in a shared repository:
 ```markdown
 ## Sprint 23
 
-- [ ] API endpoints @alice !! #backend [due: 2026-01-25]
-- [ ] UI mockups @bob ! #design [due: 2026-01-22]
-- [ ] Database migration @charlie !!! #backend [due: 2026-01-20]
+- [ ] API endpoints @alice !! #backend #due:2026-01-25
+- [ ] UI mockups @bob ! #design #due:2026-01-22
+- [ ] Database migration @charlie !!! #backend #due:2026-01-20
 ```
 
 ```bash
@@ -161,8 +166,8 @@ Keep action items in 1-1 notes:
 
 ## Action Items
 
-- [ ] Review performance doc @alice ! [due: 2026-01-20]
-- [ ] Schedule team offsite @nick !! [due: 2026-01-18]
+- [ ] Review performance doc @alice ! #due:2026-01-20
+- [ ] Schedule team offsite @nick !! #due:2026-01-18
 ```
 
 ```bash
@@ -177,7 +182,7 @@ Track TODOs in technical docs:
 ```markdown
 ## API Documentation
 
-- [ ] Document authentication @backend !!! #docs [due: 2026-01-25]
+- [ ] Document authentication @backend !!! #docs #due:2026-01-25
 - [ ] Add code examples @docs-team ! #examples
 - [x] API reference @alice !! #api-docs
 ```

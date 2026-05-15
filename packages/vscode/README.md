@@ -136,10 +136,10 @@ md2do supports rich metadata in your markdown tasks:
 
 ```markdown
 - [ ] Basic task
-- [ ] Task with due date [due: 2026-02-01]
-- [ ] Urgent task [due: tomorrow] !!!
+- [ ] Task with due date #due:2026-02-01
+- [ ] Urgent task #due:2026-02-02 !!!
 - [ ] Assigned task @alice #bug
-- [x] Completed task [completed: 2026-01-27]
+- [x] Completed task {completed:2026-01-27}
 ```
 
 ### Keyboard Shortcuts
