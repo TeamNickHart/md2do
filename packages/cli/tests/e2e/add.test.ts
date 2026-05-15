@@ -137,16 +137,32 @@ describe('E2E: md2do add', () => {
     expect(lines[3]).toBe('- [ ] Third task');
   });
 
-  it('should error when --file is missing', () => {
+  it('should print to stdout when --file is omitted', () => {
+    const output = run('add "Stdout task"');
+    expect(output).toBe('- [ ] Stdout task');
+  });
+
+  it('should print to stdout with metadata when --file is omitted', () => {
+    const output = run('add "Task" --assignee nick --priority high');
+    expect(output).toBe('- [ ] Task @nick !!');
+  });
+
+  it('should print to stdout with --due when --file is omitted', () => {
+    const expected = format(addDays(new Date(), 1), 'yyyy-MM-dd');
+    const output = run('add "Task" --due tomorrow');
+    expect(output).toBe(`- [ ] Task #due:${expected}`);
+  });
+
+  it('should error when --line is used without --file', () => {
     try {
-      execSync(`node ${cliPath} add "Test"`, {
+      execSync(`node ${cliPath} add "Task" --line 3`, {
         encoding: 'utf-8',
         stdio: 'pipe',
       });
       expect.fail('Should have thrown');
     } catch (error: unknown) {
-      const err = error as { stderr: string; status: number };
-      expect(err.stderr).toContain('--file');
+      const err = error as { stderr: string };
+      expect(err.stderr).toContain('--line requires --file');
     }
   });
 
@@ -191,6 +207,22 @@ describe('E2E: md2do add', () => {
     content = readFileSync(file, 'utf-8');
     expect(content).toContain('!');
     expect(content).not.toContain('!!');
+  });
+
+  it('should resolve --due today correctly regardless of timezone', () => {
+    const tz = 'America/Los_Angeles';
+    const output = execSync(`node ${cliPath} add "TZ task" --due today`, {
+      encoding: 'utf-8',
+      env: { ...process.env, TZ: tz },
+    }).trim();
+    // Compute expected date in the same timezone
+    const expected = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(new Date());
+    expect(output).toBe(`- [ ] TZ task #due:${expected}`);
   });
 
   it('should error on invalid date', () => {

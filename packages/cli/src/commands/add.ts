@@ -75,7 +75,10 @@ export function createAddCommand(): Command {
   command
     .description('Add a task to a markdown file')
     .argument('<text>', 'Task description')
-    .requiredOption('-f, --file <path>', 'Target markdown file')
+    .option(
+      '-f, --file <path>',
+      'Target markdown file (omit to print to stdout)',
+    )
     .option('-a, --assignee <name>', 'Assignee (@name)')
     .option('-p, --priority <level>', 'Priority: urgent, high, normal, low')
     .option(
@@ -119,6 +122,16 @@ export function createAddCommand(): Command {
         }
 
         const assembledText = parts.join(' ');
+        const checkbox = options.completed ? '- [x]' : '- [ ]';
+
+        if (!options.file) {
+          if (options.line !== undefined) {
+            console.error('Error: --line requires --file');
+            process.exit(1);
+          }
+          console.log(`${checkbox} ${assembledText}`);
+          return;
+        }
 
         const addOptions: { completed?: boolean; line?: number } = {};
         if (options.completed) {
@@ -128,10 +141,9 @@ export function createAddCommand(): Command {
           addOptions.line = options.line;
         }
 
-        const result = await addTask(options.file!, assembledText, addOptions);
+        const result = await addTask(options.file, assembledText, addOptions);
 
         if (result.success) {
-          const checkbox = options.completed ? '- [x]' : '- [ ]';
           console.log(`${checkbox} ${assembledText}`);
         } else {
           console.error(`Error: ${result.error}`);
