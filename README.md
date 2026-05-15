@@ -53,7 +53,7 @@ git clone https://github.com/TeamNickHart/md2do.git
 cd md2do
 pnpm install
 pnpm build
-npm link packages/cli
+pnpm link:cli
 ```
 
 ## 🚀 Quick Start
