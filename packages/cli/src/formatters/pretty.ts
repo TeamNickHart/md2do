@@ -137,12 +137,6 @@ export function formatAsPretty(
         );
       }
 
-      if (task.contextHeading) {
-        contextParts.push(
-          colors ? chalk.gray(task.contextHeading) : task.contextHeading,
-        );
-      }
-
       if (contextParts.length > 0) {
         output.push(
           '    ' +

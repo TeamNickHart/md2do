@@ -17,8 +17,6 @@ export interface Task {
   // Extracted context
   project?: string;
   person?: string;
-  contextDate?: Date;
-  contextHeading?: string;
 
   // Explicit metadata
   assignee?: string;
@@ -34,8 +32,6 @@ export interface Task {
 export interface ParsingContext {
   project?: string;
   person?: string;
-  currentDate?: Date;
-  currentHeading?: string;
   // Workday configuration for time handling
   workdayStartTime?: string; // e.g., "08:00"
   workdayEndTime?: string; // e.g., "17:00"
@@ -76,7 +72,7 @@ export type WarningCode =
   | 'malformed-checkbox' // [x ] or [ x]
   | 'missing-space-after' // -[x]Task
   | 'missing-space-before' // -[x] Task
-  | 'relative-date-no-context' // [due: tomorrow] without heading date
+  | 'relative-date-no-context' // [due: tomorrow] — relative dates no longer supported
   | 'missing-due-date' // Incomplete task with no due date
   | 'missing-completed-date' // [x] without [completed: date]
   | 'duplicate-todoist-id' // Same Todoist ID in multiple tasks

@@ -38,9 +38,9 @@ That's it! md2do will scan all `.md` files in your current directory and show yo
 md2do recognizes standard markdown tasks with optional metadata:
 
 ```markdown
-- [ ] Implement user authentication @jane !!! #backend #auth (2026-01-20)
-- [x] Write documentation @nick !! #docs (2026-01-15)
-- [ ] Fix bug in parser @alex ! #bug (2026-01-18)
+- [ ] Implement user authentication @jane !!! #backend #auth #due:2026-01-20
+- [x] Write documentation @nick !! #docs #due:2026-01-15
+- [ ] Fix bug in parser @alex ! #bug #due:2026-01-18
 ```
 
 **Metadata:**
@@ -48,7 +48,7 @@ md2do recognizes standard markdown tasks with optional metadata:
 - `@username` - Assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `(YYYY-MM-DD)` - Due date
+- `#due:YYYY-MM-DD` - Due date
 - `{todoist:ID}` - Todoist sync marker
 
 ## 🎯 Common Use Cases

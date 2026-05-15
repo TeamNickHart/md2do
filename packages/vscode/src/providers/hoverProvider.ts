@@ -88,11 +88,6 @@ export class TaskHoverProvider implements vscode.HoverProvider {
       sections.push(`👥 **Person**: ${task.person}`);
     }
 
-    // Context heading
-    if (task.contextHeading) {
-      sections.push(`📝 **Heading**: ${task.contextHeading}`);
-    }
-
     // Todoist sync
     if (task.todoistId) {
       sections.push(`🔄 **Todoist ID**: ${task.todoistId}`);

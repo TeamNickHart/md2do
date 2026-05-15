@@ -5,7 +5,7 @@ import type {
   Warning,
 } from '../types/index.js';
 import { PATTERNS } from './patterns.js';
-import { parseAbsoluteDate, resolveRelativeDate } from '../utils/dates.js';
+import { parseAbsoluteDate } from '../utils/dates.js';
 import { generateTaskId } from '../utils/id.js';
 
 /**
@@ -96,13 +96,13 @@ export function extractCompletedDate(text: string): Date | undefined {
 }
 
 /**
- * Extract due date from task text with context awareness
+ * Extract due date from task text
  *
- * Handles both absolute dates ([due: 2026-01-25]) and relative dates
- * ([due: tomorrow]) which require context. Supports optional time ([due: 2026-01-25 17:00]).
+ * Handles absolute dates (#due:2026-01-25 or legacy [due: 2026-01-25]).
+ * Legacy relative dates ([due: tomorrow]) always produce a warning.
  *
  * @param text - Task text
- * @param context - Parsing context (for relative dates and workday config)
+ * @param context - Parsing context (for workday config)
  * @returns Object with parsed date and optional warning
  */
 export function extractDueDate(
@@ -150,30 +150,24 @@ export function extractDueDate(
     return { date: date ?? undefined };
   }
 
-  // Try relative date
+  // Try relative date (legacy syntax only — no heading context to resolve against)
   const relativeMatch = text.match(PATTERNS.DUE_DATE_RELATIVE);
   if (relativeMatch?.[1]) {
-    if (!context.currentDate) {
-      // Relative date without context - create warning
-      return {
-        date: undefined,
-        warning: {
-          severity: 'warning',
-          source: 'md2do',
-          ruleId: 'relative-date-no-context',
-          file: '', // Will be filled in by caller
-          line: 0, // Will be filled in by caller
-          text: text.trim(),
-          message:
-            'Relative due date without context date from heading. Add a heading with a date above this task.',
-          reason:
-            'Relative due date without context date from heading. Add a heading with a date above this task.',
-        },
-      };
-    }
-
-    const date = resolveRelativeDate(relativeMatch[1], context.currentDate);
-    return { date: date ?? undefined };
+    return {
+      date: undefined,
+      warning: {
+        severity: 'warning',
+        source: 'md2do',
+        ruleId: 'relative-date-no-context',
+        file: '', // Will be filled in by caller
+        line: 0, // Will be filled in by caller
+        text: text.trim(),
+        message:
+          'Relative due dates are no longer supported. Use #due:YYYY-MM-DD with a concrete date instead.',
+        reason:
+          'Relative due dates are no longer supported. Use #due:YYYY-MM-DD with a concrete date instead.',
+      },
+    };
   }
 
   return { date: undefined };
@@ -230,7 +224,7 @@ export function cleanTaskText(text: string): string {
  *   3. Parses all metadata (assignee, priority, dates, tags)
  *   4. Cleans the text
  *   5. Generates a stable ID
- *   6. Applies context (project, person, heading date)
+ *   6. Applies context (project, person)
  *
  * @param line - Line of text to parse
  * @param lineNumber - Line number in file (1-indexed)
@@ -341,8 +335,7 @@ export function parseTask(
   }
 
   // Warn about missing dates
-  // Incomplete tasks without any date (no explicit due date and no context date)
-  if (!completed && !dueDateResult.date && !context.currentDate) {
+  if (!completed && !dueDateResult.date) {
     warnings.push({
       severity: 'info',
       source: 'md2do',
@@ -350,10 +343,8 @@ export function parseTask(
       file,
       line: lineNumber,
       text: fullText.trim(),
-      message:
-        'Task has no due date. Add #due:YYYY-MM-DD or place under a heading with a date.',
-      reason:
-        'Task has no due date. Add #due:YYYY-MM-DD or place under a heading with a date.',
+      message: 'Task has no due date. Add #due:YYYY-MM-DD.',
+      reason: 'Task has no due date. Add #due:YYYY-MM-DD.',
     });
   }
 
@@ -397,9 +388,6 @@ export function parseTask(
   if (completedDate !== undefined) task.completedDate = completedDate;
   if (context.project !== undefined) task.project = context.project;
   if (context.person !== undefined) task.person = context.person;
-  if (context.currentDate !== undefined) task.contextDate = context.currentDate;
-  if (context.currentHeading !== undefined)
-    task.contextHeading = context.currentHeading;
 
   return { task, warnings };
 }

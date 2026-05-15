@@ -187,121 +187,16 @@ No tasks at all.
     });
   });
 
-  describe('Heading date context', () => {
-    it('should extract date from heading and apply to subsequent tasks', () => {
-      const content = `
-## Meeting 1/13/26
-
-- [ ] First task
-- [ ] Second task
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks).toHaveLength(2);
-      expect(result.tasks[0]?.contextDate).toBeInstanceOf(Date);
-      expect(result.tasks[0]?.contextDate?.getMonth()).toBe(0); // January
-      expect(result.tasks[0]?.contextDate?.getDate()).toBe(13);
-      expect(result.tasks[1]?.contextDate).toEqual(
-        result.tasks[0]?.contextDate,
-      );
-    });
-
-    it('should update context when encountering new heading', () => {
-      const content = `
-## Meeting 1/13/26
-
-- [ ] Task from first meeting
-
-## Meeting 1/20/26
-
-- [ ] Task from second meeting
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks).toHaveLength(2);
-      expect(result.tasks[0]?.contextDate?.getDate()).toBe(13);
-      expect(result.tasks[1]?.contextDate?.getDate()).toBe(20);
-    });
-
-    it('should preserve heading text in context', () => {
-      const content = `
-## Sprint Planning 1/13/26
-
-- [ ] Task
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks[0]?.contextHeading).toBe(
-        '## Sprint Planning 1/13/26',
-      );
-    });
-
-    it('should handle ISO date format in headings', () => {
-      const content = `
-## 2026-01-13 Daily Standup
-
-- [ ] Task
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks[0]?.contextDate).toBeInstanceOf(Date);
-      expect(result.tasks[0]?.contextDate?.getDate()).toBe(13);
-    });
-
-    it('should handle natural date format in headings', () => {
-      const content = `
-## January 13, 2026 - Team Sync
-
-- [ ] Task
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks[0]?.contextDate).toBeInstanceOf(Date);
-      expect(result.tasks[0]?.contextDate?.getMonth()).toBe(0);
-      expect(result.tasks[0]?.contextDate?.getDate()).toBe(13);
-    });
-  });
-
-  describe('Relative dates with heading context', () => {
-    it('should resolve relative dates using heading date', () => {
-      const content = `
-## Meeting 1/13/26
-
-- [ ] Task [due: tomorrow]
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks[0]?.dueDate).toBeInstanceOf(Date);
-      expect(result.tasks[0]?.dueDate?.getDate()).toBe(14); // Tomorrow from 1/13
-      expect(result.warnings).toHaveLength(0);
-    });
-
-    it('should warn on relative date without heading context', () => {
+  describe('Relative dates always warn', () => {
+    it('should warn on relative date', () => {
       const content = '- [ ] Task [due: tomorrow]';
       const result = scanner.scanFile('test.md', content);
 
       expect(result.tasks[0]?.dueDate).toBeUndefined();
       expect(result.warnings).toHaveLength(2); // Relative date + missing date warnings
       expect(result.warnings[0]?.reason).toContain(
-        'Relative due date without context',
+        'Relative due dates are no longer supported',
       );
-    });
-
-    it('should resolve multiple relative dates in same section', () => {
-      const content = `
-## Planning 1/13/26
-
-- [ ] Task 1 [due: today]
-- [ ] Task 2 [due: tomorrow]
-- [ ] Task 3 [due: next week]
-`.trim();
-      const result = scanner.scanFile('test.md', content);
-
-      expect(result.tasks).toHaveLength(3);
-      expect(result.tasks[0]?.dueDate?.getDate()).toBe(13);
-      expect(result.tasks[1]?.dueDate?.getDate()).toBe(14);
-      expect(result.tasks[2]?.dueDate).toBeInstanceOf(Date); // Next Monday
-      expect(result.warnings).toHaveLength(0);
     });
   });
 
@@ -335,27 +230,25 @@ Line 4
       const content = `
 # Sprint 1 Planning
 
-## 1/13/26 - Sprint Start
+## Sprint Start
 
-- [ ] @alice Setup development environment !! #devops
-- [ ] @bob Review architecture docs #backend
+- [ ] @alice Setup development environment !! #devops #due:2026-01-15
+- [ ] @bob Review architecture docs #backend #due:2026-01-16
 - [x] Create project repository [completed: 2026-01-13]
 
-## 1/20/26 - Mid-Sprint Check-in
+## Mid-Sprint Check-in
 
 - [ ] @alice Deploy staging environment [due: 1/22/26] #devops
-- [ ] Integration tests [due: next week] !!
 `.trim();
       const result = scanner.scanFile('projects/acme-app/sprint-1.md', content);
 
-      expect(result.tasks).toHaveLength(5);
+      expect(result.tasks).toHaveLength(4);
 
       // First task
       expect(result.tasks[0]?.assignee).toBe('alice');
       expect(result.tasks[0]?.priority).toBe('high');
       expect(result.tasks[0]?.tags).toContain('devops');
       expect(result.tasks[0]?.project).toBe('acme-app');
-      expect(result.tasks[0]?.contextDate?.getDate()).toBe(13);
 
       // Completed task
       expect(result.tasks[2]?.completed).toBe(true);
@@ -363,10 +256,7 @@ Line 4
 
       // Task with absolute due date
       expect(result.tasks[3]?.dueDate?.getDate()).toBe(22);
-      expect(result.tasks[3]?.contextDate?.getDate()).toBe(20);
 
-      // Task with relative due date resolved from heading
-      expect(result.tasks[4]?.dueDate).toBeInstanceOf(Date);
       expect(result.warnings).toHaveLength(0);
     });
 
@@ -377,12 +267,12 @@ Line 4
 ## January 13, 2026
 
 - [ ] Discuss Q1 goals [due: 1/20/26]
-- [ ] Review performance feedback
+- [ ] Review performance feedback #due:2026-01-17
 - [x] Schedule team offsite [completed: 2026-01-13]
 
 ## January 20, 2026
 
-- [ ] Follow up on promotion discussion [due: next week]
+- [ ] Follow up on promotion discussion #due:2026-01-27
 `.trim();
       const result = scanner.scanFile('1-1s/jane-doe.md', content);
 
@@ -395,7 +285,7 @@ Line 4
 
       // Check due dates
       expect(result.tasks[0]?.dueDate?.getDate()).toBe(20);
-      expect(result.tasks[3]?.dueDate).toBeInstanceOf(Date);
+      expect(result.tasks[3]?.dueDate?.getDate()).toBe(27);
       expect(result.warnings).toHaveLength(0);
     });
 
@@ -477,10 +367,7 @@ Line 4
       const files = [
         {
           path: 'projects/acme-app/sprint.md',
-          content: `
-## 1/13/26
-- [ ] Project task [due: tomorrow]
-`.trim(),
+          content: '- [ ] Project task #due:2026-01-14',
         },
         {
           path: '1-1s/alice.md',
@@ -569,7 +456,9 @@ Line 4
 
       expect(result.tasks).toHaveLength(2);
       expect(result.warnings).toHaveLength(1);
-      expect(result.warnings[0]?.reason).toContain('Duplicate Todoist ID');
+      expect(result.warnings[0]?.reason).toContain(
+        'Duplicate Todoist ID {todoist:',
+      );
       expect(result.warnings[0]?.reason).toContain('123456');
       expect(result.warnings[0]?.line).toBe(2);
     });
@@ -617,7 +506,9 @@ Line 4
 
       expect(result.tasks).toHaveLength(2);
       expect(result.warnings).toHaveLength(1);
-      expect(result.warnings[0]?.reason).toContain('Duplicate Todoist ID');
+      expect(result.warnings[0]?.reason).toContain(
+        'Duplicate Todoist ID {todoist:',
+      );
       expect(result.warnings[0]?.reason).toContain('across files');
       expect(result.warnings[0]?.file).toBe('file2.md');
     });

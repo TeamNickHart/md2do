@@ -145,23 +145,6 @@ This task:
 - Tagged with **backend** and **security**
 - Due **January 25, 2026**
 
-## Headings as Context
-
-md2do extracts context from markdown headings:
-
-```markdown
-## Sprint 24
-
-- [ ] Implement dark mode @bob !! #frontend #due:2026-02-01
-- [ ] Database migration @alice !!! #backend #due:2026-01-28
-
-## Bugs
-
-- [ ] Fix navbar on mobile @bob ! #ui #due:2026-01-26
-```
-
-Tasks inherit their heading as context for filtering.
-
 ## File Structure as Projects
 
 Organize tasks in files and folders:

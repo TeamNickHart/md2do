@@ -159,35 +159,6 @@ export const COMPLETED_DATE =
   /\{completed:(\d{4}-\d{2}-\d{2})\}|\[completed:\s*(\d{4}-\d{2}-\d{2})\]/i;
 
 /**
- * Matches dates in markdown headings (various formats)
- *
- * Supported formats:
- *   - "## Meeting 1/13/26" → "1/13/26"
- *   - "## Sprint Planning 01/13/2026" → "01/13/2026"
- *   - "### Notes 2026-01-13" → "2026-01-13"
- *
- * Groups:
- *   [1] - Date string (format varies)
- */
-export const HEADING_DATE_SLASH = /^#{1,6}\s+.*?(\d{1,2}\/\d{1,2}\/\d{2,4})/;
-export const HEADING_DATE_ISO = /^#{1,6}\s+.*?(\d{4}-\d{2}-\d{2})/;
-
-/**
- * Matches month names in headings for natural date parsing
- *
- * Examples:
- *   "## Q1 Planning - Jan 15, 2026" → "Jan 15, 2026"
- *   "### Meeting March 1, 2026" → "March 1, 2026"
- *
- * Groups:
- *   [1] - Month name
- *   [2] - Day
- *   [3] - Year
- */
-export const HEADING_DATE_NATURAL =
-  /^#{1,6}\s+.*?(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+(\d{1,2}),?\s+(\d{4})/i;
-
-/**
  * Combined patterns object for easy import
  */
 export const PATTERNS = {
@@ -202,7 +173,4 @@ export const PATTERNS = {
   TAG,
   TODOIST_ID,
   COMPLETED_DATE,
-  HEADING_DATE_SLASH,
-  HEADING_DATE_ISO,
-  HEADING_DATE_NATURAL,
 } as const;

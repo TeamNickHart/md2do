@@ -23,7 +23,7 @@ export const ListTasksInputSchema = z.object({
   dueThisWeek: z.boolean().optional().describe('Show tasks due this week'),
   dueWithin: z.number().optional().describe('Show tasks due within N days'),
   sort: z
-    .enum(['due', 'priority', 'created', 'file', 'project', 'assignee'])
+    .enum(['due', 'priority', 'file', 'project', 'assignee'])
     .optional()
     .describe('Sort by field'),
   reverse: z.boolean().optional().describe('Reverse sort order'),

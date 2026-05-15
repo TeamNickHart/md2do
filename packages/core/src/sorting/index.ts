@@ -62,27 +62,6 @@ export function byPriority(): TaskComparator {
 }
 
 /**
- * Sort tasks by context date (earliest first)
- * Tasks without context dates come last
- *
- * @returns Comparator function
- *
- * @example
- * tasks.sort(byCreatedDate())
- */
-export function byCreatedDate(): TaskComparator {
-  return (a: Task, b: Task) => {
-    // No context date goes to end
-    if (!a.contextDate && !b.contextDate) return 0;
-    if (!a.contextDate) return 1;
-    if (!b.contextDate) return -1;
-
-    // Compare dates
-    return a.contextDate.getTime() - b.contextDate.getTime();
-  };
-}
-
-/**
  * Sort tasks by file path (alphabetically)
  *
  * @returns Comparator function

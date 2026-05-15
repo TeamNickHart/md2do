@@ -1,18 +1,12 @@
-# Time Parsing Test Cases
+# Date Parsing Test Cases
 
-## Explicit Times
+## Tasks with Dates
 
-- [ ] Task with morning time #due:2026-02-06 @test #time-test
-- [ ] Task with afternoon time #due:2026-02-06 @test #time-test
-- [ ] Task with evening time #due:2026-02-06 @test #time-test
-- [ ] Task with single digit hour #due:2026-02-06 @test #time-test
+- [ ] Task with morning deadline #due:2026-02-06 @test #time-test
+- [ ] Task with afternoon deadline #due:2026-02-06 @test #time-test
+- [ ] Task with evening deadline #due:2026-02-06 @test #time-test
+- [ ] Task with different day #due:2026-02-07 @test #time-test
 
-## No Time Specified (Should use default from config)
+## No Due Date
 
-- [ ] Task with date only, no time #due:2026-02-06 @test #time-test
-- [ ] Task with date only, different day #due:2026-02-07 @test #time-test
-
-## Edge Cases
-
-- [ ] Task with midnight #due:2026-02-06 @test #time-test
-- [ ] Task with late evening #due:2026-02-06 @test #time-test
+- [ ] Task without any date @test #time-test

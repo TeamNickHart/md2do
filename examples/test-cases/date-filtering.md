@@ -9,7 +9,7 @@ This file contains tasks with various dates to test date filtering functionality
 - [ ] Task overdue by 1 week @test ! #overdue #due:2026-01-12
 - [ ] Task overdue by 1 month @test #overdue #due:2025-12-19
 
-## Due Today #due:2026-01-19
+## Due Today
 
 - [ ] Task due today - urgent @test !!! #today #due:2026-01-19
 - [ ] Task due today - high @test !! #today #due:2026-01-19

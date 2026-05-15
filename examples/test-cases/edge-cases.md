@@ -54,9 +54,9 @@ This file tests edge cases and special parsing scenarios.
 ## Nested List Tasks (if supported)
 
 - [ ] Parent task @alice !! #parent #due:2026-01-25
-- [ ] Subtask 1 @alice ! #subtask
-- [ ] Subtask 2 @alice ! #subtask
-- [x] Completed subtask @alice #subtask
+  - [ ] Subtask 1 @alice ! #subtask
+  - [ ] Subtask 2 @alice ! #subtask
+  - [x] Completed subtask @alice #subtask
 
 ## Tasks with Mixed Completion Status
 

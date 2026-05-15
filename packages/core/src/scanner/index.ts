@@ -1,6 +1,5 @@
 import type { Task, ParsingContext, Warning } from '../types/index.js';
 import { parseTask } from '../parser/index.js';
-import { extractDateFromHeading } from '../utils/dates.js';
 
 /**
  * Extract project name from file path
@@ -44,7 +43,7 @@ export function extractPersonFromFilename(
  * MarkdownScanner scans markdown file content and extracts tasks
  *
  * Key features:
- *   - Context tracking: Maintains project, person, and heading date context
+ *   - Context tracking: Maintains project and person context
  *   - Pure function: No I/O, just string processing
  *   - Warning collection: Reports issues like relative dates without context
  *
@@ -112,14 +111,6 @@ export class MarkdownScanner {
 
       const lineNumber = i + 1; // 1-indexed
 
-      // Check if line is a heading with a date
-      const headingDate = extractDateFromHeading(line);
-      if (headingDate) {
-        context.currentDate = headingDate;
-        context.currentHeading = line.trim();
-        continue; // Headings are not tasks
-      }
-
       // Try to parse as task
       const result = parseTask(line, lineNumber, filePath, context);
 
@@ -137,8 +128,8 @@ export class MarkdownScanner {
               file: filePath,
               line: lineNumber,
               text: result.task.text,
-              message: `Duplicate Todoist ID [todoist:${result.task.todoistId}]. Also found at ${existing.file}:${existing.line}.`,
-              reason: `Duplicate Todoist ID [todoist:${result.task.todoistId}]. Also found at ${existing.file}:${existing.line}.`,
+              message: `Duplicate Todoist ID {todoist:${result.task.todoistId}}. Also found at ${existing.file}:${existing.line}.`,
+              reason: `Duplicate Todoist ID {todoist:${result.task.todoistId}}. Also found at ${existing.file}:${existing.line}.`,
             });
           } else {
             todoistIds.set(result.task.todoistId, {
@@ -195,8 +186,8 @@ export class MarkdownScanner {
               file: task.file,
               line: task.line,
               text: task.text,
-              message: `Duplicate Todoist ID [todoist:${task.todoistId}] across files. Also found at ${existing.file}:${existing.line}.`,
-              reason: `Duplicate Todoist ID [todoist:${task.todoistId}] across files. Also found at ${existing.file}:${existing.line}.`,
+              message: `Duplicate Todoist ID {todoist:${task.todoistId}} across files. Also found at ${existing.file}:${existing.line}.`,
+              reason: `Duplicate Todoist ID {todoist:${task.todoistId}} across files. Also found at ${existing.file}:${existing.line}.`,
             });
           } else if (!existing) {
             todoistIds.set(task.todoistId, {

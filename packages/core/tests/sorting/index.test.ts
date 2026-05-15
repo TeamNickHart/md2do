@@ -3,7 +3,6 @@ import type { Task } from '../../src/types/index.js';
 import {
   byDueDate,
   byPriority,
-  byCreatedDate,
   byFile,
   byProject,
   byPerson,
@@ -93,34 +92,6 @@ describe('byPriority', () => {
 
     expect(sorted).toHaveLength(2);
     expect(sorted.every((t) => t.priority === 'high')).toBe(true);
-  });
-});
-
-describe('byCreatedDate', () => {
-  it('should sort by context date ascending', () => {
-    const tasks = [
-      createTask({ contextDate: new Date('2026-01-20'), text: 'Second' }),
-      createTask({ contextDate: new Date('2026-01-18'), text: 'First' }),
-      createTask({ contextDate: new Date('2026-01-25'), text: 'Third' }),
-    ];
-
-    const sorted = [...tasks].sort(byCreatedDate());
-
-    expect(sorted[0]?.text).toBe('First');
-    expect(sorted[1]?.text).toBe('Second');
-    expect(sorted[2]?.text).toBe('Third');
-  });
-
-  it('should put tasks without context dates last', () => {
-    const tasks = [
-      createTask({ text: 'No date' }),
-      createTask({ contextDate: new Date('2026-01-20'), text: 'With date' }),
-    ];
-
-    const sorted = [...tasks].sort(byCreatedDate());
-
-    expect(sorted[0]?.text).toBe('With date');
-    expect(sorted[1]?.text).toBe('No date');
   });
 });
 

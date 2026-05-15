@@ -75,9 +75,6 @@ export async function listTasks(input: unknown): Promise<string> {
       case 'priority':
         comparator = sorting.byPriority();
         break;
-      case 'created':
-        comparator = sorting.byCreatedDate();
-        break;
       case 'file':
         comparator = sorting.byFile();
         break;
@@ -139,7 +136,5 @@ function formatTask(task: Task) {
   if (task.dueDate) formatted.dueDate = task.dueDate.toISOString();
   if (task.completedDate)
     formatted.completedDate = task.completedDate.toISOString();
-  if (task.contextHeading) formatted.contextHeading = task.contextHeading;
-
   return formatted;
 }

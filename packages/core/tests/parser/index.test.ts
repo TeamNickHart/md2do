@@ -147,9 +147,6 @@ describe('extractCompletedDate', () => {
 });
 
 describe('extractDueDate', () => {
-  const baseDate = new Date('2026-01-18T12:00:00Z');
-  const context: ParsingContext = { currentDate: baseDate };
-
   describe('New #due: syntax', () => {
     it('should extract date from #due: tag', () => {
       const result = extractDueDate('#due:2026-01-25', {});
@@ -191,44 +188,30 @@ describe('extractDueDate', () => {
     });
   });
 
-  describe('Relative dates', () => {
-    it('should extract "today" with context', () => {
-      const result = extractDueDate('[due: today]', context);
-      expect(result.date?.getTime()).toBe(baseDate.getTime());
-      expect(result.warning).toBeUndefined();
-    });
-
-    it('should extract "tomorrow" with context', () => {
-      const result = extractDueDate('[due: tomorrow]', context);
-      expect(result.date?.getDate()).toBe(19);
-      expect(result.warning).toBeUndefined();
-    });
-
-    it('should extract "next week" with context', () => {
-      const result = extractDueDate('[due: next week]', context);
-      expect(result.date).toBeInstanceOf(Date);
-      expect(result.warning).toBeUndefined();
-    });
-
-    it('should extract "next month" with context', () => {
-      const result = extractDueDate('[due: next month]', context);
-      expect(result.date?.getMonth()).toBe(1); // February
-      expect(result.warning).toBeUndefined();
-    });
-  });
-
-  describe('Relative dates without context', () => {
-    it('should return warning for relative date without context', () => {
+  describe('Relative dates always warn', () => {
+    it('should return warning for relative date', () => {
       const result = extractDueDate('[due: tomorrow]', {});
       expect(result.date).toBeUndefined();
       expect(result.warning).toBeDefined();
       expect(result.warning?.reason).toContain(
-        'Relative due date without context',
+        'Relative due dates are no longer supported',
       );
     });
 
-    it('should handle "today" without context', () => {
+    it('should warn on "today"', () => {
       const result = extractDueDate('[due: today]', {});
+      expect(result.date).toBeUndefined();
+      expect(result.warning).toBeDefined();
+    });
+
+    it('should warn on "next week"', () => {
+      const result = extractDueDate('[due: next week]', {});
+      expect(result.date).toBeUndefined();
+      expect(result.warning).toBeDefined();
+    });
+
+    it('should warn on "next month"', () => {
+      const result = extractDueDate('[due: next month]', {});
       expect(result.date).toBeUndefined();
       expect(result.warning).toBeDefined();
     });
@@ -447,64 +430,26 @@ describe('parseTask', () => {
       expect(result.task?.person).toBe('jane-doe');
     });
 
-    it('should apply context date', () => {
-      const contextDate = new Date('2026-01-13');
-      const context: ParsingContext = { currentDate: contextDate };
-      const result = parseTask('- [ ] Task', 1, file, context);
-      expect(result.task?.contextDate).toBe(contextDate);
-    });
-
-    it('should apply context heading', () => {
-      const context: ParsingContext = { currentHeading: '## Sprint 1' };
-      const result = parseTask('- [ ] Task', 1, file, context);
-      expect(result.task?.contextHeading).toBe('## Sprint 1');
-    });
-
     it('should apply all context fields', () => {
-      const contextDate = new Date('2026-01-13');
       const context: ParsingContext = {
         project: 'acme-app',
         person: 'jane-doe',
-        currentDate: contextDate,
-        currentHeading: '## Planning 1/13/26',
       };
       const result = parseTask('- [ ] Task', 1, file, context);
 
       expect(result.task?.project).toBe('acme-app');
       expect(result.task?.person).toBe('jane-doe');
-      expect(result.task?.contextDate).toBe(contextDate);
-      expect(result.task?.contextHeading).toBe('## Planning 1/13/26');
     });
   });
 
-  describe('Relative dates with context', () => {
-    it('should resolve relative dates with context', () => {
-      const context: ParsingContext = {
-        currentDate: new Date('2026-01-18T12:00:00Z'),
-      };
-      const result = parseTask('- [ ] Task [due: tomorrow]', 1, file, context);
-
-      expect(result.task?.dueDate).toBeInstanceOf(Date);
-      // Tomorrow from 2026-01-18 is 2026-01-19
-      // But the actual date returned depends on timezone handling
-      // Let's just verify it's defined and a day has been added
-      if (context.currentDate) {
-        const daysDiff = Math.round(
-          (result.task!.dueDate!.getTime() - context.currentDate.getTime()) /
-            (1000 * 60 * 60 * 24),
-        );
-        expect(daysDiff).toBe(1);
-      }
-      expect(result.warnings).toHaveLength(0);
-    });
-
-    it('should warn on relative dates without context', () => {
+  describe('Relative dates always warn', () => {
+    it('should warn on relative dates', () => {
       const result = parseTask('- [ ] Task [due: tomorrow]', 1, file, {});
 
       expect(result.task?.dueDate).toBeUndefined();
       expect(result.warnings).toHaveLength(2); // Relative date + missing date warnings
       expect(result.warnings[0]?.reason).toContain(
-        'Relative due date without context',
+        'Relative due dates are no longer supported',
       );
       expect(result.warnings[0]?.file).toBe(file);
       expect(result.warnings[0]?.line).toBe(1);
@@ -563,8 +508,6 @@ describe('parseTask', () => {
       expect(task).not.toHaveProperty('completedDate');
       expect(task).not.toHaveProperty('project');
       expect(task).not.toHaveProperty('person');
-      expect(task).not.toHaveProperty('contextDate');
-      expect(task).not.toHaveProperty('contextHeading');
     });
   });
 
@@ -572,10 +515,8 @@ describe('parseTask', () => {
     it('should parse project task', () => {
       const context: ParsingContext = {
         project: 'acme-app',
-        currentDate: new Date('2026-01-13'),
-        currentHeading: '## Sprint 1 Planning',
       };
-      const text = '- [ ] @alice Implement auth !! #backend [due: next week]';
+      const text = '- [ ] @alice Implement auth !! #backend #due:2026-01-20';
       const result = parseTask(
         text,
         15,
@@ -589,14 +530,12 @@ describe('parseTask', () => {
       expect(result.task?.tags).toEqual(['backend']);
       expect(result.task?.dueDate).toBeInstanceOf(Date);
       expect(result.task?.project).toBe('acme-app');
-      expect(result.task?.contextHeading).toBe('## Sprint 1 Planning');
       expect(result.warnings).toHaveLength(0);
     });
 
     it('should parse 1-1 task with new syntax', () => {
       const context: ParsingContext = {
         person: 'jane-doe',
-        currentDate: new Date('2026-01-13'),
       };
       const text = '- [ ] Discuss Q1 goals #due:2026-01-20';
       const result = parseTask(text, 8, '1-1s/jane-doe.md', context);
@@ -610,7 +549,6 @@ describe('parseTask', () => {
     it('should parse 1-1 task with legacy syntax', () => {
       const context: ParsingContext = {
         person: 'jane-doe',
-        currentDate: new Date('2026-01-13'),
       };
       const text = '- [ ] Discuss Q1 goals [due: 1/20/26]';
       const result = parseTask(text, 8, '1-1s/jane-doe.md', context);
@@ -714,15 +652,6 @@ describe('parseTask', () => {
 
     it('should not warn on task with legacy due date', () => {
       const result = parseTask('- [ ] Task [due: 2026-01-30]', 1, file, {});
-      expect(result.task).not.toBeNull();
-      expect(result.warnings).toHaveLength(0);
-    });
-
-    it('should not warn on task with context date', () => {
-      const context: ParsingContext = {
-        currentDate: new Date('2026-01-30'),
-      };
-      const result = parseTask('- [ ] Task with context', 1, file, context);
       expect(result.task).not.toBeNull();
       expect(result.warnings).toHaveLength(0);
     });
