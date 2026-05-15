@@ -19,6 +19,42 @@ md2do [command] [options]
 
 ## Core Commands
 
+### `add`
+
+Add a task to a markdown file, or print to stdout.
+
+```bash
+md2do add <text> [options]
+```
+
+**Options:**
+
+- `-f, --file <path>` - Target markdown file (omit to print to stdout)
+- `-a, --assignee <name>` - Assignee (@name)
+- `-p, --priority <level>` - Priority: urgent, high, normal, low
+- `-d, --due <date>` - Due date: YYYY-MM-DD, today, tomorrow, monday-sunday, next week
+- `-t, --tag <tags...>` - Tags (#tag)
+- `--completed` - Create as completed task
+- `--line <n>` - Insert at specific line number (requires --file)
+
+**Examples:**
+
+```bash
+# Add a task to a file
+md2do add "Buy milk" --file tasks.md
+
+# With metadata
+md2do add "Fix bug" --file tasks.md --assignee nick --priority high --due tomorrow
+
+# Print to stdout (no file)
+md2do add "Review PR" --due tomorrow --priority high
+
+# Pipe to a file
+md2do add "New task" --due tomorrow >> tasks.md
+```
+
+See [add command](/cli/add) for details.
+
 ### `list`
 
 List and filter tasks.
@@ -411,6 +447,9 @@ export MD2DO_FORMAT="json"
 Combine with Unix tools:
 
 ```bash
+# Add a task via pipe
+md2do add "Deploy v2" --due friday --tag release >> tasks.md
+
 # Count urgent tasks
 md2do list --priority urgent | wc -l
 

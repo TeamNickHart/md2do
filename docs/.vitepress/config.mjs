@@ -72,6 +72,7 @@ export default defineConfig({
         text: 'CLI Reference',
         items: [
           { text: 'Overview', link: '/cli/overview' },
+          { text: 'add', link: '/cli/add' },
           { text: 'list', link: '/cli/list' },
           { text: 'stats', link: '/cli/stats' },
           { text: 'migrate', link: '/cli/migrate' },

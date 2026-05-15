@@ -76,7 +76,17 @@ Create a file called `tasks.md`:
 - [x] Fix bug in parser @alex !!! #bug {completed:2026-01-18}
 ```
 
-### 2. List Your Tasks
+### 2. Add Tasks from the CLI
+
+```bash
+# Add a task to your file
+md2do add "Review pull request" --file tasks.md --assignee nick --priority high --due tomorrow
+
+# Or print to stdout for a quick preview
+md2do add "Deploy hotfix" --due today --priority urgent
+```
+
+### 3. List Your Tasks
 
 ```bash
 md2do list
@@ -99,7 +109,7 @@ Found 3 tasks
     file:///path/to/tasks.md:5
 ```
 
-### 3. Try Filtering
+### 4. Try Filtering
 
 Filter by assignee:
 
@@ -119,7 +129,7 @@ Show only incomplete tasks:
 md2do list --incomplete
 ```
 
-### 4. View Statistics
+### 5. View Statistics
 
 Get a task breakdown:
 

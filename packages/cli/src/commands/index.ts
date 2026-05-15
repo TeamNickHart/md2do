@@ -1,4 +1,5 @@
 // Command exports
+export { createAddCommand } from './add.js';
 export { createListCommand } from './list.js';
 export { createStatsCommand } from './stats.js';
 export { createTodoistCommand } from './todoist.js';

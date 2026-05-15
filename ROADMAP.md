@@ -52,6 +52,21 @@ This document outlines planned features and enhancements for md2do.
 
 ## Near-Term (Next 3-6 Months)
 
+### Localization (i18n)
+
+**Priority**: High
+
+Multi-language support across CLI, extensions, and documentation:
+
+- [ ] Externalize user-facing strings (CLI output, error messages, help text)
+- [ ] Locale-aware date formatting and parsing
+- [ ] Localized `--due` completion options (today, tomorrow, day-of-week names, "next week")
+- [ ] Localized metadata keywords (e.g., priority names, day names for relative dates)
+- [ ] VSCode extension localization (package.nls.json)
+- [ ] Obsidian plugin localization
+- [ ] Translated documentation / website
+- [ ] Community-contributed translation workflow
+
 ### Watch Mode
 
 **Priority**: High
