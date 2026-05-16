@@ -105,8 +105,12 @@ export function migrateContent(content: string): MigrationResult {
       (_match, id) => `{todoist:${id}}`,
     );
 
-    // Clean up double spaces left by removals
-    result = result.replace(/  +/g, ' ').trimEnd();
+    // Clean up double spaces left by removals (preserve leading indentation)
+    if (result !== line) {
+      const indent = result.match(/^(\s*)/)?.[1] ?? '';
+      result =
+        indent + result.slice(indent.length).replace(/  +/g, ' ').trimEnd();
+    }
 
     if (result !== line) {
       changes.push({

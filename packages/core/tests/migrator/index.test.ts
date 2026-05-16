@@ -114,6 +114,29 @@ describe('migrateContent', () => {
     });
   });
 
+  describe('indentation preservation', () => {
+    it('should preserve nested bullet indentation', () => {
+      const input = [
+        '- [ ] Parent task [due: 2026-01-25]',
+        '  - [ ] Subtask one [due: 2026-02-01]',
+        '    - [ ] Deep subtask [completed: 2026-01-18]',
+      ].join('\n');
+
+      const result = migrateContent(input);
+      const lines = result.content.split('\n');
+      expect(lines[0]).toBe('- [ ] Parent task #due/2026-01-25');
+      expect(lines[1]).toBe('  - [ ] Subtask one #due/2026-02-01');
+      expect(lines[2]).toBe('    - [ ] Deep subtask {completed:2026-01-18}');
+    });
+
+    it('should not collapse indentation on non-migrated lines', () => {
+      const input = '  - [ ] Indented task with no legacy syntax';
+      const result = migrateContent(input);
+      expect(result.content).toBe(input);
+      expect(result.changes).toHaveLength(0);
+    });
+  });
+
   describe('no-op cases', () => {
     it('should not modify already-migrated content', () => {
       const input = '- [ ] Task #due/2026-01-25 {todoist:123}';
