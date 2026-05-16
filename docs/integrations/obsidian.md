@@ -62,23 +62,48 @@ Sort tasks within groups by:
 - Priority
 - Alphabetical order
 
+### Auto-Completion
+
+Type trigger characters on a task line to get intelligent suggestions:
+
+- `#due/` — Date shortcuts (today, tomorrow, monday...) and progressive date entry (`#due/2026-05-`)
+- `{completed:` — Date suggestions for completion dates
+- `@` — Assignee suggestions learned from your vault
+- `#` — Tag suggestions learned from your vault
+- `!` — Priority levels (!, !!, !!!)
+
+Legacy bracket syntax (`[due:`, `[completed:`) also triggers date suggestions.
+
+### Completion Tracking
+
+Toggle task completion from the command palette or task list sidebar:
+
+- Completing a task automatically adds `{completed:YYYY-MM-DD}`
+- Uncompleting removes the completion date
+- Both new (`{completed:}`) and legacy (`[completed:]`) syntax are handled
+
+### Diagnostics
+
+Quick access to vault-wide task health:
+
+- **Overdue tasks** — Get notified of overdue count
+- **Diagnostics summary** — See error/warning/info counts
+- **Task statistics** — Total, completed, incomplete, and overdue counts
+
 ### Commands
 
 Available from the Command Palette (`Cmd+P` / `Ctrl+P`):
 
-| Command                       | Description                          |
-| ----------------------------- | ------------------------------------ |
-| md2do: Show Task List         | Open the task list sidebar           |
-| md2do: Refresh Tasks          | Rescan vault and update task list    |
-| md2do: Toggle Task Completion | Toggle `[ ]` / `[x]` on current line |
-| md2do: Group by File          | Switch to file grouping              |
-| md2do: Group by Assignee      | Switch to assignee grouping          |
-| md2do: Group by Due Date      | Switch to due date grouping          |
-| md2do: Group by Priority      | Switch to priority grouping          |
-| md2do: Group by Tag           | Switch to tag grouping               |
-| md2do: Sort by Due Date       | Sort tasks by due date               |
-| md2do: Sort by Priority       | Sort tasks by priority               |
-| md2do: Sort Alphabetically    | Sort tasks alphabetically            |
+| Command                         | Description                             |
+| ------------------------------- | --------------------------------------- |
+| md2do: Show Task List           | Open the task list sidebar              |
+| md2do: Refresh Task List        | Rescan vault and update task list       |
+| md2do: Toggle Task Completion   | Toggle `[ ]` / `[x]` on current line    |
+| md2do: Show Overdue Tasks       | Notify overdue task count               |
+| md2do: Show Diagnostics Summary | Show error/warning/info counts          |
+| md2do: Show Task Statistics     | Show total/completed/incomplete/overdue |
+
+Grouping and sorting are available via toolbar buttons in the task list sidebar.
 
 ## Settings
 
