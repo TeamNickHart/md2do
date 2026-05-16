@@ -66,12 +66,12 @@ describe('E2E: md2do add', () => {
       `add "Fix login bug" --file "${file}" --assignee ben --priority high --due 2026-06-01 --tag grocery --tag errand`,
     );
     expect(output).toBe(
-      '- [ ] Fix login bug @ben !! #grocery #errand #due:2026-06-01',
+      '- [ ] Fix login bug @ben !! #grocery #errand #due/2026-06-01',
     );
 
     const content = readFileSync(file, 'utf-8');
     expect(content).toContain(
-      '- [ ] Fix login bug @ben !! #grocery #errand #due:2026-06-01',
+      '- [ ] Fix login bug @ben !! #grocery #errand #due/2026-06-01',
     );
   });
 
@@ -81,7 +81,7 @@ describe('E2E: md2do add', () => {
     const expected = format(addDays(new Date(), 1), 'yyyy-MM-dd');
 
     const output = run(`add "Task" --file "${file}" --due tomorrow`);
-    expect(output).toContain(`#due:${expected}`);
+    expect(output).toContain(`#due/${expected}`);
   });
 
   it('should resolve --due today', () => {
@@ -90,7 +90,7 @@ describe('E2E: md2do add', () => {
     const expected = format(new Date(), 'yyyy-MM-dd');
 
     const output = run(`add "Task" --file "${file}" --due today`);
-    expect(output).toContain(`#due:${expected}`);
+    expect(output).toContain(`#due/${expected}`);
   });
 
   it('should resolve --due with day names', () => {
@@ -100,7 +100,7 @@ describe('E2E: md2do add', () => {
     const expected = format(nextFriday(now), 'yyyy-MM-dd');
 
     const output = run(`add "Task" --file "${file}" --due friday`);
-    expect(output).toContain(`#due:${expected}`);
+    expect(output).toContain(`#due/${expected}`);
   });
 
   it('should resolve --due "next week" to next monday', () => {
@@ -109,7 +109,7 @@ describe('E2E: md2do add', () => {
     const expected = format(nextMonday(new Date()), 'yyyy-MM-dd');
 
     const output = run(`add "Task" --file "${file}" --due "next week"`);
-    expect(output).toContain(`#due:${expected}`);
+    expect(output).toContain(`#due/${expected}`);
   });
 
   it('should create a completed task with --completed', () => {
@@ -150,7 +150,7 @@ describe('E2E: md2do add', () => {
   it('should print to stdout with --due when --file is omitted', () => {
     const expected = format(addDays(new Date(), 1), 'yyyy-MM-dd');
     const output = run('add "Task" --due tomorrow');
-    expect(output).toBe(`- [ ] Task #due:${expected}`);
+    expect(output).toBe(`- [ ] Task #due/${expected}`);
   });
 
   it('should error when --line is used without --file', () => {
@@ -222,7 +222,7 @@ describe('E2E: md2do add', () => {
       month: '2-digit',
       day: '2-digit',
     }).format(new Date());
-    expect(output).toBe(`- [ ] TZ task #due:${expected}`);
+    expect(output).toBe(`- [ ] TZ task #due/${expected}`);
   });
 
   it('should error on invalid date', () => {

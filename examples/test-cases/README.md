@@ -175,7 +175,7 @@ To add new test cases:
 2. **Add tasks following the pattern:**
 
 ```markdown
-- [ ] Description of test case @assignee !! #tag #due:2026-01-20
+- [ ] Description of test case @assignee !! #tag #due/2026-01-20
 ```
 
 3. **Include edge cases** that might break the parser

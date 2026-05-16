@@ -3,32 +3,32 @@ import { migrateContent } from '../../src/migrator/index.js';
 
 describe('migrateContent', () => {
   describe('due date migration', () => {
-    it('should migrate [due: YYYY-MM-DD] to #due:YYYY-MM-DD', () => {
+    it('should migrate [due: YYYY-MM-DD] to #due/YYYY-MM-DD', () => {
       const result = migrateContent('- [ ] Task [due: 2026-01-25]');
-      expect(result.content).toBe('- [ ] Task #due:2026-01-25');
+      expect(result.content).toBe('- [ ] Task #due/2026-01-25');
       expect(result.changes).toHaveLength(1);
     });
 
     it('should migrate [due:YYYY-MM-DD] without spaces', () => {
       const result = migrateContent('- [ ] Task [due:2026-01-25]');
-      expect(result.content).toBe('- [ ] Task #due:2026-01-25');
+      expect(result.content).toBe('- [ ] Task #due/2026-01-25');
     });
 
     it('should drop time component with warning', () => {
       const result = migrateContent('- [ ] Task [due: 2026-01-25 17:00]');
-      expect(result.content).toBe('- [ ] Task #due:2026-01-25');
+      expect(result.content).toBe('- [ ] Task #due/2026-01-25');
       expect(result.warnings).toHaveLength(1);
       expect(result.warnings[0]?.message).toContain('Time component dropped');
     });
 
     it('should convert short date M/D/YY to ISO', () => {
       const result = migrateContent('- [ ] Task [due: 1/25/26]');
-      expect(result.content).toBe('- [ ] Task #due:2026-01-25');
+      expect(result.content).toBe('- [ ] Task #due/2026-01-25');
     });
 
     it('should convert short date M/D/YYYY to ISO', () => {
       const result = migrateContent('- [ ] Task [due: 1/25/2026]');
-      expect(result.content).toBe('- [ ] Task #due:2026-01-25');
+      expect(result.content).toBe('- [ ] Task #due/2026-01-25');
     });
 
     it('should drop M/D (no year) with warning', () => {
@@ -90,7 +90,7 @@ describe('migrateContent', () => {
         '- [x] @nick Fix bug !! #backend [due: 2026-01-25] [todoist:123] [completed: 2026-01-18]';
       const result = migrateContent(input);
       expect(result.content).toBe(
-        '- [x] @nick Fix bug !! #backend #due:2026-01-25 {todoist:123} {completed:2026-01-18}',
+        '- [x] @nick Fix bug !! #backend #due/2026-01-25 {todoist:123} {completed:2026-01-18}',
       );
     });
 
@@ -105,7 +105,7 @@ describe('migrateContent', () => {
       const result = migrateContent(input);
       const lines = result.content.split('\n');
       expect(lines[0]).toBe('# Tasks');
-      expect(lines[1]).toBe('- [ ] Task one #due:2026-01-25');
+      expect(lines[1]).toBe('- [ ] Task one #due/2026-01-25');
       expect(lines[2]).toBe(
         '- [x] Task two {completed:2026-01-18} {todoist:456}',
       );
@@ -116,7 +116,7 @@ describe('migrateContent', () => {
 
   describe('no-op cases', () => {
     it('should not modify already-migrated content', () => {
-      const input = '- [ ] Task #due:2026-01-25 {todoist:123}';
+      const input = '- [ ] Task #due/2026-01-25 {todoist:123}';
       const result = migrateContent(input);
       expect(result.content).toBe(input);
       expect(result.changes).toHaveLength(0);

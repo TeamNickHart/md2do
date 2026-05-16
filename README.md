@@ -25,6 +25,7 @@ Built with TypeScript, designed for developers who love markdown.
 - 🔄 **Todoist integration** - Import tasks and sync completion status with official [Todoist](https://www.todoist.com) API
 - ⚙️ **Configurable** - Hierarchical config support (global, project, environment)
 - 🤖 **AI-powered** - MCP server integration for Claude and other AI assistants
+- 🟣 **Obsidian plugin** - Native task list view, autocomplete, and completion tracking in Obsidian
 
 ## 📦 Installation
 
@@ -80,9 +81,9 @@ That's it! md2do will scan all `.md` files and extract your TODO items.
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @jane !!! #backend #auth #due:2026-01-20
+- [ ] Implement user authentication @jane !!! #backend #auth #due/2026-01-20
 - [x] Write documentation @nick !! #docs {completed:2026-01-15}
-- [ ] Fix bug in parser @alex ! #bug #due:2026-01-18
+- [ ] Fix bug in parser @alex ! #bug #due/2026-01-18
 ```
 
 **Supported metadata:**
@@ -90,7 +91,7 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `#due:YYYY-MM-DD` - Due date
+- `#due/YYYY-MM-DD` - Due date
 - `{completed:YYYY-MM-DD}` - Completion date
 - `{todoist:ID}` - Todoist sync ID
 - `- [x]` - Completed task
@@ -373,13 +374,19 @@ md2do/
 │   │   │   ├── client.ts    # API client wrapper
 │   │   │   └── mapper.ts    # Task format conversion
 │   │   └── tests/
-│   └── mcp/           # MCP server for AI integration
-│       ├── src/
-│       │   ├── tools/       # MCP tools (list, stats, search)
-│       │   ├── resources/   # MCP resources (task URIs)
-│       │   ├── prompts/     # MCP prompt templates
-│       │   └── utils/       # Scanner utilities
-│       └── tests/
+│   ├── mcp/           # MCP server for AI integration
+│   │   ├── src/
+│   │   │   ├── tools/       # MCP tools (list, stats, search)
+│   │   │   ├── resources/   # MCP resources (task URIs)
+│   │   │   ├── prompts/     # MCP prompt templates
+│   │   │   └── utils/       # Scanner utilities
+│   │   └── tests/
+│   └── obsidian/      # Obsidian community plugin
+│       └── src/
+│           ├── views/       # Task list sidebar view
+│           ├── commands/    # Command palette commands
+│           ├── providers/   # Autocomplete suggest provider
+│           └── utils/       # Scanner & task writer
 ├── docs/              # Documentation
 │   ├── todoist-setup.md              # Todoist configuration guide
 │   └── todoist-implementation-plan.md # Technical roadmap
@@ -452,6 +459,7 @@ pnpm --filter @md2do/core test:ui
 - [Config Package](packages/config/README.md) - Configuration management documentation
 - [Todoist Package](packages/todoist/README.md) - [Todoist](https://www.todoist.com) API integration documentation
 - [MCP Package](packages/mcp/README.md) - Model Context Protocol server documentation
+- [Obsidian Plugin](docs/integrations/obsidian.md) - Obsidian community plugin documentation
 
 ## 🤝 Contributing
 

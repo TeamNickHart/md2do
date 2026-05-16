@@ -118,7 +118,7 @@ export function createAddCommand(): Command {
 
         if (options.due) {
           const resolved = resolveDate(options.due);
-          parts.push(`#due:${resolved}`);
+          parts.push(`#due/${resolved}`);
         }
 
         const assembledText = parts.join(' ');

@@ -148,7 +148,7 @@ Auto-complete for task metadata as you type:
 
 #### Date Completion
 
-Trigger: Type `#due:` and start typing
+Trigger: Type `#due/` and start typing
 
 Suggestions:
 
@@ -161,10 +161,10 @@ Suggestions:
 **Example:**
 
 ```markdown
-- [ ] Review PR #due:t|
+- [ ] Review PR #due/t|
 ```
 
-Type `t` and select `today` → `- [ ] Review PR #due:2026-01-27`
+Type `t` and select `today` → `- [ ] Review PR #due/2026-01-27`
 
 #### Assignee Completion
 
@@ -236,7 +236,7 @@ Actionable links appear above each task for quick access:
 ```markdown
 Due in 3 days • Priority: High • Delete
 
-- [ ] Review PR #due:2026-01-30 @alice !! #review
+- [ ] Review PR #due/2026-01-30 @alice !! #review
 ```
 
 Click any CodeLens link to perform the action instantly without opening menus.
@@ -279,11 +279,11 @@ md2do supports rich metadata in your markdown tasks:
 
 ```markdown
 - [ ] Basic task
-- [ ] Task with due date #due:2026-02-01
-- [ ] Urgent task #due:2026-01-28 !!!
+- [ ] Task with due date #due/2026-02-01
+- [ ] Urgent task #due/2026-01-28 !!!
 - [ ] Assigned task @alice #bug
 - [x] Completed task {completed:2026-01-27}
-- [ ] Full metadata task #due:2026-02-15 @bob #feature #urgent !! {todoist:123456}
+- [ ] Full metadata task #due/2026-02-15 @bob #feature #urgent !! {todoist:123456}
 ```
 
 > Legacy bracket syntax (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`) is still parsed for backward compatibility.
@@ -465,7 +465,7 @@ Scan only specific directories:
 1. Open any markdown file
 2. Type `- [ ] ` to start a task
 3. Add description
-4. Type `#due:` and start typing
+4. Type `#due/` and start typing
 5. Select date from auto-complete
 6. Type `@` and select assignee
 7. Type `#` and select tags
@@ -538,7 +538,7 @@ See [CLI Reference](/cli/overview) for full command documentation.
 **Solutions:**
 
 1. Ensure you're on a task line starting with `- [ ]` or `- [x]`
-2. For dates: type `#due:` and start typing
+2. For dates: type `#due/` and start typing
 3. For assignees: type `@` followed by a character
 4. For tags: type `#` followed by a character
 5. For priorities: type `!` after a space character

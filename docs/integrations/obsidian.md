@@ -100,7 +100,7 @@ The Obsidian plugin uses the same task syntax as all md2do tools:
 
 ```markdown
 - [ ] Basic task
-- [ ] Task with due date #due:2026-02-01
+- [ ] Task with due date #due/2026-02-01
 - [ ] Urgent task @alice !!! #backend
 - [x] Done task {completed:2026-01-15}
 - [ ] Synced task {todoist:123456}
@@ -115,7 +115,7 @@ See [Task Format](/guide/task-format) for the complete syntax reference.
 md2do works well for mobile task management on iPad:
 
 1. Create tasks in your daily notes or project files using standard markdown checkboxes
-2. Add metadata (`#due:`, `@assignee`, `!!` priority, `#tags`) as you write
+2. Add metadata (`#due/`, `@assignee`, `!!` priority, `#tags`) as you write
 3. Use the Task List view to browse and filter across your vault
 4. Toggle completion directly from the sidebar or with the command palette
 
@@ -123,14 +123,14 @@ md2do works well for mobile task management on iPad:
 
 Both extensions are powered by `@md2do/core`, but optimized for their respective editors:
 
-| Feature         | VS Code                         | Obsidian             |
-| --------------- | ------------------------------- | -------------------- |
-| Task sidebar    | Task Explorer in Explorer panel | Dedicated leaf view  |
-| Diagnostics     | Problems panel integration      | Warnings in settings |
-| CodeLens        | Inline actions above tasks      | Not available        |
-| Dashboard       | Webview panel                   | Not available        |
-| Auto-completion | `#due:`, `@`, `#`, `!` triggers | Planned              |
-| Todoist sync    | Via CLI                         | Via CLI              |
+| Feature         | VS Code                         | Obsidian                        |
+| --------------- | ------------------------------- | ------------------------------- |
+| Task sidebar    | Task Explorer in Explorer panel | Dedicated leaf view             |
+| Diagnostics     | Problems panel integration      | Warnings in settings            |
+| CodeLens        | Inline actions above tasks      | Not available                   |
+| Dashboard       | Webview panel                   | Not available                   |
+| Auto-completion | `#due/`, `@`, `#`, `!` triggers | `#due/`, `@`, `#`, `!` triggers |
+| Todoist sync    | Via CLI                         | Via CLI                         |
 
 ## Troubleshooting
 

@@ -1,6 +1,6 @@
 # migrate
 
-Migrate markdown files from legacy bracket syntax (`[due:...]`, `[completed:...]`, `[todoist:...]`) to the new tag/brace syntax (`#due:...`, `{completed:...}`, `{todoist:...}`).
+Migrate markdown files from legacy bracket syntax (`[due:...]`, `[completed:...]`, `[todoist:...]`) to the new tag/brace syntax (`#due/...`, `{completed:...}`, `{todoist:...}`).
 
 ## Usage
 
@@ -22,7 +22,7 @@ The migrate command scans all matching markdown files and converts legacy bracke
 
 | Legacy Syntax             | New Syntax               |
 | ------------------------- | ------------------------ |
-| `[due: 2026-02-01]`       | `#due:2026-02-01`        |
+| `[due: 2026-02-01]`       | `#due/2026-02-01`        |
 | `[completed: 2026-01-15]` | `{completed:2026-01-15}` |
 | `[todoist: 123456]`       | `{todoist:123456}`       |
 
@@ -42,7 +42,7 @@ Output:
 tasks/home.md:
   L7:
     - - [ ] Pay electricity bill !! #bills [due: 2026-01-15]
-    + - [ ] Pay electricity bill !! #bills #due:2026-01-15
+    + - [ ] Pay electricity bill !! #bills #due/2026-01-15
 
   L12:
     - - [x] Fix leaky faucet [completed: 2026-01-10]

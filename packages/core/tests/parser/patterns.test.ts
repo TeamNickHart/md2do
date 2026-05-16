@@ -138,8 +138,8 @@ describe('Tag Pattern', () => {
     expect(matches).toHaveLength(0);
   });
 
-  it('should not match #due: as a tag', () => {
-    const text = 'Task #due:2026-01-25 #backend';
+  it('should not match #due/ as a tag', () => {
+    const text = 'Task #due/2026-01-25 #backend';
     const matches = Array.from(text.matchAll(PATTERNS.TAG));
     expect(matches).toHaveLength(1);
     expect(matches[0]?.[1]).toBe('backend');
@@ -147,15 +147,15 @@ describe('Tag Pattern', () => {
 });
 
 describe('Due Date Patterns', () => {
-  describe('New #due: syntax', () => {
-    it('should match #due: tag syntax', () => {
-      const text = 'Task #due:2026-01-25';
+  describe('New #due/ syntax', () => {
+    it('should match #due/ tag syntax', () => {
+      const text = 'Task #due/2026-01-25';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
       expect(match?.[1]).toBe('2026-01-25');
     });
 
-    it('should match #due: in middle of text', () => {
-      const text = 'Task #due:2026-01-25 #backend';
+    it('should match #due/ in middle of text', () => {
+      const text = 'Task #due/2026-01-25 #backend';
       const match = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
       expect(match?.[1]).toBe('2026-01-25');
     });

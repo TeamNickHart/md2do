@@ -63,10 +63,10 @@ export const PRIORITY_HIGH = /!!/;
 export const PRIORITY_NORMAL = /(?<!!)!(?!!)/;
 
 /**
- * Matches due date in new syntax (#due:YYYY-MM-DD) or legacy bracket syntax
+ * Matches due date in new syntax (#due/YYYY-MM-DD) or legacy bracket syntax
  *
  * New syntax examples:
- *   "#due:2026-01-25" → group 1: "2026-01-25"
+ *   "#due/2026-01-25" → group 1: "2026-01-25"
  *
  * Legacy syntax examples:
  *   "[due: 2026-01-25]" → group 2: "2026-01-25", group 3: optional time
@@ -74,12 +74,12 @@ export const PRIORITY_NORMAL = /(?<!!)!(?!!)/;
  *   "[due:2026-01-25]" → group 2: "2026-01-25"
  *
  * Groups:
- *   [1] - Date from new #due: syntax
+ *   [1] - Date from new #due/ syntax
  *   [2] - Date from legacy [due:] syntax
  *   [3] - Optional time from legacy syntax
  */
 export const DUE_DATE_ABSOLUTE =
-  /#due:(\d{4}-\d{2}-\d{2})|\[due:\s*(\d{4}-\d{2}-\d{2})(?:\s+(\d{1,2}:\d{2}))?\s*\]/i;
+  /#due\/(\d{4}-\d{2}-\d{2})|\[due:\s*(\d{4}-\d{2}-\d{2})(?:\s+(\d{1,2}:\d{2}))?\s*\]/i;
 
 /**
  * Matches relative due date keywords
@@ -110,20 +110,20 @@ export const DUE_DATE_RELATIVE =
 export const DUE_DATE_SHORT = /\[due:\s*(\d{1,2}\/\d{1,2}(?:\/\d{2,4})?)\]/i;
 
 /**
- * Matches hashtags for categorization, excluding #due: prefix
+ * Matches hashtags for categorization, excluding #due/ prefix
  *
  * Examples:
  *   "#backend" → "backend"
  *   "#urgent-fix" → "urgent-fix"
  *   "# heading" → no match (space after #)
- *   "#due:2026-01-25" → no match (due date, not a tag)
+ *   "#due/2026-01-25" → no match (due date, not a tag)
  *
  * Groups:
  *   [1] - Tag name (alphanumeric and hyphens only)
  *
  * Note: Use with .match() or .matchAll() to get all tags
  */
-export const TAG = /#(?!due:)([\w-]+)/g;
+export const TAG = /#(?!due\/)([\w-]+)/g;
 
 /**
  * Matches Todoist ID in new syntax ({todoist:NNN}) or legacy bracket syntax

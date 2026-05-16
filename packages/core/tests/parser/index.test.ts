@@ -147,9 +147,9 @@ describe('extractCompletedDate', () => {
 });
 
 describe('extractDueDate', () => {
-  describe('New #due: syntax', () => {
-    it('should extract date from #due: tag', () => {
-      const result = extractDueDate('#due:2026-01-25', {});
+  describe('New #due/ syntax', () => {
+    it('should extract date from #due/ tag', () => {
+      const result = extractDueDate('#due/2026-01-25', {});
       expect(result.date).toBeInstanceOf(Date);
       expect(result.date?.getFullYear()).toBe(2026);
       expect(result.date?.getMonth()).toBe(0);
@@ -157,8 +157,8 @@ describe('extractDueDate', () => {
       expect(result.warning).toBeUndefined();
     });
 
-    it('should extract #due: alongside other tags', () => {
-      const result = extractDueDate('Task #due:2026-01-25 #backend', {});
+    it('should extract #due/ alongside other tags', () => {
+      const result = extractDueDate('Task #due/2026-01-25 #backend', {});
       expect(result.date).toBeInstanceOf(Date);
       expect(result.date?.getDate()).toBe(25);
     });
@@ -231,8 +231,8 @@ describe('cleanTaskText', () => {
     expect(cleanTaskText('@nick Review PR')).toBe('Review PR');
   });
 
-  it('should remove new #due: syntax', () => {
-    expect(cleanTaskText('Task #due:2026-01-25')).toBe('Task');
+  it('should remove new #due/ syntax', () => {
+    expect(cleanTaskText('Task #due/2026-01-25')).toBe('Task');
   });
 
   it('should remove legacy due date', () => {
@@ -266,7 +266,7 @@ describe('cleanTaskText', () => {
   });
 
   it('should remove all new syntax metadata at once', () => {
-    const text = '@nick Review PR !! #backend #due:2026-01-25 {todoist:123}';
+    const text = '@nick Review PR !! #backend #due/2026-01-25 {todoist:123}';
     expect(cleanTaskText(text)).toBe('Review PR');
   });
 
@@ -290,8 +290,8 @@ describe('cleanTaskText', () => {
     expect(cleanTaskText('Task [due: 1/25]')).toBe('Task');
   });
 
-  it('should not treat #due: as a tag', () => {
-    expect(cleanTaskText('Task #due:2026-01-25 #backend')).toBe('Task');
+  it('should not treat #due/ as a tag', () => {
+    expect(cleanTaskText('Task #due/2026-01-25 #backend')).toBe('Task');
   });
 });
 
@@ -349,7 +349,7 @@ describe('parseTask', () => {
     });
 
     it('should extract due date with new syntax', () => {
-      const result = parseTask('- [ ] Task #due:2026-01-25', 1, file, {});
+      const result = parseTask('- [ ] Task #due/2026-01-25', 1, file, {});
       expect(result.task?.dueDate).toBeInstanceOf(Date);
       expect(result.task?.dueDate?.getDate()).toBe(25);
     });
@@ -392,7 +392,7 @@ describe('parseTask', () => {
 
     it('should extract all new syntax metadata at once', () => {
       const text =
-        '- [ ] @nick Fix bug !! #backend #urgent #due:2026-01-25 {todoist:123}';
+        '- [ ] @nick Fix bug !! #backend #urgent #due/2026-01-25 {todoist:123}';
       const result = parseTask(text, 1, file, {});
 
       expect(result.task?.assignee).toBe('nick');
@@ -516,7 +516,7 @@ describe('parseTask', () => {
       const context: ParsingContext = {
         project: 'acme-app',
       };
-      const text = '- [ ] @alice Implement auth !! #backend #due:2026-01-20';
+      const text = '- [ ] @alice Implement auth !! #backend #due/2026-01-20';
       const result = parseTask(
         text,
         15,
@@ -537,7 +537,7 @@ describe('parseTask', () => {
       const context: ParsingContext = {
         person: 'jane-doe',
       };
-      const text = '- [ ] Discuss Q1 goals #due:2026-01-20';
+      const text = '- [ ] Discuss Q1 goals #due/2026-01-20';
       const result = parseTask(text, 8, '1-1s/jane-doe.md', context);
 
       expect(result.task?.text).toBe('Discuss Q1 goals');
@@ -644,8 +644,8 @@ describe('parseTask', () => {
       expect(result.warnings[0]?.reason).toContain('Task has no due date');
     });
 
-    it('should not warn on task with new #due: syntax', () => {
-      const result = parseTask('- [ ] Task #due:2026-01-30', 1, file, {});
+    it('should not warn on task with new #due/ syntax', () => {
+      const result = parseTask('- [ ] Task #due/2026-01-30', 1, file, {});
       expect(result.task).not.toBeNull();
       expect(result.warnings).toHaveLength(0);
     });

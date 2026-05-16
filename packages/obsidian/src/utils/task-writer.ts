@@ -39,15 +39,18 @@ export async function toggleTaskCompletion(
 
     let updatedLine: string;
     if (isCompleted) {
-      // Uncompleting: remove completion date
+      // Uncompleting: remove completion date (both new and legacy syntax)
       updatedLine = originalLine
         .replace(/- \[x\]/i, '- [ ]')
-        .replace(/\s*\[completed:\s*[^\]]+\]/, '');
+        .replace(/\s*(\{completed:[^}]+\}|\[completed:\s*[^\]]+\])/, '');
     } else {
       // Completing: add completion date
       updatedLine = originalLine.replace(/- \[ \]/, '- [x]');
-      if (!updatedLine.includes('[completed:')) {
-        updatedLine = updatedLine.trimEnd() + ` [completed: ${today}]`;
+      if (
+        !updatedLine.includes('{completed:') &&
+        !updatedLine.includes('[completed:')
+      ) {
+        updatedLine = updatedLine.trimEnd() + ` {completed:${today}}`;
       }
     }
 

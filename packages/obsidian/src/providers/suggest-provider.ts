@@ -36,7 +36,73 @@ export class TaskSuggestProvider extends EditorSuggest<Suggestion> {
 
     const textUpToCursor = line.substring(0, cursor.ch);
 
-    // Check for [due: or [completed: trigger (with or without auto-paired bracket)
+    // Check for #due/ trigger (new syntax)
+    const newDueMatch = textUpToCursor.match(/#due\/$/);
+    if (newDueMatch && newDueMatch.index !== undefined) {
+      return {
+        start: {
+          line: cursor.line,
+          ch: newDueMatch.index + newDueMatch[0].length,
+        },
+        end: cursor,
+        query: 'date:',
+      };
+    }
+
+    // Check for partial date value after #due/: #due/2026-05-
+    const newDueValueMatch = textUpToCursor.match(/#due\/(\d[\d-]*)$/);
+    if (
+      newDueValueMatch &&
+      newDueValueMatch.index !== undefined &&
+      newDueValueMatch[1]
+    ) {
+      return {
+        start: {
+          line: cursor.line,
+          ch:
+            newDueValueMatch.index +
+            newDueValueMatch[0].indexOf(newDueValueMatch[1]),
+        },
+        end: cursor,
+        query: `dateValue:${newDueValueMatch[1]}`,
+      };
+    }
+
+    // Check for {completed: trigger (new syntax)
+    const newCompletedMatch = textUpToCursor.match(/\{completed:\s*\}?$/i);
+    if (newCompletedMatch && newCompletedMatch.index !== undefined) {
+      return {
+        start: {
+          line: cursor.line,
+          ch: newCompletedMatch.index + newCompletedMatch[0].length,
+        },
+        end: cursor,
+        query: 'date:',
+      };
+    }
+
+    // Check for partial date value after {completed:: {completed:2026-05-
+    const newCompletedValueMatch = textUpToCursor.match(
+      /\{completed:(\d[\d-]*)\}?$/i,
+    );
+    if (
+      newCompletedValueMatch &&
+      newCompletedValueMatch.index !== undefined &&
+      newCompletedValueMatch[1]
+    ) {
+      return {
+        start: {
+          line: cursor.line,
+          ch:
+            newCompletedValueMatch.index +
+            newCompletedValueMatch[0].indexOf(newCompletedValueMatch[1]),
+        },
+        end: cursor,
+        query: `dateValue:${newCompletedValueMatch[1]}`,
+      };
+    }
+
+    // Check for [due: or [completed: trigger (legacy, with or without auto-paired bracket)
     const dateMatch = textUpToCursor.match(/\[(due|completed):\s*\]?$/i);
     if (dateMatch && dateMatch.index !== undefined) {
       return {
@@ -46,7 +112,7 @@ export class TaskSuggestProvider extends EditorSuggest<Suggestion> {
       };
     }
 
-    // Check for partial date value: [due: 2026-05-
+    // Check for partial date value: [due: 2026-05- (legacy)
     const dateValueMatch = textUpToCursor.match(
       /\[(due|completed):\s+(\d[\d-]*)\]?$/i,
     );

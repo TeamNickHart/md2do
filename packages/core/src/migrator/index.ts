@@ -21,9 +21,9 @@ export interface MigrationWarning {
  * Migrate content from legacy bracket syntax to new tag/brace syntax.
  *
  * Rules:
- *   [due: YYYY-MM-DD]      → #due:YYYY-MM-DD
- *   [due: YYYY-MM-DD H:MM] → #due:YYYY-MM-DD (time dropped with warning)
- *   [due: M/D/YY]          → #due:YYYY-MM-DD (converted to ISO)
+ *   [due: YYYY-MM-DD]      → #due/YYYY-MM-DD
+ *   [due: YYYY-MM-DD H:MM] → #due/YYYY-MM-DD (time dropped with warning)
+ *   [due: M/D/YY]          → #due/YYYY-MM-DD (converted to ISO)
  *   [due: M/D]             → dropped with warning (no year)
  *   [due: tomorrow]        → dropped with warning
  *   [completed: YYYY-MM-DD] → {completed:YYYY-MM-DD}
@@ -38,7 +38,7 @@ export function migrateContent(content: string): MigrationResult {
     const lineNum = index + 1;
     let result = line;
 
-    // Migrate [due: YYYY-MM-DD] or [due: YYYY-MM-DD H:MM] → #due:YYYY-MM-DD
+    // Migrate [due: YYYY-MM-DD] or [due: YYYY-MM-DD H:MM] → #due/YYYY-MM-DD
     result = result.replace(
       /\[due:\s*(\d{4}-\d{2}-\d{2})(?:\s+\d{1,2}:\d{2})?\s*\]/gi,
       (match: string, dateStr: string) => {
@@ -52,11 +52,11 @@ export function migrateContent(content: string): MigrationResult {
             message: `Time component dropped during migration: ${match}`,
           });
         }
-        return `#due:${dateStr}`;
+        return `#due/${dateStr}`;
       },
     );
 
-    // Migrate [due: M/D/YY] or [due: M/D/YYYY] → #due:YYYY-MM-DD
+    // Migrate [due: M/D/YY] or [due: M/D/YYYY] → #due/YYYY-MM-DD
     result = result.replace(
       /\[due:\s*(\d{1,2})\/(\d{1,2})\/(\d{2,4})\s*\]/gi,
       (_match, m, d, y) => {
@@ -66,7 +66,7 @@ export function migrateContent(content: string): MigrationResult {
         if (year.length === 2) {
           year = `20${year}`;
         }
-        return `#due:${year}-${month}-${day}`;
+        return `#due/${year}-${month}-${day}`;
       },
     );
 

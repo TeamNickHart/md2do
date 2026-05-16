@@ -98,7 +98,7 @@ export function extractCompletedDate(text: string): Date | undefined {
 /**
  * Extract due date from task text
  *
- * Handles absolute dates (#due:2026-01-25 or legacy [due: 2026-01-25]).
+ * Handles absolute dates (#due/2026-01-25 or legacy [due: 2026-01-25]).
  * Legacy relative dates ([due: tomorrow]) always produce a warning.
  *
  * @param text - Task text
@@ -109,10 +109,10 @@ export function extractDueDate(
   text: string,
   context: ParsingContext,
 ): { date: Date | undefined; warning?: Warning } {
-  // Try absolute date first (new #due: syntax or legacy [due:] syntax)
+  // Try absolute date first (new #due/ syntax or legacy [due:] syntax)
   const absoluteMatch = text.match(PATTERNS.DUE_DATE_ABSOLUTE);
   if (absoluteMatch) {
-    // group 1 = new #due: syntax, group 2 = legacy [due:] syntax
+    // group 1 = new #due/ syntax, group 2 = legacy [due:] syntax
     const dateStr = absoluteMatch[1] || absoluteMatch[2];
     if (dateStr) {
       // group 3 = optional time (legacy syntax only)
@@ -163,9 +163,9 @@ export function extractDueDate(
         line: 0, // Will be filled in by caller
         text: text.trim(),
         message:
-          'Relative due dates are no longer supported. Use #due:YYYY-MM-DD with a concrete date instead.',
+          'Relative due dates are no longer supported. Use #due/YYYY-MM-DD with a concrete date instead.',
         reason:
-          'Relative due dates are no longer supported. Use #due:YYYY-MM-DD with a concrete date instead.',
+          'Relative due dates are no longer supported. Use #due/YYYY-MM-DD with a concrete date instead.',
       },
     };
   }
@@ -203,7 +203,7 @@ export function cleanTaskText(text: string): string {
       .replace(PATTERNS.COMPLETED_DATE, '')
       // Remove assignee
       .replace(PATTERNS.ASSIGNEE, '')
-      // Remove tags (after due date removal so #due: is already gone)
+      // Remove tags (after due date removal so #due/ is already gone)
       .replace(PATTERNS.TAG, '')
       // Remove priority markers
       .replace(/!!!/g, '')
@@ -343,8 +343,8 @@ export function parseTask(
       file,
       line: lineNumber,
       text: fullText.trim(),
-      message: 'Task has no due date. Add #due:YYYY-MM-DD.',
-      reason: 'Task has no due date. Add #due:YYYY-MM-DD.',
+      message: 'Task has no due date. Add #due/YYYY-MM-DD.',
+      reason: 'Task has no due date. Add #due/YYYY-MM-DD.',
     });
   }
 

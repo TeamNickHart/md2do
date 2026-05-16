@@ -71,7 +71,7 @@ Create a file called `tasks.md`:
 ```markdown
 # My Tasks
 
-- [ ] Review pull request @nick !! #code-review #due:2026-01-25
+- [ ] Review pull request @nick !! #code-review #due/2026-01-25
 - [ ] Update documentation @jane ! #docs
 - [x] Fix bug in parser @alex !!! #bug {completed:2026-01-18}
 ```
@@ -151,6 +151,7 @@ Now that you have md2do installed:
 - **[Explore filtering](/guide/filtering)** - Master powerful filtering options
 - **[Configure md2do](/guide/configuration)** - Set up defaults and preferences
 - **[Set up Todoist](/integrations/todoist)** - Enable [Todoist](https://www.todoist.com) synchronization
+- **[Install the Obsidian plugin](/integrations/obsidian)** - Task management in Obsidian
 - **[Try AI integration](/integrations/mcp)** - Use Claude Code with md2do
 
 ## Getting Help

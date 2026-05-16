@@ -25,7 +25,7 @@ A VS Code extension to enhance the md2do task management experience directly in 
 - Highlight @assignees (e.g., `@nick` in blue)
 - Highlight priority markers (`!!!` in red, `!!` in orange, `!` in yellow)
 - Highlight tags (`#backend` in purple)
-- Highlight due dates (`#due:2026-01-25` in green)
+- Highlight due dates (`#due/2026-01-25` in green)
 - Highlight Todoist IDs (`{todoist:123}` in gray)
 - Highlight completed tasks differently from incomplete
 

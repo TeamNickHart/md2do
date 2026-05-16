@@ -42,8 +42,8 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return undefined;
     }
 
-    // Progressive date completion for new syntax: #due:2, #due:2026-
-    const newDuePartialMatch = lineText.match(/#due:(\d[\d-]*)$/);
+    // Progressive date completion for new syntax: #due/2, #due/2026-
+    const newDuePartialMatch = lineText.match(/#due\/(\d[\d-]*)$/);
     if (newDuePartialMatch && newDuePartialMatch[1]) {
       const wordPos = position.character - newDuePartialMatch[0].length + 1;
       const range = new vscode.Range(
@@ -56,16 +56,16 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
         (item) => ({
           ...item,
           range,
-          insertText: `due:${item.insertText as string}`,
-          filterText: `due:${item.insertText as string}`,
+          insertText: `due/${item.insertText as string}`,
+          filterText: `due/${item.insertText as string}`,
         }),
       );
     }
 
-    // Date trigger for new syntax: #due: (with optional alpha for shortcut filtering)
-    const dueColonMatch = lineText.match(/#due:[a-z ]*$/i);
-    if (dueColonMatch) {
-      const wordPos = position.character - dueColonMatch[0].length + 1;
+    // Date trigger for new syntax: #due/ (with optional alpha for shortcut filtering)
+    const dueSlashMatch = lineText.match(/#due\/[a-z ]*$/i);
+    if (dueSlashMatch) {
+      const wordPos = position.character - dueSlashMatch[0].length + 1;
       const range = new vscode.Range(
         position.line,
         wordPos,
@@ -75,8 +75,8 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
       return this.getDueShortcuts().map((item) => ({
         ...item,
         range,
-        insertText: `due:${item.insertText as string}`,
-        filterText: `due:${item.filterText ?? (item.label as string)}`,
+        insertText: `due/${item.insertText as string}`,
+        filterText: `due/${item.filterText ?? (item.label as string)}`,
       }));
     }
 
@@ -103,14 +103,14 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
     const tagMatch = lineText.match(/#([\w-]*)$/);
     if (tagMatch) {
       const items = this.getTagCompletions();
-      // Add a "due:" entry so typing #du suggests #due: which triggers date completions
+      // Add a "due/" entry so typing #du suggests #due/ which triggers date completions
       const dueItem: vscode.CompletionItem = {
-        label: 'due:',
+        label: 'due/',
         kind: vscode.CompletionItemKind.Value,
-        insertText: 'due:',
+        insertText: 'due/',
         detail: 'Set a due date',
         documentation:
-          'Type #due: to see date shortcuts (today, tomorrow, monday...)',
+          'Type #due/ to see date shortcuts (today, tomorrow, monday...)',
         sortText: '!due',
         command: {
           command: 'editor.action.triggerSuggest',
@@ -472,9 +472,9 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
   }
 
   /**
-   * Get due date shortcut completions for the #due: trigger path.
+   * Get due date shortcut completions for the #due/ trigger path.
    * Returns items with label='today', insertText='YYYY-MM-DD', filterText='today'.
-   * The caller prefixes insertText/filterText with 'due:'.
+   * The caller prefixes insertText/filterText with 'due/'.
    */
   private getDueShortcuts(): vscode.CompletionItem[] {
     const today = new Date();
