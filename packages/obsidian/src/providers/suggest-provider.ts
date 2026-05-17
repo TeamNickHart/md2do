@@ -142,8 +142,8 @@ export class TaskSuggestProvider extends EditorSuggest<Suggestion> {
       };
     }
 
-    // Check for # trigger
-    const tagMatch = textUpToCursor.match(/#(\w*)$/);
+    // Check for # trigger (exclude #due/ which is handled above)
+    const tagMatch = textUpToCursor.match(/#(?!due\/)(\w*)$/);
     if (tagMatch) {
       return {
         start: { line: cursor.line, ch: tagMatch.index! + 1 },

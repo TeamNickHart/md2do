@@ -53,46 +53,24 @@ export default class Md2doPlugin extends Plugin {
     this.statusBarEl.addClass('md2do-status-bar');
     this.statusBarEl.setText('md2do: Loading...');
 
-    // Watch for file changes
-    if (this.settings.autoScan) {
-      const debouncedRefresh = debounce(
-        () => void this.refreshTasks(),
-        1000,
-        true,
-      );
+    // Watch for file changes (always register, check setting dynamically)
+    const debouncedRefresh = debounce(
+      () => void this.refreshTasks(),
+      1000,
+      true,
+    );
 
-      this.registerEvent(
-        this.app.vault.on('modify', (file) => {
-          if (file instanceof TFile && file.extension === 'md') {
-            debouncedRefresh();
-          }
-        }),
-      );
+    const onFileChange = (file: unknown) => {
+      if (!this.settings.autoScan) return;
+      if (file instanceof TFile && file.extension === 'md') {
+        debouncedRefresh();
+      }
+    };
 
-      this.registerEvent(
-        this.app.vault.on('create', (file) => {
-          if (file instanceof TFile && file.extension === 'md') {
-            debouncedRefresh();
-          }
-        }),
-      );
-
-      this.registerEvent(
-        this.app.vault.on('delete', (file) => {
-          if (file instanceof TFile && file.extension === 'md') {
-            debouncedRefresh();
-          }
-        }),
-      );
-
-      this.registerEvent(
-        this.app.vault.on('rename', (file) => {
-          if (file instanceof TFile && file.extension === 'md') {
-            debouncedRefresh();
-          }
-        }),
-      );
-    }
+    this.registerEvent(this.app.vault.on('modify', onFileChange));
+    this.registerEvent(this.app.vault.on('create', onFileChange));
+    this.registerEvent(this.app.vault.on('delete', onFileChange));
+    this.registerEvent(this.app.vault.on('rename', onFileChange));
 
     // Initial scan once layout is ready
     this.app.workspace.onLayoutReady(() => {

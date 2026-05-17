@@ -65,8 +65,10 @@ export function registerCommands(plugin: Md2doPlugin): void {
     id: 'show-overdue',
     name: 'Show overdue tasks',
     callback: () => {
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
       const overdueTasks = plugin.tasks.filter(
-        (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
+        (t) => !t.completed && t.dueDate && t.dueDate < today,
       );
       if (overdueTasks.length === 0) {
         new Notice('No overdue tasks!');
@@ -105,8 +107,14 @@ export function registerCommands(plugin: Md2doPlugin): void {
       const total = plugin.tasks.length;
       const completed = plugin.tasks.filter((t) => t.completed).length;
       const incomplete = total - completed;
+      const statsNow = new Date();
+      const statsToday = new Date(
+        statsNow.getFullYear(),
+        statsNow.getMonth(),
+        statsNow.getDate(),
+      );
       const overdue = plugin.tasks.filter(
-        (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
+        (t) => !t.completed && t.dueDate && t.dueDate < statsToday,
       ).length;
 
       const lines = [
