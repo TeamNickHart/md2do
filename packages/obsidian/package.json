@@ -1,6 +1,6 @@
 {
   "name": "md2do-obsidian",
-  "version": "0.1.0",
+  "version": "0.7.0",
   "private": true,
   "description": "md2do Obsidian plugin - intelligent markdown task management",
   "main": "main.js",
