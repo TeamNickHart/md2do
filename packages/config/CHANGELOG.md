@@ -1,5 +1,11 @@
 # @md2do/config
 
+## 0.7.0
+
+### Minor Changes
+
+- feat: Obsidian community plugin, #due/ syntax migration, and improved task parsing
+
 ## 0.6.0
 
 ### Minor Changes
