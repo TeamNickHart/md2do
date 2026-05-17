@@ -8,7 +8,7 @@
   - New `md2do add` command for creating tasks from the CLI
   - `--file` is optional — omit to print to stdout for dry-run or piping
   - Supports `--assignee`, `--priority`, `--due` (relative dates), `--tag`, `--completed`, `--line`
-  - Breaking: metadata syntax migrated to hybrid tag/brace format (`#due:`, `{completed:}`, `{todoist:}`)
+  - Breaking: metadata syntax migrated to hybrid tag/brace format (`#due/`, `{completed:}`, `{todoist:}`)
   - Legacy bracket syntax still parsed for backward compatibility
   - New `md2do migrate` command to convert files to new syntax
 

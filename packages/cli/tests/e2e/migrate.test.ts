@@ -27,7 +27,7 @@ describe('E2E: md2do migrate', () => {
         '# Tasks',
         '- [ ] Task one [due: 2026-05-15]',
         '- [ ] Task two [due: 2026-06-01]',
-        '- [ ] Already migrated #due:2026-07-01',
+        '- [ ] Already migrated #due/2026-07-01',
       ].join('\n'),
     });
 
@@ -40,9 +40,9 @@ describe('E2E: md2do migrate', () => {
       expect(result).toBe(
         [
           '# Tasks',
-          '- [ ] Task one #due:2026-05-15',
-          '- [ ] Task two #due:2026-06-01',
-          '- [ ] Already migrated #due:2026-07-01',
+          '- [ ] Task one #due/2026-05-15',
+          '- [ ] Task two #due/2026-06-01',
+          '- [ ] Already migrated #due/2026-07-01',
         ].join('\n'),
       );
     } finally {
@@ -105,7 +105,7 @@ describe('E2E: md2do migrate', () => {
 
       const result = readFileSync(join(tmpDir, 'tasks.md'), 'utf-8');
       expect(result).toBe(
-        '- [x] @nick Fix bug !! #backend #due:2026-01-25 {todoist:123} {completed:2026-01-18}\n',
+        '- [x] @nick Fix bug !! #backend #due/2026-01-25 {todoist:123} {completed:2026-01-18}\n',
       );
     } finally {
       rmSync(tmpDir, { recursive: true });
@@ -128,8 +128,8 @@ describe('E2E: md2do migrate', () => {
       const result = readFileSync(join(tmpDir, 'tasks.md'), 'utf-8');
       expect(result).toBe(
         [
-          '- [ ] Short date #due:2026-01-25',
-          '- [ ] Full year #due:2026-01-25',
+          '- [ ] Short date #due/2026-01-25',
+          '- [ ] Full year #due/2026-01-25',
         ].join('\n'),
       );
     } finally {
@@ -166,7 +166,7 @@ describe('E2E: md2do migrate', () => {
       });
 
       const result = readFileSync(join(tmpDir, 'tasks.md'), 'utf-8');
-      expect(result).toBe('- [ ] Timed task #due:2026-05-15\n');
+      expect(result).toBe('- [ ] Timed task #due/2026-05-15\n');
       expect(output).toContain('Time component dropped');
     } finally {
       rmSync(tmpDir, { recursive: true });
@@ -176,7 +176,7 @@ describe('E2E: md2do migrate', () => {
   it('should not modify files with no legacy syntax', () => {
     const original = [
       '# Tasks',
-      '- [ ] Already new #due:2026-05-15 {todoist:123}',
+      '- [ ] Already new #due/2026-05-15 {todoist:123}',
       '- [x] Done {completed:2026-05-10}',
       '- [ ] Plain task #backend',
     ].join('\n');
@@ -210,8 +210,144 @@ describe('E2E: md2do migrate', () => {
       expect(result).toBe(original);
 
       // Output shows diff
-      expect(output).toContain('#due:2026-05-15');
+      expect(output).toContain('#due/2026-05-15');
       expect(output).toContain('[DRY RUN]');
+    } finally {
+      rmSync(tmpDir, { recursive: true });
+    }
+  });
+
+  it('should preserve nested bullet indentation', () => {
+    const tmpDir = createTempDir({
+      'tasks.md': [
+        '# Project Tasks',
+        '',
+        '- [ ] Parent task [due: 2026-05-15]',
+        '  - [ ] Subtask one [due: 2026-06-01]',
+        '    - [ ] Deep subtask [completed: 2026-01-18]',
+        '  - [ ] Subtask two [todoist: 789]',
+        '- [ ] Another top-level [due: 2026-07-01]',
+      ].join('\n'),
+    });
+
+    try {
+      execSync(`node ${cliPath} migrate --path ${tmpDir}`, {
+        encoding: 'utf-8',
+      });
+
+      const result = readFileSync(join(tmpDir, 'tasks.md'), 'utf-8');
+      expect(result).toBe(
+        [
+          '# Project Tasks',
+          '',
+          '- [ ] Parent task #due/2026-05-15',
+          '  - [ ] Subtask one #due/2026-06-01',
+          '    - [ ] Deep subtask {completed:2026-01-18}',
+          '  - [ ] Subtask two {todoist:789}',
+          '- [ ] Another top-level #due/2026-07-01',
+        ].join('\n'),
+      );
+    } finally {
+      rmSync(tmpDir, { recursive: true });
+    }
+  });
+
+  it('should not alter lines without legacy syntax', () => {
+    const original = [
+      '# My Notes',
+      '',
+      'Some paragraph with   extra   spaces.',
+      '',
+      '- Regular list item',
+      '  - Nested list item',
+      '    - Deeply nested',
+      '',
+      '- [ ] Task with new syntax #due/2026-05-15 {todoist:123}',
+      '  - [ ] Nested task {completed:2026-05-10}',
+      '',
+      '```',
+      '  indented code block  ',
+      '```',
+    ].join('\n');
+
+    const tmpDir = createTempDir({ 'notes.md': original });
+
+    try {
+      execSync(`node ${cliPath} migrate --path ${tmpDir}`, {
+        encoding: 'utf-8',
+      });
+
+      const result = readFileSync(join(tmpDir, 'notes.md'), 'utf-8');
+      expect(result).toBe(original);
+    } finally {
+      rmSync(tmpDir, { recursive: true });
+    }
+  });
+
+  it('should handle a realistic file with mixed content', () => {
+    const tmpDir = createTempDir({
+      'sprint.md': [
+        '# Sprint 12',
+        '',
+        '## Backend',
+        '',
+        '- [ ] @alice Implement auth API !!! #backend [due: 2026-05-20] [todoist:100]',
+        '  - [ ] Set up OAuth provider [due: 2026-05-18]',
+        '  - [ ] Write token validation [due: 2026-05-19]',
+        '- [x] @bob Fix DB migration !! #backend [completed: 2026-05-10] [todoist: 200]',
+        '',
+        '## Frontend',
+        '',
+        '- [ ] @carol Build login page #frontend [due: 2026-05-22]',
+        '- [ ] Design system updates #frontend #design',
+        '  - [ ] Update color palette',
+        '  - [ ] Add new icons [due: 2026-05-25]',
+        '',
+        '> Note: Sprint ends [due: 2026-05-30] is in the text, not a task.',
+      ].join('\n'),
+    });
+
+    try {
+      execSync(`node ${cliPath} migrate --path ${tmpDir}`, {
+        encoding: 'utf-8',
+      });
+
+      const result = readFileSync(join(tmpDir, 'sprint.md'), 'utf-8');
+      expect(result).toBe(
+        [
+          '# Sprint 12',
+          '',
+          '## Backend',
+          '',
+          '- [ ] @alice Implement auth API !!! #backend #due/2026-05-20 {todoist:100}',
+          '  - [ ] Set up OAuth provider #due/2026-05-18',
+          '  - [ ] Write token validation #due/2026-05-19',
+          '- [x] @bob Fix DB migration !! #backend {completed:2026-05-10} {todoist:200}',
+          '',
+          '## Frontend',
+          '',
+          '- [ ] @carol Build login page #frontend #due/2026-05-22',
+          '- [ ] Design system updates #frontend #design',
+          '  - [ ] Update color palette',
+          '  - [ ] Add new icons #due/2026-05-25',
+          '',
+          '> Note: Sprint ends #due/2026-05-30 is in the text, not a task.',
+        ].join('\n'),
+      );
+
+      // Verify parse roundtrip works
+      const output = execSync(
+        `node ${cliPath} list --path ${tmpDir} --format json --no-warnings 2>&1`,
+        { encoding: 'utf-8' },
+      );
+
+      const parsed = JSON.parse(output) as {
+        tasks?: Array<{ text: string; completed: boolean }>;
+      };
+      const tasks = Array.isArray(parsed) ? parsed : (parsed.tasks ?? []);
+
+      // 8 task lines (excludes headings, blank lines, paragraph, blockquote)
+      expect(tasks).toHaveLength(8);
     } finally {
       rmSync(tmpDir, { recursive: true });
     }

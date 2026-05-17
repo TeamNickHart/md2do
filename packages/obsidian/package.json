@@ -1,0 +1,21 @@
+{
+  "name": "md2do-obsidian",
+  "version": "0.7.0",
+  "private": true,
+  "description": "md2do Obsidian plugin - intelligent markdown task management",
+  "main": "main.js",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --external:obsidian --format=cjs --outfile=main.js --platform=node --target=es2020",
+    "dev": "esbuild src/main.ts --bundle --external:obsidian --format=cjs --outfile=main.js --platform=node --target=es2020 --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@md2do/core": "workspace:*"
+  },
+  "devDependencies": {
+    "esbuild": ">=0.25.0",
+    "obsidian": "^1.7.2",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.0"
+  }
+}

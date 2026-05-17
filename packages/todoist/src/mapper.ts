@@ -46,8 +46,8 @@ export function extractTaskContent(text: string): string {
       .replace(/@\w+/g, '')
       // Remove priority markers
       .replace(/!+/g, '')
-      // Remove due dates (new syntax #due:YYYY-MM-DD) — before tag removal
-      .replace(/#due:\d{4}-\d{2}-\d{2}/g, '')
+      // Remove due dates (new syntax #due/YYYY-MM-DD) — before tag removal
+      .replace(/#due\/\d{4}-\d{2}-\d{2}/g, '')
       // Remove tags
       .replace(/#[\w-]+/g, '')
       // Remove dates in parentheses
@@ -105,7 +105,7 @@ export function formatTaskContent(
     const year = options.due.getUTCFullYear();
     const month = String(options.due.getUTCMonth() + 1).padStart(2, '0');
     const day = String(options.due.getUTCDate()).padStart(2, '0');
-    result += ` #due:${year}-${month}-${day}`;
+    result += ` #due/${year}-${month}-${day}`;
   }
 
   // Add Todoist ID

@@ -64,7 +64,7 @@ md2do add "Fix login bug" --file tasks.md \
   --due tomorrow --tag backend
 ```
 
-Output: `- [ ] Fix login bug @nick !! #backend #due:2026-01-21`
+Output: `- [ ] Fix login bug @nick !! #backend #due/2026-01-21`
 
 ### Relative due dates
 

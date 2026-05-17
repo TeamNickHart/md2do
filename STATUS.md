@@ -59,7 +59,7 @@ This document provides a quick overview of md2do's current implementation status
 
 ### Metadata Syntax
 
-- [x] Due dates: `#due:2026-01-25` (tag-style)
+- [x] Due dates: `#due/2026-01-25` (tag-style)
 - [x] Completion dates: `{completed:2026-01-25}` (brace-style)
 - [x] Todoist IDs: `{todoist:123456}` (brace-style)
 - [x] Legacy bracket syntax still parsed for backward compatibility (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`)

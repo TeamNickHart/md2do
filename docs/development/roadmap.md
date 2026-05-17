@@ -14,9 +14,9 @@ This page highlights the major upcoming features and their current status.
 - MCP server for AI
 - Hierarchical configuration
 - VitePress docs site at [md2do.com](https://md2do.com)
-- **Syntax migration** - New `#due:YYYY-MM-DD`, `{completed:YYYY-MM-DD}`, `{todoist:NNN}` format with backward-compatible legacy parsing
+- **Syntax migration** - New `#due/YYYY-MM-DD`, `{completed:YYYY-MM-DD}`, `{todoist:NNN}` format with backward-compatible legacy parsing
 - **`md2do migrate` command** - Automated migration from legacy bracket syntax
-- **VS Code extension** (v0.2.1) - Task Explorer, CodeLens, diagnostics, dashboard, smart `#due:` autocomplete
+- **VS Code extension** (v0.2.1) - Task Explorer, CodeLens, diagnostics, dashboard, smart `#due/` autocomplete
 - **Obsidian plugin** (beta) - Task list view, grouping, sorting, commands
 
 ## In Progress
@@ -25,7 +25,7 @@ This page highlights the major upcoming features and their current status.
 
 - [ ] Syntax migration updates (suggest provider, task writer)
 - [ ] Community plugin submission
-- [ ] Auto-completion for `#due:`, `@`, `#`
+- [ ] Auto-completion for `#due/`, `@`, `#`
 
 ### Advanced Sync Logic
 

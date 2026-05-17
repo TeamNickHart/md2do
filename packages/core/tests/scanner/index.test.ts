@@ -232,8 +232,8 @@ Line 4
 
 ## Sprint Start
 
-- [ ] @alice Setup development environment !! #devops #due:2026-01-15
-- [ ] @bob Review architecture docs #backend #due:2026-01-16
+- [ ] @alice Setup development environment !! #devops #due/2026-01-15
+- [ ] @bob Review architecture docs #backend #due/2026-01-16
 - [x] Create project repository [completed: 2026-01-13]
 
 ## Mid-Sprint Check-in
@@ -267,12 +267,12 @@ Line 4
 ## January 13, 2026
 
 - [ ] Discuss Q1 goals [due: 1/20/26]
-- [ ] Review performance feedback #due:2026-01-17
+- [ ] Review performance feedback #due/2026-01-17
 - [x] Schedule team offsite [completed: 2026-01-13]
 
 ## January 20, 2026
 
-- [ ] Follow up on promotion discussion #due:2026-01-27
+- [ ] Follow up on promotion discussion #due/2026-01-27
 `.trim();
       const result = scanner.scanFile('1-1s/jane-doe.md', content);
 
@@ -367,7 +367,7 @@ Line 4
       const files = [
         {
           path: 'projects/acme-app/sprint.md',
-          content: '- [ ] Project task #due:2026-01-14',
+          content: '- [ ] Project task #due/2026-01-14',
         },
         {
           path: '1-1s/alice.md',

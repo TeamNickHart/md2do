@@ -27,6 +27,9 @@ features:
   - icon: 💻
     title: VSCode Extension
     details: Task explorer with grouping/filtering/sorting, CodeLens inline actions, interactive dashboard, smart diagnostics, and auto-completion. Available on the VSCode Marketplace.
+  - icon: 🟣
+    title: Obsidian Plugin
+    details: Native task list view, autocomplete, and completion tracking directly in Obsidian. Works on desktop and iPad.
   - icon: 🎯
     title: Powerful Filtering
     details: Filter by assignee, priority, project, tags, due dates, and more.
@@ -74,9 +77,9 @@ md2do stats --by assignee
 md2do recognizes standard markdown task syntax with rich metadata:
 
 ```markdown
-- [ ] Implement user authentication @jane !!! #backend #auth #due:2026-01-20
+- [ ] Implement user authentication @jane !!! #backend #auth #due/2026-01-20
 - [x] Write documentation @nick !! #docs {completed:2026-01-15}
-- [ ] Fix bug in parser @alex ! #bug #due:2026-01-18
+- [ ] Fix bug in parser @alex ! #bug #due/2026-01-18
 ```
 
 **Supported metadata:**
@@ -84,7 +87,7 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `@username` - Task assignee
 - `!!!` / `!!` / `!` - Priority (urgent/high/normal)
 - `#tag` - Tags
-- `#due:YYYY-MM-DD` - Due date
+- `#due/YYYY-MM-DD` - Due date
 - `{completed:YYYY-MM-DD}` - Completion date
 - `{todoist:ID}` - Todoist sync ID
 
@@ -147,6 +150,8 @@ Use Claude Code or other AI assistants to query your tasks:
 **📖 [Read the Guide](/guide/task-format)** - Learn about task format and features
 
 **💻 [VSCode Extension](/integrations/vscode)** - Install the VSCode extension
+
+**🟣 [Obsidian Plugin](/integrations/obsidian)** - Install the Obsidian plugin
 
 **🔌 [Todoist Setup](/integrations/todoist)** - Set up [Todoist](https://www.todoist.com) integration
 

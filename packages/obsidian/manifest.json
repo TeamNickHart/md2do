@@ -1,0 +1,10 @@
+{
+  "id": "md2do",
+  "name": "md2do",
+  "version": "0.7.0",
+  "minAppVersion": "1.0.0",
+  "description": "Manage tasks in markdown with due dates, priorities, assignees, tags, and Todoist sync.",
+  "author": "Nicholas Hart",
+  "authorUrl": "https://md2do.com",
+  "isDesktopOnly": false
+}

@@ -1,0 +1,217 @@
+/* md2do Obsidian Plugin Styles */
+
+/* Task Explorer View */
+.md2do-task-list {
+  padding: 0;
+}
+
+.md2do-task-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.md2do-task-item:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.md2do-task-item.is-completed .md2do-task-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.md2do-task-checkbox {
+  margin-right: 6px;
+  margin-top: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.md2do-task-text {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.md2do-task-meta {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Priority badges */
+.md2do-priority {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.md2do-priority-urgent {
+  background-color: var(--color-red);
+  color: var(--text-on-accent);
+}
+
+.md2do-priority-high {
+  background-color: var(--color-orange);
+  color: var(--text-on-accent);
+}
+
+.md2do-priority-normal {
+  background-color: var(--color-blue);
+  color: var(--text-on-accent);
+}
+
+.md2do-priority-low {
+  background-color: var(--color-base-40);
+  color: var(--text-normal);
+}
+
+/* Tags */
+.md2do-tag {
+  font-size: 10px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background-color: var(--tag-background);
+  color: var(--tag-color);
+}
+
+/* Assignee */
+.md2do-assignee {
+  font-size: 10px;
+  color: var(--text-accent);
+}
+
+/* Due date */
+.md2do-due-date {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.md2do-due-date.is-overdue {
+  color: var(--color-red);
+  font-weight: 600;
+}
+
+.md2do-due-date.is-due-today {
+  color: var(--color-orange);
+  font-weight: 600;
+}
+
+/* Group headers */
+.md2do-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.md2do-group-header:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.md2do-group-count {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 8px;
+  background-color: var(--background-modifier-hover);
+  font-weight: normal;
+}
+
+.md2do-group-collapse-icon {
+  transition: transform 100ms ease;
+  margin-right: 4px;
+}
+
+.md2do-group-header.is-collapsed .md2do-group-collapse-icon {
+  transform: rotate(-90deg);
+}
+
+/* File location */
+.md2do-task-file {
+  font-size: 10px;
+  color: var(--text-faint);
+  margin-top: 2px;
+}
+
+/* Empty state */
+.md2do-empty-state {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* Toolbar */
+.md2do-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.md2do-toolbar-btn {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+}
+
+.md2do-toolbar-btn:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+
+.md2do-toolbar-btn.is-active {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+}
+
+.md2do-toolbar-separator {
+  width: 1px;
+  height: 16px;
+  background-color: var(--background-modifier-border);
+  margin: 0 2px;
+}
+
+/* Status bar */
+.md2do-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.md2do-status-overdue {
+  color: var(--color-red);
+}
+
+/* Suggestion popup */
+.md2do-suggestion {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.md2do-suggestion-label {
+  font-weight: 500;
+}
+
+.md2do-suggestion-detail {
+  font-size: 11px;
+  color: var(--text-muted);
+}
