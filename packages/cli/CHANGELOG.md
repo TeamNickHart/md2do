@@ -1,5 +1,18 @@
 # @md2do/cli
 
+## 0.7.0
+
+### Minor Changes
+
+- feat: Obsidian community plugin, #due/ syntax migration, and improved task parsing
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @md2do/core@0.7.0
+  - @md2do/config@0.7.0
+  - @md2do/todoist@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
