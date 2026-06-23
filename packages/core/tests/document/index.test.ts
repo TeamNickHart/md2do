@@ -121,6 +121,17 @@ describe('parseDocument', () => {
     expect(tree.sections).toHaveLength(0);
   });
 
+  it('should promote H3+ headings to sections', () => {
+    const content =
+      '# Project\n\n## Section One\n- [ ] task a\n\n### Sub Section\n- [ ] task b\n';
+    const tree = parseDocument('test.md', content);
+
+    expect(tree.sections).toHaveLength(2);
+    expect(tree.sections[0]!.name).toBe('Section One');
+    expect(tree.sections[1]!.name).toBe('Sub Section');
+    expect(tree.sections[1]!.tasks).toHaveLength(1);
+  });
+
   it('should treat root tasks after H1 but before first H2 as root', () => {
     const content = `# My Project
 - [ ] root task

@@ -29,7 +29,7 @@ export interface DocumentTree {
   sections: DocumentSection[];
 }
 
-const HEADING_REGEX = /^(#{1,2})\s+(.+?)(?:\s+\{todoist:(\d+)\})?\s*$/;
+const HEADING_REGEX = /^(#{1,6})\s+(.+?)(?:\s+\{todoist:(\d+)\})?\s*$/;
 
 function toDocumentTask(
   rawLine: string,
@@ -86,7 +86,7 @@ export function parseDocument(
         tree.projectHeadingLine = lineNumber;
         if (todoistId) tree.projectTodoistId = todoistId;
         currentSection = null;
-      } else if (level === 2) {
+      } else if (level >= 2) {
         currentSection = {
           name,
           headingLine: lineNumber,

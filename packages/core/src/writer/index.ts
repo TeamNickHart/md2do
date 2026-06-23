@@ -165,7 +165,7 @@ export async function updateHeadings(
 
       const originalLine = lines[lineIndex]!;
       // Only update heading lines (# or ##)
-      if (!/^#{1,2}\s/.test(originalLine)) continue;
+      if (!/^#{1,6}\s/.test(originalLine)) continue;
       // Don't add if already has a todoist ID
       if (/\{todoist:\d+\}/.test(originalLine)) continue;
 
