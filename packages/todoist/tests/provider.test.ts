@@ -74,39 +74,39 @@ describe('TodoistProvider', () => {
       const tasks = await provider.fetchTasks();
 
       expect(tasks).toHaveLength(1);
-      expect(tasks[0].externalId).toBe('abc');
-      expect(tasks[0].text).toBe('Do the thing');
-      expect(tasks[0].completed).toBe(false);
+      expect(tasks[0]!.externalId).toBe('abc');
+      expect(tasks[0]!.text).toBe('Do the thing');
+      expect(tasks[0]!.completed).toBe(false);
     });
 
     it('maps completed status', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ isCompleted: true })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.completed).toBe(true);
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.completed).toBe(true);
     });
 
     it('maps priority 4 → urgent', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ priority: 4 })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.priority).toBe('urgent');
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.priority).toBe('urgent');
     });
 
     it('maps priority 3 → high', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ priority: 3 })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.priority).toBe('high');
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.priority).toBe('high');
     });
 
     it('maps priority 2 → normal', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ priority: 2 })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.priority).toBe('normal');
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.priority).toBe('normal');
     });
 
     it('maps priority 1 → low', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ priority: 1 })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.priority).toBe('low');
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.priority).toBe('low');
     });
 
     it('maps dueDate when present', async () => {
@@ -121,28 +121,28 @@ describe('TodoistProvider', () => {
           },
         }),
       ]);
-      const [task] = await provider.fetchTasks();
-      expect(task.dueDate).toBe('2026-08-15');
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.dueDate).toBe('2026-08-15');
     });
 
     it('omits dueDate when not present', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ due: null })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.dueDate).toBeUndefined();
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.dueDate).toBeUndefined();
     });
 
     it('maps labels as tags', async () => {
       getTasks.mockResolvedValue([
         makeTodoistTask({ labels: ['eng', 'backend'] }),
       ]);
-      const [task] = await provider.fetchTasks();
-      expect(task.tags).toEqual(['eng', 'backend']);
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.tags).toEqual(['eng', 'backend']);
     });
 
     it('omits tags when labels is empty', async () => {
       getTasks.mockResolvedValue([makeTodoistTask({ labels: [] })]);
-      const [task] = await provider.fetchTasks();
-      expect(task.tags).toBeUndefined();
+      const tasks = await provider.fetchTasks();
+      expect(tasks[0]!.tags).toBeUndefined();
     });
 
     it('passes options.filter to client.getTasks', async () => {
@@ -157,8 +157,8 @@ describe('TodoistProvider', () => {
       ]);
       const tasks = await provider.fetchTasks();
       expect(tasks).toHaveLength(2);
-      expect(tasks[0].externalId).toBe('1');
-      expect(tasks[1].externalId).toBe('2');
+      expect(tasks[0]!.externalId).toBe('1');
+      expect(tasks[1]!.externalId).toBe('2');
     });
   });
 
