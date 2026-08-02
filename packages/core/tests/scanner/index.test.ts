@@ -312,8 +312,8 @@ Line 4
       expect(result.tasks[0]?.tags).toEqual(['backend', 'urgent']);
 
       // Task with Todoist ID
-      expect(result.tasks[1]?.todoistId).toBe('123456');
-      expect(result.tasks[3]?.todoistId).toBe('789012');
+      expect(result.tasks[1]?.sources?.['todoist']).toBe('123456');
+      expect(result.tasks[3]?.sources?.['todoist']).toBe('789012');
     });
   });
 
@@ -456,10 +456,7 @@ Line 4
 
       expect(result.tasks).toHaveLength(2);
       expect(result.warnings).toHaveLength(1);
-      expect(result.warnings[0]?.reason).toContain(
-        'Duplicate Todoist ID {todoist:',
-      );
-      expect(result.warnings[0]?.reason).toContain('123456');
+      expect(result.warnings[0]?.reason).toContain('{todoist:123456}');
       expect(result.warnings[0]?.line).toBe(2);
     });
 
@@ -506,9 +503,7 @@ Line 4
 
       expect(result.tasks).toHaveLength(2);
       expect(result.warnings).toHaveLength(1);
-      expect(result.warnings[0]?.reason).toContain(
-        'Duplicate Todoist ID {todoist:',
-      );
+      expect(result.warnings[0]?.reason).toContain('{todoist:123456}');
       expect(result.warnings[0]?.reason).toContain('across files');
       expect(result.warnings[0]?.file).toBe('file2.md');
     });

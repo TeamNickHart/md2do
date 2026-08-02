@@ -237,7 +237,7 @@ async function configInitAction(options: ConfigInitOptions): Promise<void> {
           'relative-date-no-context': 'warn',
           'missing-due-date': 'warn',
           'missing-completed-date': 'warn',
-          'duplicate-todoist-id': 'error',
+          'duplicate-source-id': 'error',
           'file-read-error': 'error',
         },
       };
@@ -274,7 +274,7 @@ async function configInitAction(options: ConfigInitOptions): Promise<void> {
           'relative-date-no-context': 'warn',
           'missing-due-date': 'warn',
           'missing-completed-date': 'warn',
-          'duplicate-todoist-id': 'error',
+          'duplicate-source-id': 'error',
           'file-read-error': 'error',
         },
       };

@@ -362,12 +362,12 @@ describe('parseTask', () => {
 
     it('should extract Todoist ID with new syntax', () => {
       const result = parseTask('- [ ] Task {todoist:123456}', 1, file, {});
-      expect(result.task?.todoistId).toBe('123456');
+      expect(result.task?.sources?.['todoist']).toBe('123456');
     });
 
     it('should extract Todoist ID with legacy syntax', () => {
       const result = parseTask('- [ ] Task [todoist:123456]', 1, file, {});
-      expect(result.task?.todoistId).toBe('123456');
+      expect(result.task?.sources?.['todoist']).toBe('123456');
     });
 
     it('should extract completion date with new syntax', () => {
@@ -399,7 +399,7 @@ describe('parseTask', () => {
       expect(result.task?.priority).toBe('high');
       expect(result.task?.tags).toEqual(['backend', 'urgent']);
       expect(result.task?.dueDate).toBeInstanceOf(Date);
-      expect(result.task?.todoistId).toBe('123');
+      expect(result.task?.sources?.['todoist']).toBe('123');
       expect(result.task?.text).toBe('Fix bug');
     });
 
@@ -412,7 +412,7 @@ describe('parseTask', () => {
       expect(result.task?.priority).toBe('high');
       expect(result.task?.tags).toEqual(['backend', 'urgent']);
       expect(result.task?.dueDate).toBeInstanceOf(Date);
-      expect(result.task?.todoistId).toBe('123');
+      expect(result.task?.sources?.['todoist']).toBe('123');
       expect(result.task?.text).toBe('Fix bug');
     });
   });
@@ -504,7 +504,7 @@ describe('parseTask', () => {
       expect(task).not.toHaveProperty('assignee');
       expect(task).not.toHaveProperty('priority');
       expect(task).not.toHaveProperty('dueDate');
-      expect(task).not.toHaveProperty('todoistId');
+      expect(task).not.toHaveProperty('sources');
       expect(task).not.toHaveProperty('completedDate');
       expect(task).not.toHaveProperty('project');
       expect(task).not.toHaveProperty('person');
@@ -566,7 +566,7 @@ describe('parseTask', () => {
 
       expect(result.task?.completed).toBe(true);
       expect(result.task?.text).toBe('Fix payment bug');
-      expect(result.task?.todoistId).toBe('987654');
+      expect(result.task?.sources?.['todoist']).toBe('987654');
       expect(result.task?.completedDate).toBeInstanceOf(Date);
     });
 
@@ -577,7 +577,7 @@ describe('parseTask', () => {
 
       expect(result.task?.completed).toBe(true);
       expect(result.task?.text).toBe('Fix payment bug');
-      expect(result.task?.todoistId).toBe('987654');
+      expect(result.task?.sources?.['todoist']).toBe('987654');
       expect(result.task?.completedDate).toBeInstanceOf(Date);
     });
   });

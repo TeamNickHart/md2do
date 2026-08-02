@@ -133,7 +133,7 @@ describe.skip('E2E: JSON Format', () => {
       expect(task.priority).toBe('urgent');
 
       // May include optional fields
-      // assignee, tags[], dueDate, todoistId
+      // assignee, tags[], dueDate, sources
     }
 
     expect(json).toMatchSnapshot();

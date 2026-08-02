@@ -13,7 +13,7 @@ export interface JsonOutput {
     priority?: string;
     dueDate?: string; // ISO string
     tags: string[];
-    todoistId?: string;
+    sources?: Record<string, string>;
     completedDate?: string; // ISO string
   }>;
   metadata: {
@@ -43,7 +43,7 @@ export function formatAsJson(tasks: Task[]): string {
       ...(task.priority && { priority: task.priority }),
       ...(task.dueDate && { dueDate: task.dueDate.toISOString() }),
       tags: task.tags,
-      ...(task.todoistId && { todoistId: task.todoistId }),
+      ...(task.sources && { sources: task.sources }),
       ...(task.completedDate && {
         completedDate: task.completedDate.toISOString(),
       }),

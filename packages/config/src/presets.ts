@@ -30,7 +30,7 @@ export const PRESET_STRICT: WarningPreset = {
     'missing-completed-date': 'warn',
 
     // Critical issues - errors
-    'duplicate-todoist-id': 'error',
+    'duplicate-source-id': 'error',
     'file-read-error': 'error',
   },
 };
@@ -65,7 +65,7 @@ export const PRESET_RECOMMENDED: WarningPreset = {
     'missing-completed-date': 'off',
 
     // Critical errors - always shown
-    'duplicate-todoist-id': 'error',
+    'duplicate-source-id': 'error',
     'file-read-error': 'error',
   },
 };

@@ -79,8 +79,8 @@ export class MarkdownScanner {
     const tasks: Task[] = [];
     const warnings: Warning[] = [];
 
-    // Track Todoist IDs to detect duplicates
-    const todoistIds = new Map<string, { file: string; line: number }>();
+    // Track source IDs (composite "slug:id" key) to detect duplicates
+    const sourceIds = new Map<string, { file: string; line: number }>();
 
     // Initialize context from file path
     const context: ParsingContext = {};
@@ -117,25 +117,25 @@ export class MarkdownScanner {
       if (result.task) {
         tasks.push(result.task);
 
-        // Check for duplicate Todoist IDs
-        if (result.task.todoistId) {
-          const existing = todoistIds.get(result.task.todoistId);
-          if (existing) {
-            warnings.push({
-              severity: 'error',
-              source: 'md2do',
-              ruleId: 'duplicate-todoist-id',
-              file: filePath,
-              line: lineNumber,
-              text: result.task.text,
-              message: `Duplicate Todoist ID {todoist:${result.task.todoistId}}. Also found at ${existing.file}:${existing.line}.`,
-              reason: `Duplicate Todoist ID {todoist:${result.task.todoistId}}. Also found at ${existing.file}:${existing.line}.`,
-            });
-          } else {
-            todoistIds.set(result.task.todoistId, {
-              file: filePath,
-              line: lineNumber,
-            });
+        // Check for duplicate source IDs
+        if (result.task.sources) {
+          for (const [slug, id] of Object.entries(result.task.sources)) {
+            const compositeKey = `${slug}:${id}`;
+            const existing = sourceIds.get(compositeKey);
+            if (existing) {
+              warnings.push({
+                severity: 'error',
+                source: 'md2do',
+                ruleId: 'duplicate-source-id',
+                file: filePath,
+                line: lineNumber,
+                text: result.task.text,
+                message: `Duplicate {${slug}:${id}}. Also found at ${existing.file}:${existing.line}.`,
+                reason: `Duplicate {${slug}:${id}}. Also found at ${existing.file}:${existing.line}.`,
+              });
+            } else {
+              sourceIds.set(compositeKey, { file: filePath, line: lineNumber });
+            }
           }
         }
       }
@@ -164,36 +164,36 @@ export class MarkdownScanner {
     const allTasks: Task[] = [];
     const allWarnings: Warning[] = [];
 
-    // Track Todoist IDs across all files
-    const todoistIds = new Map<string, { file: string; line: number }>();
+    // Track source IDs (composite "slug:id" key) across all files
+    const sourceIds = new Map<string, { file: string; line: number }>();
 
     for (const file of files) {
       const result = this.scanFile(file.path, file.content);
       allTasks.push(...result.tasks);
       allWarnings.push(...result.warnings);
 
-      // Check for duplicate Todoist IDs across files
+      // Check for duplicate source IDs across files
       for (const task of result.tasks) {
-        if (task.todoistId) {
-          const existing = todoistIds.get(task.todoistId);
-          if (existing && existing.file !== task.file) {
-            // Only add warning if duplicate is in a different file
-            // (same-file duplicates are already caught by scanFile)
-            allWarnings.push({
-              severity: 'error',
-              source: 'md2do',
-              ruleId: 'duplicate-todoist-id',
-              file: task.file,
-              line: task.line,
-              text: task.text,
-              message: `Duplicate Todoist ID {todoist:${task.todoistId}} across files. Also found at ${existing.file}:${existing.line}.`,
-              reason: `Duplicate Todoist ID {todoist:${task.todoistId}} across files. Also found at ${existing.file}:${existing.line}.`,
-            });
-          } else if (!existing) {
-            todoistIds.set(task.todoistId, {
-              file: task.file,
-              line: task.line,
-            });
+        if (task.sources) {
+          for (const [slug, id] of Object.entries(task.sources)) {
+            const compositeKey = `${slug}:${id}`;
+            const existing = sourceIds.get(compositeKey);
+            if (existing && existing.file !== task.file) {
+              // Only add warning if duplicate is in a different file
+              // (same-file duplicates are already caught by scanFile)
+              allWarnings.push({
+                severity: 'error',
+                source: 'md2do',
+                ruleId: 'duplicate-source-id',
+                file: task.file,
+                line: task.line,
+                text: task.text,
+                message: `Duplicate {${slug}:${id}} across files. Also found at ${existing.file}:${existing.line}.`,
+                reason: `Duplicate {${slug}:${id}} across files. Also found at ${existing.file}:${existing.line}.`,
+              });
+            } else if (!existing) {
+              sourceIds.set(compositeKey, { file: task.file, line: task.line });
+            }
           }
         }
       }

@@ -6,7 +6,7 @@ import {
   md2doToTodoist,
   todoistToMd2do,
 } from '@md2do/todoist';
-import { parseTask, updateTask } from '@md2do/core';
+import { parseTask, updateTask, formatSources } from '@md2do/core';
 import type { Task as TodoistTask } from '@doist/todoist-api-typescript';
 import type { Task } from '@md2do/core';
 import { scanMarkdownFiles } from '../scanner.js';
@@ -464,8 +464,10 @@ async function todoistImportAction(
   const task = parseResult.task;
 
   // Check if already has Todoist ID
-  if (task.todoistId) {
-    console.error(`❌ Error: Task already has a Todoist ID: ${task.todoistId}`);
+  if (task.sources?.['todoist']) {
+    console.error(
+      `❌ Error: Task already has a Todoist ID: ${task.sources['todoist']}`,
+    );
     console.error("   Use 'md2do todoist sync' to sync existing tasks");
     process.exit(1);
   }
@@ -499,11 +501,13 @@ async function todoistImportAction(
   const todoistTask = await client.createTask(todoistParams);
 
   // Update markdown file with Todoist ID
+  // Merge any existing sources with the new todoist id
+  const updatedSources = { ...(task.sources ?? {}), todoist: todoistTask.id };
   const updateResult = await updateTask({
     file: file,
     line,
     updates: {
-      text: `${task.text} [todoist:${todoistTask.id}]`,
+      text: `${task.text} ${formatSources(updatedSources)}`,
     },
   });
 
@@ -600,7 +604,9 @@ async function todoistSyncAction(options: TodoistSyncOptions): Promise<void> {
   });
 
   // Filter tasks with Todoist IDs
-  const tasksWithTodoist = scanResult.tasks.filter((t) => t.todoistId);
+  const tasksWithTodoist = scanResult.tasks.filter(
+    (t) => t.sources?.['todoist'],
+  );
 
   if (tasksWithTodoist.length === 0) {
     console.log('');
@@ -620,12 +626,13 @@ async function todoistSyncAction(options: TodoistSyncOptions): Promise<void> {
   const notFoundIds: string[] = [];
 
   for (const task of tasksWithTodoist) {
+    const todoistId = task.sources!['todoist']!;
     try {
-      const todoistTask = await client.getTask(task.todoistId!);
-      todoistTasks.set(task.todoistId!, todoistTask);
+      const todoistTask = await client.getTask(todoistId);
+      todoistTasks.set(todoistId, todoistTask);
     } catch (error) {
       // Task not found in Todoist (deleted)
-      notFoundIds.push(task.todoistId!);
+      notFoundIds.push(todoistId);
     }
   }
 
@@ -644,7 +651,7 @@ async function todoistSyncAction(options: TodoistSyncOptions): Promise<void> {
   }> = [];
 
   for (const mdTask of tasksWithTodoist) {
-    const todoistTask = todoistTasks.get(mdTask.todoistId!);
+    const todoistTask = todoistTasks.get(mdTask.sources!['todoist']!);
 
     if (!todoistTask) {
       // Task deleted in Todoist
@@ -729,12 +736,18 @@ async function todoistSyncAction(options: TodoistSyncOptions): Promise<void> {
           errorCount++;
         }
       } else if (update.type === 'pull' && !update.todoistTask) {
-        // Remove Todoist ID from deleted task
+        // Remove Todoist ID from deleted task — reconstruct sources without todoist
+        const remainingSources = { ...(update.task.sources ?? {}) };
+        delete remainingSources['todoist'];
+        const sourcesStr =
+          Object.keys(remainingSources).length > 0
+            ? ` ${formatSources(remainingSources)}`
+            : '';
         const result = await updateTask({
           file: update.task.file,
           line: update.task.line,
           updates: {
-            text: update.task.text.replace(/\s*\[todoist:\d+\]/, ''),
+            text: `${update.task.text}${sourcesStr}`,
           },
         });
 
