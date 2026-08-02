@@ -103,15 +103,21 @@ md2do todoist import notes.md:42 --project Personal
 
 ### How Sync Works
 
-md2do links tasks using IDs:
+md2do links tasks using source link tokens:
 
 ```markdown
 - [ ] Review PR #due/2026-01-25 {todoist:123456789}
 ```
 
-The `{todoist:ID}` marker connects your markdown to Todoist.
+The `{todoist:ID}` marker connects your markdown task to Todoist. This uses md2do's general
+`{slug:ID}` source link syntax — `todoist` is the slug for the native Todoist integration.
 
 > **Note:** Legacy bracket syntax (`[todoist: ID]`, `[due: ...]`) is still parsed for backward compatibility.
+
+::: tip Other integrations
+Need to bring in tasks from Teams, Outlook, or Slack? md2do's `ingest` command supports any
+source via a simple JSONL format. See [Multi-Source Ingestion](/integrations/ingest).
+:::
 
 ### Sync Commands
 
@@ -404,6 +410,7 @@ Not automatically. Use `--project` flag when importing tasks to specify the dest
 - [Configuration](/guide/configuration) - Advanced config options
 - [MCP Integration](/integrations/mcp) - Use with Claude Code AI
 - [CLI Reference](/cli/todoist/overview) - Complete command reference
+- [Multi-Source Ingestion](/integrations/ingest) - Import from Teams, Outlook, Slack, and more
 
 ## Get Help
 

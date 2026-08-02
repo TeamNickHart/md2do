@@ -9,7 +9,7 @@
 [![codecov](https://codecov.io/gh/TeamNickHart/md2do/branch/main/graph/badge.svg)](https://codecov.io/gh/TeamNickHart/md2do)
 [![CI](https://github.com/TeamNickHart/md2do/workflows/CI/badge.svg)](https://github.com/TeamNickHart/md2do/actions)
 
-Manage TODO items in markdown files with powerful filtering, sorting, and [Todoist](https://www.todoist.com) sync.
+Manage TODO items in markdown files with powerful filtering, sorting, native [Todoist](https://www.todoist.com) sync, and open multi-source ingestion.
 Built with TypeScript, designed for developers who love markdown.
 
 ## ✨ Features
@@ -22,7 +22,8 @@ Built with TypeScript, designed for developers who love markdown.
 - ⚡ **Fast** - Built with performance in mind using fast-glob
 - 🔧 **Flexible** - Output in pretty, table, or JSON formats
 - 📁 **Context-aware** - Automatically extracts project and person context from folder structure
-- 🔄 **Todoist integration** - Import tasks and sync completion status with official [Todoist](https://www.todoist.com) API
+- 🔄 **Todoist integration** - Native two-way sync with the official [Todoist](https://www.todoist.com) API (import, sync, list, add)
+- 🌐 **Multi-source ingestion** - Bring in tasks from Teams, Outlook, Slack, or any source via JSONL — no API credentials needed in md2do
 - ⚙️ **Configurable** - Hierarchical config support (global, project, environment)
 - 🤖 **AI-powered** - MCP server integration for Claude and other AI assistants
 - 🟣 **Obsidian plugin** - Native task list view, autocomplete, and completion tracking in Obsidian
@@ -93,7 +94,8 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `#tag` - Tags
 - `#due/YYYY-MM-DD` - Due date
 - `{completed:YYYY-MM-DD}` - Completion date
-- `{todoist:ID}` - Todoist sync ID
+- `{todoist:ID}` - Todoist sync ID (native integration)
+- `{slug:ID}` - Any external source link (Teams, Outlook, Slack, etc.)
 - `- [x]` - Completed task
 - `- [ ]` - Incomplete task
 
@@ -351,12 +353,13 @@ md2do/
 ├── packages/
 │   ├── core/          # Core parsing, filtering, and file writing
 │   │   ├── src/
-│   │   │   ├── parser/      # Markdown task parser
+│   │   │   ├── parser/      # Markdown task parser (extractSources, formatSources)
 │   │   │   ├── scanner/     # File scanner
 │   │   │   ├── filters/     # Task filtering
 │   │   │   ├── sorting/     # Task sorting
 │   │   │   ├── writer/      # File modification (atomic updates)
-│   │   │   └── types/       # TypeScript types
+│   │   │   ├── ingest/      # JSONL ingest engine (parseJsonl, ingestRecords)
+│   │   │   └── types/       # TypeScript types (Task, SourceProvider, IngestRecord)
 │   │   └── tests/
 │   ├── cli/           # CLI interface
 │   │   ├── src/
@@ -369,10 +372,11 @@ md2do/
 │   │   │   ├── schema.ts    # Zod schemas for validation
 │   │   │   └── loader.ts    # Hierarchical config loading
 │   │   └── tests/
-│   ├── todoist/       # Todoist API integration
+│   ├── todoist/       # Todoist API integration (native SourceProvider)
 │   │   ├── src/
 │   │   │   ├── client.ts    # API client wrapper
-│   │   │   └── mapper.ts    # Task format conversion
+│   │   │   ├── mapper.ts    # Task format conversion
+│   │   │   └── provider.ts  # TodoistProvider implements SourceProvider
 │   │   └── tests/
 │   ├── mcp/           # MCP server for AI integration
 │   │   ├── src/
@@ -454,8 +458,8 @@ pnpm --filter @md2do/core test:ui
 
 ## 📖 Additional Documentation
 
-- [Todoist Setup Guide](docs/todoist-setup.md) - Complete guide to configuring [Todoist](https://www.todoist.com) integration
-- [Todoist Implementation Plan](docs/todoist-implementation-plan.md) - Technical roadmap and architecture
+- [Todoist Integration](docs/integrations/todoist.md) - Native two-way [Todoist](https://www.todoist.com) sync
+- [Multi-Source Ingestion](docs/integrations/ingest.md) - Import tasks from Teams, Outlook, Slack, and more
 - [Config Package](packages/config/README.md) - Configuration management documentation
 - [Todoist Package](packages/todoist/README.md) - [Todoist](https://www.todoist.com) API integration documentation
 - [MCP Package](packages/mcp/README.md) - Model Context Protocol server documentation
@@ -502,14 +506,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [x] **MCP (Model Context Protocol) integration** - ✅ Complete! See [MCP docs](packages/mcp/README.md)
 - [x] **Configuration file support** - ✅ Complete! Hierarchical config with `.md2do.json`/`.yaml`
-- [x] **Todoist integration foundation** - ✅ Complete! API client, task mapping, file writer
-  - [ ] CLI commands (`md2do todoist sync`, `md2do todoist push`, etc.)
-  - [ ] Bidirectional sync logic
-  - [ ] Interactive token setup
-  - [ ] Validation warnings for `{todoist:ID}` markers
-    - [ ] Detect malformed IDs
-    - [ ] Verify ID exists in Todoist
-    - [ ] Warn about orphaned/deleted tasks
+- [x] **Todoist native integration** - ✅ Complete! Two-way sync, import, list, add — see [Todoist docs](docs/integrations/todoist.md)
+- [x] **Pluggable multi-source ingestion** - ✅ Complete! Open `{slug:ID}` syntax, `md2do ingest` command, `SourceProvider` interface — see [ingest docs](docs/integrations/ingest.md)
 
 ### CLI Enhancements
 
@@ -594,12 +592,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Autocomplete for assignees and tags (learned from workspace)
 - [ ] Inline suggestions with fuzzy matching
 
-### Integrations
+### Native Integrations (via `SourceProvider`)
+
+Additional first-class integrations built on the same interface as Todoist:
 
 - [ ] GitHub Issues integration
 - [ ] Linear integration
 - [ ] Jira integration
-- [ ] Notion integration
+
+> **Bring your own source today:** Use `md2do ingest` with JSONL to import from any system — no native integration required.
 
 ## 📞 Support
 

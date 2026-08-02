@@ -4,30 +4,31 @@ See the complete roadmap at [ROADMAP.md](https://github.com/TeamNickHart/md2do/b
 
 This page highlights the major upcoming features and their current status.
 
-## Current Version: v0.2.x
+## Current Version: v0.7.x
 
 ### Completed
 
 - Core task parsing and filtering
 - CLI commands (list, stats, config, migrate)
-- Todoist integration (import, sync, list, add)
-- MCP server for AI
+- **Todoist integration** (native — import, sync, list, add with full two-way sync)
+- MCP server for AI assistants
 - Hierarchical configuration
 - VitePress docs site at [md2do.com](https://md2do.com)
-- **Syntax migration** - New `#due/YYYY-MM-DD`, `{completed:YYYY-MM-DD}`, `{todoist:NNN}` format with backward-compatible legacy parsing
-- **`md2do migrate` command** - Automated migration from legacy bracket syntax
-- **VS Code extension** (v0.2.1) - Task Explorer, CodeLens, diagnostics, dashboard, smart `#due/` autocomplete
-- **Obsidian plugin** (beta) - Task list view, grouping, sorting, commands
+- **Syntax migration** — New `#due/YYYY-MM-DD`, `{completed:YYYY-MM-DD}`, `{slug:NNN}` format with backward-compatible legacy parsing
+- **`md2do migrate` command** — Automated migration from legacy bracket syntax
+- **VS Code extension** — Task Explorer, CodeLens, diagnostics, dashboard, smart `#due/` autocomplete
+- **Obsidian plugin** — Task list view, grouping, sorting, commands, autocomplete
+- **Pluggable multi-source ingestion** — Open `{slug:ID}` source link pattern; `md2do ingest` command for JSONL-based import from any source (Teams, Outlook, Slack, etc.)
+- **`SourceProvider` interface** — Typed contract for native integrations (Todoist implements this today)
 
 ## In Progress
 
 ### Obsidian Plugin Polish
 
-- [ ] Syntax migration updates (suggest provider, task writer)
 - [ ] Community plugin submission
 - [ ] Auto-completion for `#due/`, `@`, `#`
 
-### Advanced Sync Logic
+### Advanced Todoist Sync
 
 - [x] Basic bidirectional sync
 - [ ] Advanced conflict detection
@@ -42,6 +43,14 @@ This page highlights the major upcoming features and their current status.
 - [ ] First-run experience
 
 ## Near-Term
+
+### MCP Agent Workflows
+
+AI-powered task ingestion from M365 and more
+
+- Claude + M365 MCP tools → JSONL → `md2do ingest`
+- Prompt templates for Teams, Outlook, calendar
+- Scheduled agent runs (cron + MCP)
 
 ### Watch Mode
 
@@ -59,20 +68,19 @@ Real-time monitoring and auto-sync
 
 ## Mid-Term
 
-### MCP + Todoist
+### Native Integrations (via `SourceProvider`)
 
-AI-powered hybrid workflows
+Additional first-class integrations built on the same interface as Todoist:
 
-- Todoist operations via MCP
-- Unified queries
-- Smart sync suggestions
+- **GitHub Issues** — bidirectional sync, issue linking
+- **Linear** — issue sync with priority and cycle mapping
+- **Jira** — ticket sync
 
-### GitHub Issues
+### Multi-Source Unified View
 
-Sync with GitHub Issues
-
-- Bidirectional sync
-- Issue linking
+- Filter tasks by source (`--source teams`, `--source todoist`)
+- Cross-source stats (`md2do stats --by source`)
+- Conflict detection across sources (same task imported twice)
 
 ## Long-Term
 
