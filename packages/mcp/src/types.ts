@@ -82,6 +82,7 @@ export const PROMPT_TEMPLATES = {
   DAILY_STANDUP: 'daily_standup',
   SPRINT_SUMMARY: 'sprint_summary',
   OVERDUE_REVIEW: 'overdue_review',
+  BUILD_INTEGRATION: 'build_integration',
 } as const;
 
 export type PromptTemplateName =

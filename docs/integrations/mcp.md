@@ -194,6 +194,9 @@ Filter and query tasks:
 - **By project:** `--project acme-corp`
 - **By completion:** `--completed` / `--incomplete`
 
+Tasks include a `sources` field when present (e.g. `{ "teams": "msg-789" }`), so Claude can
+see external IDs for tasks ingested from Teams, Outlook, Slack, or other sources.
+
 ### `get_task_stats`
 
 Aggregate statistics:
@@ -253,6 +256,24 @@ Generates:
 - Prioritized by urgency
 - Suggestions for re-scheduling
 
+### Build Integration
+
+```
+Claude: Use the build_integration prompt with source=teams
+```
+
+Generates a prompt you can pass to any Claude agent that has access to an external system
+(Teams, Outlook, Slack, Google Calendar, etc.). The agent will fetch tasks and write a valid
+JSONL file that `md2do ingest` can consume.
+
+Arguments:
+
+- `source` (required) — source slug, e.g. `teams`, `outlook`, `slack`, `gcal`
+- `mode` (optional) — `jsonl` (default) or `provider` (appends a TypeScript `SourceProvider` skeleton)
+
+See [Integration Builder Prompt](/integrations/prompts/build-integration) for the full prompt
+text and a worked example.
+
 ## Resources
 
 Claude can access task data via URIs:
@@ -294,7 +315,11 @@ Ask naturally - Claude translates to md2do filters:
 
 ## Advanced Usage
 
-### Combining with Todoist
+### Combining with External Sources
+
+md2do tasks carry a `sources` field for each external system they were ingested from
+(e.g. `{ "teams": "msg-789", "todoist": "12345" }`). Claude can see these IDs in
+`list_tasks` output and use them to correlate tasks across systems.
 
 If you have [Todoist](https://www.todoist.com) integration enabled, Claude can help sync:
 
@@ -311,6 +336,10 @@ Recommended command:
 md2do todoist import features.md:15
 md2do todoist import bugs.md:12"
 ```
+
+For other sources (Teams, Outlook, Slack, etc.), use the `build_integration` prompt to
+generate a fetching prompt for any Claude agent with access to that system. See
+[Building Integrations](#building-integrations) below.
 
 ### Code Analysis
 
@@ -348,6 +377,27 @@ Claude: "📝 Code Review Queue
 
 All tasks tagged #code-review and due by Friday"
 ```
+
+## Building Integrations
+
+Use the `build_integration` MCP prompt to connect md2do to any external system. It generates
+a ready-to-use prompt for a Claude agent that has access to that system:
+
+```
+Claude: Use the build_integration prompt with source=teams
+```
+
+The agent will:
+
+1. Fetch tasks from the source (mentions, flagged items, saved messages, etc.)
+2. Write a JSONL file in the md2do ingest format
+3. Run `md2do ingest` to populate your vault
+
+The resulting tasks appear alongside everything else in your vault and are fully queryable
+via `md2do list`, the Obsidian plugin, and — back through MCP — by Claude itself.
+
+See [Integration Builder Prompt](/integrations/prompts/build-integration) for the full prompt
+text, field reference, and a worked Teams example.
 
 ## Configuration
 

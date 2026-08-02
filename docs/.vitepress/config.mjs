@@ -97,6 +97,7 @@ export default defineConfig({
           { text: 'Obsidian Plugin', link: '/integrations/obsidian' },
           { text: 'Todoist', link: '/integrations/todoist' },
           { text: 'Multi-Source Ingestion', link: '/integrations/ingest' },
+          { text: 'Integration Builder Prompt', link: '/integrations/prompts/build-integration' },
           { text: 'MCP (AI Integration)', link: '/integrations/mcp' },
         ],
       },

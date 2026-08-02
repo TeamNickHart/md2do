@@ -53,6 +53,25 @@ export function registerPrompts(server: Server) {
           },
         ],
       },
+      {
+        name: PROMPT_TEMPLATES.BUILD_INTEGRATION,
+        description:
+          'Generate a prompt to help a Claude agent fetch tasks from an external source and write valid md2do JSONL ingest files',
+        arguments: [
+          {
+            name: 'source',
+            description:
+              'Source system slug (e.g. teams, outlook, slack, gcal)',
+            required: true,
+          },
+          {
+            name: 'mode',
+            description:
+              'Output mode: "jsonl" (default) or "provider" (appends TypeScript SourceProvider skeleton)',
+            required: false,
+          },
+        ],
+      },
     ],
   }));
 
@@ -69,6 +88,9 @@ export function registerPrompts(server: Server) {
 
       case PROMPT_TEMPLATES.OVERDUE_REVIEW:
         return getOverdueReviewPrompt(args);
+
+      case PROMPT_TEMPLATES.BUILD_INTEGRATION:
+        return getBuildIntegrationPrompt(args);
 
       default:
         throw new Error(`Unknown prompt: ${name}`);
@@ -150,6 +172,107 @@ Format the report with:
 **Risks:**
 - Overdue tasks
 - High-priority incomplete tasks`,
+        },
+      },
+    ],
+  };
+}
+
+/**
+ * Build integration prompt
+ */
+function getBuildIntegrationPrompt(args?: Record<string, string>) {
+  const source = args?.source ?? 'your-source';
+
+  const corePrompt = `You are helping build a new md2do source integration for: ${source}.
+
+md2do ingests external tasks via a JSONL file — one JSON record per line.
+Your job: fetch tasks from ${source}, write valid JSONL, then run the ingest command.
+
+## JSONL Format
+
+Required fields (every record must have all four):
+
+  source       string   — always "${source}"
+  externalId   string   — stable, unique ID for this item in ${source}
+  text         string   — task description (plain text)
+  completed    boolean  — true if already done/resolved
+
+Optional fields:
+
+  priority     string   — "urgent" | "high" | "normal" | "low"
+  dueDate      string   — YYYY-MM-DD (ISO date only, no time)
+  tags         string[] — tag names, no # prefix
+  assignee     string   — username, no @ prefix
+  metadata     object   — any extra data (preserved, ignored by md2do)
+
+## Example
+
+{"source":"${source}","externalId":"abc-123","text":"Review Q3 budget","completed":false,"priority":"high","dueDate":"2026-08-15","tags":["finance"],"assignee":"nick"}
+{"source":"${source}","externalId":"abc-456","text":"Old action item","completed":true}
+
+## Instructions
+
+1. Fetch all relevant items from ${source} (unread @mentions, flagged emails, saved items, etc.)
+2. Write one JSONL line per item to /tmp/${source}-tasks.jsonl
+3. Choose externalId carefully — use the most stable unique identifier in ${source}
+   (message-id, event-id, thread-id — NOT a list index or timestamp alone)
+4. Map priorities to md2do levels:
+   - Critical / P0 / urgent → "urgent"
+   - Important / P1 / high  → "high"
+   - Normal / P2 / medium   → "normal"
+   - Low / P3 / no priority → "low" (or omit)
+5. Set completed: true only when explicitly done/resolved/closed in ${source}
+
+After writing the file, run:
+
+  md2do ingest /tmp/${source}-tasks.jsonl --vault ~/notes
+
+This creates vault/${source}/${source}-tasks.md with all tasks in md2do format,
+queryable via \`md2do list\`, the Obsidian plugin, and the MCP server.`;
+
+  const providerSkeleton = `
+
+## TypeScript SourceProvider Skeleton
+
+If you want a programmatic integration instead of agent-generated JSONL, implement this interface:
+
+\`\`\`typescript
+import type { SourceProvider, SourceTask, FetchOptions } from '@md2do/core';
+
+export class ${source.charAt(0).toUpperCase() + source.slice(1)}Provider implements SourceProvider {
+  readonly slug = '${source}';
+  readonly name = '${source.charAt(0).toUpperCase() + source.slice(1)}';
+
+  async fetchTasks(options?: FetchOptions): Promise<SourceTask[]> {
+    // TODO: fetch items from ${source} API
+    return [];
+  }
+}
+\`\`\`
+
+Then use \`ingestRecords()\` from \`@md2do/core\` to convert to markdown:
+
+\`\`\`typescript
+import { ingestRecords } from '@md2do/core';
+
+const provider = new ${source.charAt(0).toUpperCase() + source.slice(1)}Provider(client);
+const tasks = await provider.fetchTasks();
+const records = tasks.map((t) => ({ source: provider.slug, ...t }));
+const markdown = ingestRecords(records);
+\`\`\``;
+
+  const text =
+    args?.mode === 'provider' ? corePrompt + providerSkeleton : corePrompt;
+
+  return {
+    description: `Integration builder prompt for ${source}`,
+    messages: [
+      {
+        role: 'user' as const,
+        content: {
+          type: 'text' as const,
+          text,
         },
       },
     ],
