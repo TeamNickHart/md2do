@@ -13,12 +13,13 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.config.*',
         '**/dist/**',
+        '**/client.ts', // thin API wrapper, no unit-testable logic
       ],
       thresholds: {
-        lines: 50, // TODO: Increase to 80% - client.ts needs tests
-        functions: 70,
+        lines: 80,
+        functions: 80,
         branches: 90,
-        statements: 50,
+        statements: 80,
       },
     },
   },

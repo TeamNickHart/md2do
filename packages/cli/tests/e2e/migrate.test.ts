@@ -379,7 +379,7 @@ describe('E2E: md2do migrate', () => {
           assignee?: string;
           priority?: string;
           tags: string[];
-          todoistId?: string;
+          sources?: Record<string, string>;
           dueDate?: string;
           completed: boolean;
           completedDate?: string;
@@ -396,7 +396,7 @@ describe('E2E: md2do migrate', () => {
       expect(tasks[0]?.assignee).toBe('alice');
       expect(tasks[0]?.priority).toBe('high');
       expect(tasks[0]?.tags).toEqual(['backend']);
-      expect(tasks[0]?.todoistId).toBe('123');
+      expect(tasks[0]?.sources?.['todoist']).toBe('123');
       expect(tasks[0]?.dueDate).toBeDefined();
 
       // Second task: completion preserved

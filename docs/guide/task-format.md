@@ -111,18 +111,27 @@ The older bracket syntax is still parsed:
 
 :::
 
-### Todoist Integration
+### Source Links
 
-When syncing with [Todoist](https://www.todoist.com), md2do links tasks using `{todoist:}` brace syntax:
+md2do uses `{slug:ID}` brace tokens to link tasks to external systems:
 
 ```markdown
 - [ ] Review pull request #due/2026-01-25 {todoist:123456789}
+- [ ] Follow up on Teams mention {teams:msg-789}
+- [ ] Action item from flagged email {outlook:AAMk-abc}
 ```
 
-The `{todoist:ID}` marker links the task to Todoist for sync.
+The slug identifies the source system; the ID is the record's unique identifier in that system.
+Any `{word:value}` token is treated as a source link — the only reserved word is `completed`.
+
+**Todoist** is md2do's native integration with full two-way sync. The `{todoist:ID}` marker
+is written automatically when you run `md2do todoist import` or `md2do todoist sync`.
+
+For other sources (Teams, Outlook, Slack, etc.), use `md2do ingest` to generate vault files
+from JSONL. See [Multi-Source Ingestion](/integrations/ingest) for details.
 
 ::: details Legacy Syntax (Backward Compatible)
-The older bracket syntax is still parsed:
+The older bracket syntax for Todoist is still parsed:
 
 ```markdown
 - [ ] Review pull request [todoist: 123456789]
@@ -178,7 +187,7 @@ md2do recognizes metadata in this order on each line:
 5. **Tags**: All `#hashtags` found
 6. **Due date**: `#due/YYYY-MM-DD` tag syntax
 7. **Completion date**: `{completed:YYYY-MM-DD}` (if checked)
-8. **Todoist ID**: `{todoist:ID}` (if present)
+8. **Source links**: `{slug:ID}` tokens (any non-reserved slug)
 
 Both new and legacy syntax are parsed during the transition period. See [Syntax Migration](#syntax-migration) for details.
 
@@ -195,17 +204,18 @@ Extracts:
 - Priority: `"urgent"`
 - Tags: `["backend", "urgent"]`
 - Due: `2026-01-25`
-- Todoist ID: `"123"`
+- Sources: `{ todoist: "123" }`
 
 ## Syntax Migration
 
 md2do has migrated from bracket syntax to a hybrid tag/brace syntax. Both old and new syntax are parsed during the transition, but the new syntax is recommended for all new tasks.
 
-| Metadata   | New Syntax               | Legacy Syntax             |
-| ---------- | ------------------------ | ------------------------- |
-| Due date   | `#due/2026-01-25`        | `[due: 2026-01-25]`       |
-| Completion | `{completed:2026-01-25}` | `[completed: 2026-01-25]` |
-| Todoist ID | `{todoist:123}`          | `[todoist: 123]`          |
+| Metadata     | New Syntax                   | Legacy Syntax             |
+| ------------ | ---------------------------- | ------------------------- |
+| Due date     | `#due/2026-01-25`            | `[due: 2026-01-25]`       |
+| Completion   | `{completed:2026-01-25}`     | `[completed: 2026-01-25]` |
+| Todoist ID   | `{todoist:123}`              | `[todoist: 123]`          |
+| Other source | `{teams:msg-789}` (any slug) | —                         |
 
 **What changed:**
 
@@ -290,5 +300,6 @@ Wrong
 
 - [Filtering & Sorting](/guide/filtering) - Query your tasks
 - [Configuration](/guide/configuration) - Customize md2do
-- [Todoist Integration](/integrations/todoist) - Sync with Todoist
+- [Todoist Integration](/integrations/todoist) - Native two-way Todoist sync
+- [Multi-Source Ingestion](/integrations/ingest) - Bring in tasks from Teams, Outlook, Slack, and more
 - [Examples](/guide/examples) - Real-world usage patterns

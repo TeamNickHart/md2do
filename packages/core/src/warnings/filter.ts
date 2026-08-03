@@ -21,7 +21,7 @@ export interface WarningFilterConfig {
  *   enabled: true,
  *   rules: {
  *     'missing-due-date': 'off',
- *     'duplicate-todoist-id': 'error',
+ *     'duplicate-source-id': 'error',
  *   },
  * };
  *

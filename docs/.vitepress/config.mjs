@@ -76,6 +76,7 @@ export default defineConfig({
           { text: 'list', link: '/cli/list' },
           { text: 'stats', link: '/cli/stats' },
           { text: 'migrate', link: '/cli/migrate' },
+          { text: 'ingest', link: '/cli/ingest' },
           {
             text: 'todoist',
             collapsed: false,
@@ -94,7 +95,9 @@ export default defineConfig({
         items: [
           { text: 'VSCode Extension', link: '/integrations/vscode' },
           { text: 'Obsidian Plugin', link: '/integrations/obsidian' },
-          { text: 'Todoist Setup', link: '/integrations/todoist' },
+          { text: 'Todoist', link: '/integrations/todoist' },
+          { text: 'Multi-Source Ingestion', link: '/integrations/ingest' },
+          { text: 'Integration Builder Prompt', link: '/integrations/prompts/build-integration' },
           { text: 'MCP (AI Integration)', link: '/integrations/mcp' },
         ],
       },

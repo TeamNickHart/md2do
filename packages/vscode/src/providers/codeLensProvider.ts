@@ -109,14 +109,16 @@ export class TaskCodeLensProvider implements vscode.CodeLensProvider {
         codeLenses.push(priorityLens);
       }
 
-      // Todoist sync status
-      if (task.todoistId) {
-        const todoistLens = new vscode.CodeLens(range, {
-          title: '🔄 Synced',
-          command: '',
-          tooltip: `Synced with Todoist (ID: ${task.todoistId})`,
-        });
-        codeLenses.push(todoistLens);
+      // Source sync status
+      if (task.sources) {
+        for (const [slug, id] of Object.entries(task.sources)) {
+          const syncLens = new vscode.CodeLens(range, {
+            title: '🔄 Synced',
+            command: '',
+            tooltip: `Synced with ${slug} (ID: ${id})`,
+          });
+          codeLenses.push(syncLens);
+        }
       }
 
       // Delete action

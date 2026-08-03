@@ -142,7 +142,9 @@ describe('formatTaskContent', () => {
   });
 
   it('should format content with Todoist ID', () => {
-    const result = formatTaskContent('Fix bug', { todoistId: '123456' });
+    const result = formatTaskContent('Fix bug', {
+      sources: { todoist: '123456' },
+    });
     expect(result).toBe('Fix bug {todoist:123456}');
   });
 
@@ -152,7 +154,7 @@ describe('formatTaskContent', () => {
       priority: 'urgent',
       tags: ['backend'],
       due: new Date('2026-01-20T00:00:00.000Z'),
-      todoistId: '123456',
+      sources: { todoist: '123456' },
     });
     expect(result).toBe(
       'Fix bug @nick !!! #backend #due/2026-01-20 {todoist:123456}',
@@ -244,7 +246,7 @@ describe('todoistToMd2do', () => {
       priority: 'urgent',
       tags: ['backend'],
       due: new Date('2026-01-20T00:00:00.000Z'),
-      todoistId: '123456',
+      sources: { todoist: '123456' },
     });
   });
 
@@ -292,7 +294,7 @@ describe('todoistToMd2do', () => {
       text: 'Fix bug {todoist:123456}',
       completed: false,
       priority: 'low',
-      todoistId: '123456',
+      sources: { todoist: '123456' },
     });
   });
 });

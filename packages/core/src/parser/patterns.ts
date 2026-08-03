@@ -142,6 +142,46 @@ export const TAG = /#(?!due\/)([\w-]+)/g;
 export const TODOIST_ID = /\{todoist:(\d+)\}|\[todoist:\s*(\d+)\]/i;
 
 /**
+ * Matches any {slug:value} brace token (global)
+ *
+ * Examples:
+ *   "{todoist:123}" → slug: "todoist", value: "123"
+ *   "{teams:msg-456}" → slug: "teams", value: "msg-456"
+ *   "{completed:2026-01-18}" → slug: "completed", value: "2026-01-18"
+ *
+ * Groups:
+ *   [1] - Slug (starts with letter, alphanumeric)
+ *   [2] - Value (anything up to closing brace)
+ */
+export const BRACE_TOKEN = /\{([a-zA-Z][a-zA-Z0-9]*):([^}]+)\}/g;
+
+/**
+ * Matches {slug:value} brace tokens that are NOT reserved slugs (global)
+ * Reserved slugs: completed
+ *
+ * Examples:
+ *   "{todoist:123}" → match
+ *   "{teams:msg-456}" → match
+ *   "{completed:2026-01-18}" → no match (reserved)
+ */
+export const BRACE_TOKEN_NON_RESERVED =
+  /\{(?!completed:)[a-zA-Z][a-zA-Z0-9]*:[^}]+\}/g;
+
+/**
+ * Legacy bracket-only form for Todoist ID
+ *
+ * Examples:
+ *   "[todoist:123456]" → group 1: "123456"
+ *   "[todoist: 987654321]" → group 1: "987654321"
+ */
+export const TODOIST_ID_LEGACY = /\[todoist:\s*(\d+)\]/i;
+
+/**
+ * Reserved slug names that cannot be used as source identifiers
+ */
+export const RESERVED_SLUGS = new Set(['completed']);
+
+/**
  * Matches completion date in new syntax ({completed:YYYY-MM-DD}) or legacy bracket syntax
  *
  * New syntax examples:
@@ -172,5 +212,9 @@ export const PATTERNS = {
   DUE_DATE_SHORT,
   TAG,
   TODOIST_ID,
+  TODOIST_ID_LEGACY,
   COMPLETED_DATE,
+  BRACE_TOKEN,
+  BRACE_TOKEN_NON_RESERVED,
+  RESERVED_SLUGS,
 } as const;

@@ -136,5 +136,7 @@ function formatTask(task: Task) {
   if (task.dueDate) formatted.dueDate = task.dueDate.toISOString();
   if (task.completedDate)
     formatted.completedDate = task.completedDate.toISOString();
+  if (task.sources && Object.keys(task.sources).length > 0)
+    formatted.sources = task.sources;
   return formatted;
 }

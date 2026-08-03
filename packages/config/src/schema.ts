@@ -44,7 +44,7 @@ export const WarningConfigSchema = z
           'relative-date-no-context',
           'missing-due-date',
           'missing-completed-date',
-          'duplicate-todoist-id',
+          'duplicate-source-id',
           'file-read-error',
         ]),
         z.enum(['error', 'warn', 'info', 'off']),
@@ -97,7 +97,7 @@ export type WarningPreset = {
     | 'relative-date-no-context'
     | 'missing-due-date'
     | 'missing-completed-date'
-    | 'duplicate-todoist-id'
+    | 'duplicate-source-id'
     | 'file-read-error',
     'error' | 'warn' | 'info' | 'off'
   >;
@@ -137,7 +137,7 @@ export const DEFAULT_CONFIG: Config = {
       'missing-completed-date': 'off',
 
       // Errors - always shown
-      'duplicate-todoist-id': 'error',
+      'duplicate-source-id': 'error',
       'file-read-error': 'error',
     },
   },

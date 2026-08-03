@@ -68,11 +68,67 @@ export function extractTags(text: string): string[] {
  * @example
  * extractTodoistId("Task {todoist:123456}") // => "123456"
  * extractTodoistId("Task [todoist:123456]") // => "123456" (legacy)
+ * @deprecated Use extractSources() instead
  */
 export function extractTodoistId(text: string): string | undefined {
   const match = text.match(PATTERNS.TODOIST_ID);
   if (!match) return undefined;
   return match[1] || match[2];
+}
+
+/**
+ * Extract all source links from task text as a slug → id map
+ *
+ * Matches {slug:value} tokens, skipping reserved slugs (e.g. "completed").
+ * Also handles legacy [todoist:NNN] bracket syntax.
+ *
+ * @param text - Task text
+ * @returns Record of slug → externalId, or undefined if none found
+ *
+ * @example
+ * extractSources("Task {todoist:123} {teams:msg-456}") // => { todoist: "123", teams: "msg-456" }
+ * extractSources("Task [todoist:123]") // => { todoist: "123" } (legacy)
+ * extractSources("Task {completed:2026-01-18}") // => undefined (reserved)
+ */
+export function extractSources(
+  text: string,
+): Record<string, string> | undefined {
+  const sources: Record<string, string> = {};
+
+  // Match all {slug:value} tokens
+  const bracePattern = new RegExp(PATTERNS.BRACE_TOKEN.source, 'g');
+  for (const match of text.matchAll(bracePattern)) {
+    const slug = match[1];
+    const value = match[2];
+    if (slug && value && !PATTERNS.RESERVED_SLUGS.has(slug)) {
+      sources[slug] = value;
+    }
+  }
+
+  // Handle legacy [todoist:NNN] if not already captured via brace syntax
+  if (!('todoist' in sources)) {
+    const legacyMatch = text.match(PATTERNS.TODOIST_ID_LEGACY);
+    if (legacyMatch?.[1]) {
+      sources['todoist'] = legacyMatch[1];
+    }
+  }
+
+  return Object.keys(sources).length > 0 ? sources : undefined;
+}
+
+/**
+ * Format sources record as space-separated {slug:id} tokens
+ *
+ * @param sources - Record of slug → externalId
+ * @returns Space-separated string of {slug:id} tokens
+ *
+ * @example
+ * formatSources({ todoist: "123", teams: "msg-456" }) // => "{todoist:123} {teams:msg-456}"
+ */
+export function formatSources(sources: Record<string, string>): string {
+  return Object.entries(sources)
+    .map(([slug, id]) => `{${slug}:${id}}`)
+    .join(' ');
 }
 
 /**
@@ -198,8 +254,11 @@ export function cleanTaskText(text: string): string {
       .replace(PATTERNS.DUE_DATE_ABSOLUTE, '')
       .replace(PATTERNS.DUE_DATE_RELATIVE, '')
       .replace(PATTERNS.DUE_DATE_SHORT, '')
-      // Remove todoist ID and completed date (new and legacy)
-      .replace(PATTERNS.TODOIST_ID, '')
+      // Remove non-reserved brace tokens (source links like {todoist:ID}, {teams:ID})
+      .replace(new RegExp(PATTERNS.BRACE_TOKEN_NON_RESERVED.source, 'g'), '')
+      // Remove legacy [todoist:NNN] bracket syntax
+      .replace(PATTERNS.TODOIST_ID_LEGACY, '')
+      // Remove completed date (new and legacy)
       .replace(PATTERNS.COMPLETED_DATE, '')
       // Remove assignee
       .replace(PATTERNS.ASSIGNEE, '')
@@ -321,7 +380,7 @@ export function parseTask(
   const assignee = extractAssignee(fullText);
   const priority = extractPriority(fullText);
   const tags = extractTags(fullText);
-  const todoistId = extractTodoistId(fullText);
+  const sources = extractSources(fullText);
   const completedDate = extractCompletedDate(fullText);
 
   // Extract due date (may produce warning)
@@ -384,7 +443,7 @@ export function parseTask(
   if (assignee !== undefined) task.assignee = assignee;
   if (priority !== undefined) task.priority = priority;
   if (dueDateResult.date !== undefined) task.dueDate = dueDateResult.date;
-  if (todoistId !== undefined) task.todoistId = todoistId;
+  if (sources !== undefined) task.sources = sources;
   if (completedDate !== undefined) task.completedDate = completedDate;
   if (context.project !== undefined) task.project = context.project;
   if (context.person !== undefined) task.person = context.person;

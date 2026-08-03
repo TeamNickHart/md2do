@@ -193,6 +193,35 @@ md2do migrate --path ./work-notes
 
 See [migrate command](/cli/migrate) for details.
 
+### `ingest`
+
+Import tasks from any external source into your vault via a JSONL file.
+
+```bash
+md2do ingest <file.jsonl> [options]
+```
+
+**Options:**
+
+- `-o, --output <path>` - Write to a specific output file
+- `--vault <root>` - Vault root directory (default: current directory)
+- `--dry-run` - Print generated markdown without writing
+
+**Examples:**
+
+```bash
+# Preview output
+md2do ingest teams-mentions.jsonl --dry-run
+
+# Write to vault (output: vault/teams/teams-mentions.md)
+md2do ingest teams-mentions.jsonl --vault ~/notes
+
+# Specify output path directly
+md2do ingest outlook-flagged.jsonl --output ~/notes/outlook/inbox.md
+```
+
+See [ingest command](/cli/ingest) for the full JSONL format spec and vault convention.
+
 ## Todoist Commands
 
 Sync with [Todoist](https://www.todoist.com). Requires API token configuration.
@@ -566,5 +595,6 @@ md2do todoist sync --help
 - [Task Format](/guide/task-format) - Learn task syntax
 - [Filtering](/guide/filtering) - Advanced filtering
 - [Configuration](/guide/configuration) - Set up config files
-- [Todoist Integration](/integrations/todoist) - Sync with Todoist
+- [Todoist Integration](/integrations/todoist) - Native two-way Todoist sync
+- [Multi-Source Ingestion](/integrations/ingest) - Import from Teams, Outlook, Slack, and more
 - [Examples](/guide/examples) - Real-world usage

@@ -1,4 +1,5 @@
 import type { Task } from '@md2do/core';
+import { formatSources } from '@md2do/core';
 import type { Task as TodoistTask } from '@doist/todoist-api-typescript';
 
 /**
@@ -75,7 +76,7 @@ export function formatTaskContent(
     priority?: string;
     tags?: string[];
     due?: Date;
-    todoistId?: string;
+    sources?: Record<string, string>;
   },
 ): string {
   let result = content;
@@ -108,9 +109,9 @@ export function formatTaskContent(
     result += ` #due/${year}-${month}-${day}`;
   }
 
-  // Add Todoist ID
-  if (options.todoistId) {
-    result += ` {todoist:${options.todoistId}}`;
+  // Add source links
+  if (options.sources && Object.keys(options.sources).length > 0) {
+    result += ` ${formatSources(options.sources)}`;
   }
 
   return result;
@@ -165,7 +166,7 @@ export function md2doToTodoist(
 export interface Md2doTaskUpdate {
   text: string;
   completed: boolean;
-  todoistId: string;
+  sources: Record<string, string>;
   priority?: string;
   tags?: string[];
   due?: Date;
@@ -187,9 +188,9 @@ export function todoistToMd2do(
     priority?: string;
     tags?: string[];
     due?: Date;
-    todoistId?: string;
+    sources?: Record<string, string>;
   } = {
-    todoistId: todoistTask.id,
+    sources: { todoist: todoistTask.id },
   };
 
   if (assignee !== undefined) {
@@ -211,7 +212,7 @@ export function todoistToMd2do(
   const update: Md2doTaskUpdate = {
     text: formatTaskContent(todoistTask.content, formatOptions),
     completed: todoistTask.isCompleted ?? false,
-    todoistId: todoistTask.id,
+    sources: { todoist: todoistTask.id },
   };
 
   // Add optional properties only if they have values

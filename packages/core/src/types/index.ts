@@ -24,8 +24,8 @@ export interface Task {
   priority?: Priority;
   tags: string[];
 
-  // Optional Todoist sync
-  todoistId?: string;
+  // Optional external source links (slug → externalId)
+  sources?: Record<string, string>;
   completedDate?: Date;
 }
 
@@ -75,7 +75,7 @@ export type WarningCode =
   | 'relative-date-no-context' // [due: tomorrow] — relative dates no longer supported
   | 'missing-due-date' // Incomplete task with no due date
   | 'missing-completed-date' // [x] without [completed: date]
-  | 'duplicate-todoist-id' // Same Todoist ID in multiple tasks
+  | 'duplicate-source-id' // Same source:id in multiple tasks
   | 'file-read-error'; // Failed to read file
 
 export interface Warning {
@@ -99,4 +99,41 @@ export interface Warning {
   // Legacy field for backward compatibility (deprecated)
   /** @deprecated Use message instead */
   reason?: string;
+}
+
+export interface SourceTask {
+  externalId: string;
+  text: string;
+  completed: boolean;
+  priority?: 'urgent' | 'high' | 'normal' | 'low';
+  dueDate?: string; // YYYY-MM-DD
+  tags?: string[];
+  assignee?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface FetchOptions {
+  since?: Date;
+  limit?: number;
+  filter?: Record<string, unknown>;
+}
+
+export interface SourceProvider {
+  readonly slug: string;
+  readonly name: string;
+  fetchTasks(options?: FetchOptions): Promise<SourceTask[]>;
+  completeTask?(externalId: string): Promise<void>;
+  reopenTask?(externalId: string): Promise<void>;
+}
+
+export interface IngestRecord {
+  source: string;
+  externalId: string;
+  text: string;
+  completed: boolean;
+  priority?: string;
+  dueDate?: string;
+  tags?: string[];
+  assignee?: string;
+  metadata?: Record<string, unknown>;
 }

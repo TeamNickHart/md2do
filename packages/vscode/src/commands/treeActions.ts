@@ -105,8 +105,10 @@ export async function copyTaskAsMarkdown(task: Task): Promise<void> {
       markdown += ` ${task.tags.map((t) => `#${t}`).join(' ')}`;
     }
 
-    if (task.todoistId) {
-      markdown += ` {todoist:${task.todoistId}}`;
+    if (task.sources && Object.keys(task.sources).length > 0) {
+      for (const [slug, id] of Object.entries(task.sources)) {
+        markdown += ` {${slug}:${id}}`;
+      }
     }
 
     await vscode.env.clipboard.writeText(markdown);

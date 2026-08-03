@@ -25,7 +25,7 @@ describe('Warning Presets', () => {
     });
 
     it('should have critical rules set to error', () => {
-      expect(PRESET_STRICT.rules['duplicate-todoist-id']).toBe('error');
+      expect(PRESET_STRICT.rules['duplicate-source-id']).toBe('error');
       expect(PRESET_STRICT.rules['file-read-error']).toBe('error');
     });
 
@@ -53,7 +53,7 @@ describe('Warning Presets', () => {
     });
 
     it('should have critical rules set to error', () => {
-      expect(PRESET_RECOMMENDED.rules['duplicate-todoist-id']).toBe('error');
+      expect(PRESET_RECOMMENDED.rules['duplicate-source-id']).toBe('error');
       expect(PRESET_RECOMMENDED.rules['file-read-error']).toBe('error');
     });
 

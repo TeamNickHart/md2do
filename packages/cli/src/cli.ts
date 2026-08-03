@@ -9,6 +9,7 @@ import {
   createTodoistCommand,
   createConfigCommand,
   createMigrateCommand,
+  createIngestCommand,
 } from './commands/index.js';
 
 // Read version from package.json
@@ -39,6 +40,7 @@ program.addCommand(createStatsCommand());
 program.addCommand(createTodoistCommand());
 program.addCommand(createConfigCommand());
 program.addCommand(createMigrateCommand());
+program.addCommand(createIngestCommand());
 
 // Show help if no command specified
 if (process.argv.length === 2) {
