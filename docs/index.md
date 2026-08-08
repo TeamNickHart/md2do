@@ -42,12 +42,15 @@ features:
   - icon: ⚡
     title: Fast
     details: Built with performance in mind using fast-glob and TypeScript.
+  - icon: 🔌
+    title: Multi-Source Ingestion
+    details: Bring tasks from any external system — Teams, Outlook, Slack, Google Calendar — via a simple JSONL pipeline. No hardcoded integrations.
   - icon: 🔄
     title: Todoist Integration
     details: Import tasks to Todoist and sync completion status. Official Todoist API integration.
   - icon: 🤖
     title: AI-Powered
-    details: MCP server integration for Claude and other AI assistants.
+    details: MCP server for Claude with built-in prompts including build_integration — generate fetch-and-ingest workflows for any external source.
 ---
 
 ## Quick Example
@@ -89,7 +92,7 @@ md2do recognizes standard markdown task syntax with rich metadata:
 - `#tag` - Tags
 - `#due/YYYY-MM-DD` - Due date
 - `{completed:YYYY-MM-DD}` - Completion date
-- `{todoist:ID}` - Todoist sync ID
+- `{slug:ID}` - Source link (e.g. `{todoist:123}`, `{teams:msg-789}`)
 
 > Legacy bracket syntax (`[due: ...]`, `[completed: ...]`, `[todoist: ...]`) is still parsed for backward compatibility.
 
@@ -118,6 +121,22 @@ projects/
 Context extraction works when running `md2do list` from the repository root directory. The `--path` option currently doesn't preserve project/person context.
 :::
 
+### 🔌 Multi-Source Ingestion
+
+Bring tasks from any external system via a simple JSONL pipeline:
+
+```bash
+# Ingest tasks from Teams, Outlook, Slack, etc.
+md2do ingest /tmp/teams-tasks.jsonl --vault ~/notes
+md2do ingest /tmp/outlook-flagged.jsonl --vault ~/notes
+
+# Tasks appear in your vault with source links
+# - [ ] Follow up on PR review {teams:msg-789}
+# - [ ] Review Q3 budget {outlook:AAMk-abc}
+```
+
+See [Multi-Source Ingestion](/integrations/ingest) for the JSONL format and pipeline details.
+
 ### 🔄 Todoist Integration
 
 Import tasks to [Todoist](https://www.todoist.com) and sync completion status:
@@ -133,13 +152,15 @@ md2do todoist sync --direction pull
 
 ### 🤖 AI Integration
 
-Use Claude Code or other AI assistants to query your tasks:
+Use Claude Code or other AI assistants to query your tasks — including tasks ingested from external sources:
 
 > "What urgent tasks does @nick have?"
 
 > "Show me task breakdown by project"
 
 > "Generate my daily standup report"
+
+> "Build an integration for Teams" _(uses the `build_integration` MCP prompt)_
 
 ## Next Steps
 
@@ -154,6 +175,8 @@ Use Claude Code or other AI assistants to query your tasks:
 **🟣 [Obsidian Plugin](/integrations/obsidian)** - Install the Obsidian plugin
 
 **🔌 [Todoist Setup](/integrations/todoist)** - Set up [Todoist](https://www.todoist.com) integration
+
+**📥 [Multi-Source Ingestion](/integrations/ingest)** - Bring in tasks from Teams, Outlook, Slack, and more
 
 **🤖 [MCP Integration](/integrations/mcp)** - Connect with Claude Code
 

@@ -98,23 +98,33 @@ md2do list --due-this-week --project backend
 - Completion rates
 - Custom breakdowns
 
+### 🔌 Multi-Source Ingestion
+
+Bring tasks from any external system into your vault via a simple JSONL pipeline — no hardcoded integrations required:
+
+- **Any source** — Teams, Outlook, Slack, Google Calendar, or anything that can emit JSON
+- **Open format** — one JSON record per line, four required fields
+- **Source links** — `{slug:ID}` tokens link vault tasks back to their origin
+- **Unified view** — all sources queryable with the same `md2do list` filters
+
+```bash
+md2do ingest /tmp/teams-mentions.jsonl --vault ~/notes
+# Creates: ~/notes/teams/teams-mentions.md
+```
+
 ### 🔄 Todoist Integration
 
 - Import markdown tasks to [Todoist](https://www.todoist.com)
 - Sync completion status from Todoist to markdown
 - Preserve all metadata
-- Official Todoist API integration
-
-::: info Coming Soon
-Full bidirectional sync (pushing markdown changes back to Todoist) is planned for a future release.
-:::
+- Official Todoist API integration — full two-way sync
 
 ### 🤖 AI-Powered (MCP)
 
-- Claude Code integration
-- Natural language queries
-- AI-generated reports
-- Smart task analysis
+- Claude Code integration via MCP server
+- Natural language queries across all your tasks
+- AI-generated reports (standup, sprint summary, overdue review)
+- **`build_integration` prompt** — ask Claude to fetch tasks from any source and write ingest files automatically
 
 ### ⚡ Performance
 
@@ -189,7 +199,7 @@ Track TODOs in technical docs:
 
 ### Hybrid Workflows
 
-Use markdown as source of truth, sync with Todoist for mobile access:
+Use markdown as source of truth, sync with Todoist for mobile access, and pull in tasks from other tools:
 
 ```bash
 # Import important tasks to Todoist
@@ -197,6 +207,9 @@ md2do todoist import roadmap.md:15
 
 # Sync completion status
 md2do todoist sync
+
+# Ingest from Teams mentions or Outlook flags
+md2do ingest /tmp/teams.jsonl --vault ~/notes
 ```
 
 ## How It Works
@@ -238,4 +251,5 @@ Ready to get started?
 - **[Install md2do](/guide/getting-started)** - Get up and running in minutes
 - **[Task Format Guide](/guide/task-format)** - Learn the syntax
 - **[CLI Reference](/cli/overview)** - Explore all commands
+- **[Multi-Source Ingestion](/integrations/ingest)** - Bring in tasks from any source
 - **[Examples](/guide/examples)** - See real-world usage
