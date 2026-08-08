@@ -1,5 +1,14 @@
 # @md2do/mcp
 
+## 0.8.0
+
+### Minor Changes
+
+- feat: integration builder prompt + MCP sources fix
+  - Add `build_integration` MCP prompt: generates a ready-to-use prompt for any Claude agent to fetch tasks from an external source and write valid md2do JSONL ingest files; supports `source` (required) and `mode=provider` (appends TypeScript SourceProvider skeleton)
+  - Fix `formatTask()` to include `sources` field in JSON output so Claude can see external IDs on ingested tasks
+  - Add TodoistProvider unit tests and fix coverage thresholds
+
 ## 0.7.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @md2do/config
 
+## 0.8.0
+
+### Patch Changes
+
+- Version bump to stay in sync with linked packages
+
 ## 0.7.0
 
 ### Minor Changes
