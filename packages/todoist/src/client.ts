@@ -1,5 +1,12 @@
 import { TodoistApi } from '@doist/todoist-api-typescript';
-import type { Task, Project, Label } from '@doist/todoist-api-typescript';
+import type {
+  Task,
+  Project,
+  Label,
+  Section,
+  AddProjectArgs,
+  AddSectionArgs,
+} from '@doist/todoist-api-typescript';
 import type { TodoistTaskParams } from './mapper.js';
 
 /**
@@ -140,6 +147,45 @@ export class TodoistClient {
     } catch (error) {
       throw new Error(
         `Failed to get project ${projectId}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  /**
+   * Create a new project
+   */
+  async addProject(args: AddProjectArgs): Promise<Project> {
+    try {
+      return await this.api.addProject(args);
+    } catch (error) {
+      throw new Error(
+        `Failed to create project: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  /**
+   * Get sections, optionally filtered by project
+   */
+  async getSections(projectId?: string): Promise<Section[]> {
+    try {
+      return await this.api.getSections(projectId);
+    } catch (error) {
+      throw new Error(
+        `Failed to get sections: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  /**
+   * Create a new section in a project
+   */
+  async addSection(args: AddSectionArgs): Promise<Section> {
+    try {
+      return await this.api.addSection(args);
+    } catch (error) {
+      throw new Error(
+        `Failed to create section: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   }
