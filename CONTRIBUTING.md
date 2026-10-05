@@ -4,7 +4,7 @@ Thanks for your interest in md2do! Bug reports, fixes, and ideas are all welcome
 
 ## Quick start
 
-Requires Node.js 20 and pnpm 9 (what CI uses).
+Requires Node.js 24 and pnpm 9 (what CI uses).
 
 ```bash
 # Fork the repo on GitHub, then:
