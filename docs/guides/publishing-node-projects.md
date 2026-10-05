@@ -1116,9 +1116,7 @@ All workflow templates are available in [`templates/github-workflows/`](https://
 For fully-configured, production-ready examples, see md2do's actual workflows:
 
 - [`.github/workflows/publish.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/publish.yml) - npm OIDC publishing
-- [`.github/workflows/release.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/release.yml) - VSCode publishing
 - [`.github/workflows/ci.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/ci.yml) - Smart CI
-- [`.github/workflows/coverage-report.yml`](https://github.com/TeamNickHart/md2do/blob/main/.github/workflows/coverage-report.yml) - Coverage
 
 ---
 

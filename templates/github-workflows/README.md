@@ -138,9 +138,7 @@ Ready-to-copy GitHub Actions workflows based on md2do's production setup.
 For fully-configured production workflows, see md2do's actual workflows:
 
 - [`.github/workflows/publish.yml`](../../.github/workflows/publish.yml) - npm OIDC publishing in action
-- [`.github/workflows/release.yml`](../../.github/workflows/release.yml) - VSCode publishing in action
 - [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) - Smart CI in action
-- [`.github/workflows/coverage-report.yml`](../../.github/workflows/coverage-report.yml) - Coverage reporting in action
 
 ## Troubleshooting
 

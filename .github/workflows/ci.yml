@@ -383,15 +383,27 @@ jobs:
       - name: Run tests with coverage
         run: pnpm test:coverage
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+      # Job summary works on fork PRs too, unlike the PR comment below
+      - name: Write coverage summary
         if: always()
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/*/coverage/lcov.info
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
+        run: |
+          {
+            echo "## Coverage"
+            echo ""
+            echo "| Package | Lines | Functions | Branches |"
+            echo "| --- | --- | --- | --- |"
+            for lcov in packages/*/coverage/lcov.info; do
+              [ -f "$lcov" ] || continue
+              pkg=$(basename "$(dirname "$(dirname "$lcov")")")
+              awk -F: -v pkg="$pkg" '
+                function pct(hit, found) { return found ? sprintf("%.1f%%", 100 * hit / found) : "n/a" }
+                /^LF:/ { lf += $2 } /^LH:/ { lh += $2 }
+                /^FNF:/ { fnf += $2 } /^FNH:/ { fnh += $2 }
+                /^BRF:/ { brf += $2 } /^BRH:/ { brh += $2 }
+                END { printf "| %s | %s | %s | %s |\n", pkg, pct(lh, lf), pct(fnh, fnf), pct(brh, brf) }
+              ' "$lcov"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v4
