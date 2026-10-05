@@ -156,10 +156,9 @@ Plausible provides:
 
 ### Publish fails with "401 Unauthorized"
 
-- **First publish**: Check that `NPM_TOKEN` secret is set in GitHub
-- Verify token is a "Granular Access Token" with read/write permissions on `@md2do/*`
-- Token may have expired (check expiration date)
-- After first publish succeeds, trusted publishing (provenance) handles future publishes automatically
+- Publishing uses Trusted Publishing (OIDC); there is no `NPM_TOKEN` secret
+- Check that the package on npmjs.com lists `TeamNickHart/md2do` and `publish.yml` as its trusted publisher
+- A brand-new package needs one manual first publish before a trusted publisher can be configured
 
 ### Changeset PR not created
 

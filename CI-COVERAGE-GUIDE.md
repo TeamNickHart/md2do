@@ -11,8 +11,8 @@ Every pull request and push to `main` automatically:
 1. ✅ Runs all tests with coverage
 2. 📊 Generates coverage reports
 3. 🚨 **Fails if coverage thresholds aren't met**
-4. 💬 Comments coverage summary on PRs
-5. 📤 Uploads coverage to Codecov
+4. 📝 Writes a per-package coverage table to the job summary
+5. 💬 Comments the core coverage report on PRs (not on PRs from forks)
 
 ---
 
@@ -29,12 +29,6 @@ Defined in each `packages/*/vitest.config.ts`:
 | **@md2do/todoist** | 50%\*     | 51.25% ✅ | \*Temporary - needs client.ts tests (goal: 80%) |
 | **@md2do/cli**     | None\*    | 0%        | \*Disabled - needs unit tests (goal: 70%)       |
 | **@md2do/mcp**     | None\*    | 0%        | \*Disabled - needs initial tests (goal: 70%)    |
-
-### Project-Level Threshold (Codecov)
-
-**Overall project**: Allow 2% drop from previous coverage
-
-**New code (patches)**: Must be 80%+ covered
 
 ---
 
@@ -59,16 +53,16 @@ This runs ALL tests with coverage enabled and checks thresholds.
 
 **The build FAILS** ❌
 
-### 3. Coverage Upload
+### 3. Coverage Reports
 
-Coverage reports are uploaded to:
-
-- **Codecov** - Web-based coverage visualization
+- **Job summary** - Per-package table on the "Coverage Check" job's summary page
 - **GitHub Artifacts** - Downloadable coverage reports (30-day retention)
 
 ### 4. PR Comment
 
-On pull requests, a bot comments with:
+On pull requests from branches in this repository, a bot comments with the core package
+report. PRs from forks don't get the comment (their token is read-only); use the job
+summary instead.
 
 ```markdown
 📊 Coverage Report
@@ -121,16 +115,12 @@ On pull requests, a bot comments with:
 
 ### Scenario 2: New Code Not Sufficiently Tested
 
-**Codecov Status:**
-
-```
-❌ Patch coverage: 65% (target: 80%)
-```
+**Problem:** New code pulls a package below its threshold, or lands untested
 
 **Solution:**
 
 1. **Identify new code:**
-   - Check Codecov PR comment
+   - Open the HTML report (`pnpm coverage:report`)
    - Look at files you added/modified
 
 2. **Add tests for new code:**
@@ -203,11 +193,11 @@ Create an issue to track improvement:
 
 ## Viewing Coverage Reports in CI
 
-### Method 1: Codecov Dashboard
+### Method 1: Job Summary
 
-1. Go to: https://codecov.io/gh/TeamNickHart/md2do
-2. Click on your PR or commit
-3. Browse file-by-file coverage
+1. Go to your PR → "Checks" tab
+2. Open the "Coverage Check" job
+3. Click "Summary" for the per-package table
 
 ### Method 2: GitHub Artifacts
 
@@ -219,15 +209,8 @@ Create an issue to track improvement:
 
 ### Method 3: PR Comment
 
-Codecov bot comments on PRs with coverage diff:
-
-```markdown
-📊 Coverage: 85.23% (+2.1%)
-
-| File      | Coverage | Δ      |
-| --------- | -------- | ------ |
-| parser.ts | 95%      | +3% ⬆️ |
-```
+On PRs from branches in this repository, a bot comments with file-by-file coverage for the
+core package.
 
 ---
 
@@ -252,7 +235,7 @@ Codecov bot comments on PRs with coverage diff:
    - Test boundary values
 
 4. **Check coverage diff**
-   - Look at Codecov PR comment
+   - Compare the job summary against `main`
    - Make sure you didn't decrease coverage
 
 ### ❌ DON'T
@@ -310,31 +293,6 @@ Look at HTML report:
 
 ---
 
-## Codecov Setup
-
-### Adding Codecov Token (Maintainers Only)
-
-1. Go to https://codecov.io
-2. Sign in with GitHub
-3. Add repository
-4. Copy upload token
-5. Add to GitHub Secrets:
-   - Repository → Settings → Secrets
-   - Add `CODECOV_TOKEN`
-
-### Codecov Configuration
-
-File: `codecov.yml`
-
-**Key settings:**
-
-- Allow 2% coverage drop
-- Require 80% for new code
-- Ignore test files and examples
-- Per-package tracking
-
----
-
 ## FAQ
 
 ### Q: Why did my PR fail with "Coverage: 79.8%"?
@@ -386,28 +344,11 @@ Not worth testing:
 
 ---
 
-## Coverage Badges
-
-Add coverage badge to README:
-
-```markdown
-[![codecov](https://codecov.io/gh/TeamNickHart/md2do/branch/main/graph/badge.svg)](https://codecov.io/gh/TeamNickHart/md2do)
-```
-
-Shows current coverage visually:
-
-- 🟢 Green: >80%
-- 🟡 Yellow: 70-80%
-- 🔴 Red: <70%
-
----
-
 ## Related Documentation
 
 - **COVERAGE-GUIDE.md** - Local coverage usage
 - **COVERAGE-SETUP.md** - Initial setup
 - **.github/workflows/ci.yml** - CI configuration
-- **codecov.yml** - Codecov settings
 
 ---
 
