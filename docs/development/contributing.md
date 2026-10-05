@@ -6,7 +6,7 @@ Thank you for your interest in contributing to md2do!
 
 ### Prerequisites
 
-- Node.js 20
+- Node.js 24
 - pnpm 9
 
 ### Setup

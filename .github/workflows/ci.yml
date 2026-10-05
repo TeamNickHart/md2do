@@ -61,7 +61,7 @@ jobs:
     name: Install Dependencies
     runs-on: ubuntu-latest
     needs: detect-changes
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -69,7 +69,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -114,7 +114,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -143,7 +143,7 @@ jobs:
     name: Lint Check
     runs-on: ubuntu-latest
     needs: [detect-changes, build]
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -151,7 +151,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -193,7 +193,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     needs: [detect-changes, install]
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -201,7 +201,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -238,7 +238,7 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     needs: [detect-changes, build]
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -246,7 +246,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -288,7 +288,7 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     needs: [detect-changes, build]
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -296,7 +296,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -338,7 +338,7 @@ jobs:
     name: Coverage Check
     runs-on: ubuntu-latest
     needs: [detect-changes, build]
-    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true'
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -346,7 +346,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
