@@ -402,9 +402,10 @@ jobs:
             packages/*/coverage/
           retention-days: 30
 
+      # Fork PRs get a read-only GITHUB_TOKEN, so the comment would fail the job
       - name: Comment coverage summary on PR
         uses: romeovs/lcov-reporter-action@v0.3.1
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
         with:
           lcov-file: ./packages/core/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}

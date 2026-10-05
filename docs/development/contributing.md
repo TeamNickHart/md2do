@@ -6,14 +6,14 @@ Thank you for your interest in contributing to md2do!
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- pnpm >= 9.0.0
+- Node.js 20
+- pnpm 9
 
 ### Setup
 
 ```bash
-# Clone the repository
-git clone https://github.com/TeamNickHart/md2do.git
+# Fork the repository on GitHub, then clone your fork
+git clone https://github.com/<your-username>/md2do.git
 cd md2do
 
 # Install dependencies
@@ -23,7 +23,7 @@ pnpm install
 pnpm build
 
 # Run tests
-pnpm test
+pnpm test:run
 ```
 
 ## Development Workflow
@@ -37,7 +37,9 @@ md2do/
 │   ├── config/      # Configuration management
 │   ├── todoist/     # Todoist integration
 │   ├── cli/         # Command-line interface
-│   └── mcp/         # MCP server for AI
+│   ├── mcp/         # MCP server for AI
+│   ├── vscode/      # VS Code extension
+│   └── obsidian/    # Obsidian plugin
 ├── docs/            # VitePress documentation
 └── README.md
 ```
@@ -58,9 +60,20 @@ md2do/
    pnpm validate
    ```
 
-   This runs linting, type checking, formatting, and tests.
+   This runs build, linting, formatting, type checking, and tests.
 
-4. **Commit your changes:**
+4. **Add a changeset** if you changed a published package (`core`, `cli`, `config`,
+   `todoist`, `mcp`):
+
+   ```bash
+   pnpm changeset
+   ```
+
+   Select the packages you touched, choose `patch` for a bug fix or `minor` for a feature,
+   and write a one-line summary. Changes that only touch `vscode`, `obsidian`, docs, or CI
+   don't need one.
+
+5. **Commit your changes** (including the generated `.changeset/*.md` file):
    ```bash
    git add .
    git commit -m "feat: your feature description"
@@ -77,17 +90,18 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Pull Requests
 
-1. Push your branch:
+1. Push your branch to your fork:
 
    ```bash
    git push origin feature/your-feature-name
    ```
 
-2. Open a pull request on GitHub
+2. Open a pull request against `main`
 
-3. Ensure CI passes (lint, typecheck, tests)
+3. Ensure CI passes (lint, typecheck, tests). For first-time contributors, CI starts once a
+   maintainer approves the workflow run.
 
-4. Wait for review
+4. Wait for review. Maintainers handle version bumps and releases.
 
 ## Development Commands
 
@@ -98,11 +112,11 @@ pnpm build
 # Watch mode for development
 pnpm dev
 
-# Run tests
-pnpm test
+# Run tests once
+pnpm test:run
 
 # Run tests in watch mode
-pnpm test:watch
+pnpm test
 
 # Lint code
 pnpm lint

@@ -50,8 +50,10 @@ jobs:
       - name: Generate coverage
         run: pnpm test:coverage
 
+      # Fork PRs get a read-only GITHUB_TOKEN, so the comment would fail the job
       - name: Coverage Summary Comment
         uses: romeovs/lcov-reporter-action@v0.3.1
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           lcov-file: ./packages/core/coverage/lcov.info
           github-token: ${{ secrets.GITHUB_TOKEN }}
