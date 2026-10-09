@@ -23,6 +23,7 @@ This page highlights the major upcoming features and their current status.
 - **`build_integration` MCP prompt** — Ask Claude to fetch tasks from any external source and write valid ingest files; `mode=provider` appends a TypeScript `SourceProvider` skeleton
 - **`sources` in MCP output** — `list_tasks` includes source IDs so Claude can correlate tasks with external systems
 - **CI/CD** — GitHub Actions with coverage, type check, lint; npm Trusted Publishing via OIDC (no token)
+- **`todoist push`** — One-way push of a markdown file to Todoist as a project with sections and tasks; writes `{todoist:ID}` back to headings
 
 ## In Progress
 

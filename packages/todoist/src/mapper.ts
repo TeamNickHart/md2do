@@ -127,11 +127,13 @@ export interface TodoistTaskParams {
   due_date?: string;
   due_string?: string;
   project_id?: string;
+  section_id?: string;
 }
 
 export function md2doToTodoist(
   task: Task,
   projectId?: string,
+  sectionId?: string,
 ): TodoistTaskParams {
   const params: TodoistTaskParams = {
     content: extractTaskContent(task.text),
@@ -155,6 +157,11 @@ export function md2doToTodoist(
   // Add project ID
   if (projectId) {
     params.project_id = projectId;
+  }
+
+  // Add section ID
+  if (sectionId) {
+    params.section_id = sectionId;
   }
 
   return params;

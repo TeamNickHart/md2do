@@ -6,13 +6,14 @@ Sync your markdown tasks with Todoist for mobile access, notifications, and cros
 
 md2do integrates with Todoist for task management:
 
-- **Import** - Send markdown tasks to Todoist (one-time)
-- **Sync** - Update markdown from Todoist changes (completion status, metadata)
+- **Import** - Send a single markdown task to Todoist and link it with `{todoist:ID}`
+- **Push** - Push an entire markdown file to Todoist as a project with sections and tasks
+- **Sync** - Pull updates from Todoist back to markdown (completion status)
 
 ::: info Current Implementation
-md2do currently supports **one-way sync** (Todoist → markdown). You can import tasks to Todoist and pull updates back to markdown.
+md2do supports **task-level import** and **document-level push** (markdown → Todoist), plus **one-way sync** pulling completion status back from Todoist.
 
-**Coming Soon:** Full bidirectional sync (pushing markdown changes back to Todoist) is planned for a future release.
+Full bidirectional sync (pushing markdown edits back to linked Todoist tasks) is planned for a future release.
 :::
 
 Your markdown files remain the source of truth, while Todoist provides mobile apps and notifications.
@@ -97,6 +98,30 @@ md2do todoist import tasks.md:15
 
 # Specify target project
 md2do todoist import notes.md:42 --project Personal
+```
+
+### Push a Markdown File as a Todoist Project
+
+```bash
+# Preview what would be created
+md2do todoist push planning.md --dry-run
+
+# Push (will prompt for confirmation)
+md2do todoist push planning.md
+
+# Push without confirmation
+md2do todoist push planning.md --force
+```
+
+The `push` command reads the H1 heading as the project name, H2+ headings as sections, and tasks under each heading as section tasks. After pushing, it writes `{todoist:ID}` back to each heading so the file records where it was sent.
+
+```markdown
+# Q3 Planning {todoist:12345}
+
+## Backend {todoist:67890}
+
+- [ ] Fix auth bug
+- [ ] Add rate limiting
 ```
 
 ## Sync Workflow
@@ -374,7 +399,8 @@ If compromised, regenerate in [Todoist Settings](https://app.todoist.com/app/set
 
 Current limitations (may be addressed in future versions):
 
-- No support for Todoist sections
+- `push` creates sections from H2+ headings, but subtask nesting is not yet supported
+- Tasks pushed via `push` are not linked individually — only headings get `{todoist:ID}`
 - No support for recurring tasks
 - No support for task comments
 - Subtasks sync as separate tasks

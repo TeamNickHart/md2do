@@ -5,8 +5,9 @@ import {
   md2doToTodoistPriority,
   md2doToTodoist,
   todoistToMd2do,
+  pushDocument,
 } from '@md2do/todoist';
-import { parseTask, updateTask, formatSources } from '@md2do/core';
+import { parseTask, updateTask, formatSources, parseDocument, updateHeadings } from '@md2do/core';
 import type { Task as TodoistTask } from '@doist/todoist-api-typescript';
 import type { Task } from '@md2do/core';
 import { scanMarkdownFiles } from '../scanner.js';
@@ -29,6 +30,11 @@ interface TodoistImportOptions {
   project?: string;
 }
 
+interface TodoistPushOptions {
+  dryRun?: boolean;
+  force?: boolean;
+}
+
 interface TodoistSyncOptions {
   path?: string;
   dryRun?: boolean;
@@ -48,6 +54,7 @@ export function createTodoistCommand(): Command {
   command.addCommand(createTodoistListCommand());
   command.addCommand(createTodoistAddCommand());
   command.addCommand(createTodoistImportCommand());
+  command.addCommand(createTodoistPushCommand());
   command.addCommand(createTodoistSyncCommand());
 
   return command;
@@ -536,6 +543,175 @@ async function todoistImportAction(
   console.log(`  Todoist ID: ${todoistTask.id}`);
   console.log(`  Updated: ${file}:${line}`);
   console.log(`  View in Todoist: ${todoistTask.url}`);
+  console.log('');
+}
+
+/**
+ * Create the 'todoist push' subcommand
+ */
+function createTodoistPushCommand(): Command {
+  const command = new Command('push');
+
+  command
+    .description(
+      'Push a markdown file to Todoist as a new project with sections and tasks',
+    )
+    .argument('<file>', 'Markdown file to push')
+    .option('--dry-run', 'Show what would be created without doing it')
+    .option('--force', 'Skip confirmation prompt')
+    .action(async (file: string, options: TodoistPushOptions) => {
+      try {
+        await todoistPushAction(file, options);
+      } catch (error) {
+        console.error(
+          'Error:',
+          error instanceof Error ? error.message : String(error),
+        );
+        process.exit(1);
+      }
+    });
+
+  return command;
+}
+
+/**
+ * Action handler for 'todoist push' command
+ */
+async function todoistPushAction(
+  file: string,
+  options: TodoistPushOptions,
+): Promise<void> {
+  // Read the file
+  let content: string;
+  try {
+    content = await fs.readFile(file, 'utf-8');
+  } catch (error) {
+    console.error(`Error: Could not read file: ${file}`);
+    console.error(
+      `   ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exit(1);
+  }
+
+  // Parse document structure
+  const tree = parseDocument(file, content);
+
+  // Validate
+  if (!tree.projectName) {
+    console.error('Error: File must have an H1 heading (# Project Name)');
+    process.exit(1);
+  }
+
+  if (tree.projectTodoistId && !options.force) {
+    console.error(
+      `Error: File already has a Todoist project ID: ${tree.projectTodoistId}`,
+    );
+    console.error('   Use --force to push anyway (will create a new project)');
+    process.exit(1);
+  }
+
+  // Count tasks
+  const rootTaskCount = tree.rootTasks.filter((t) => !t.completed).length;
+  const sectionTaskCount = tree.sections.reduce(
+    (sum, s) => sum + s.tasks.filter((t) => !t.completed).length,
+    0,
+  );
+  const totalTasks = rootTaskCount + sectionTaskCount;
+
+  // Display summary
+  console.log('');
+  console.log(`Project: ${tree.projectName}`);
+  console.log(
+    `  ${totalTasks} tasks (${rootTaskCount} root, ${sectionTaskCount} in sections)`,
+  );
+  console.log(`  ${tree.sections.length} sections`);
+
+  if (tree.sections.length > 0) {
+    for (const section of tree.sections) {
+      const count = section.tasks.filter((t) => !t.completed).length;
+      console.log(`    - ${section.name} (${count} tasks)`);
+    }
+  }
+  console.log('');
+
+  if (options.dryRun) {
+    console.log('Dry run - no changes made');
+    console.log('');
+    return;
+  }
+
+  // Confirm unless --force
+  if (!options.force) {
+    const p = await import('@clack/prompts');
+    const confirmed = await p.confirm({
+      message: `Push "${tree.projectName}" to Todoist?`,
+    });
+
+    if (p.isCancel(confirmed) || !confirmed) {
+      console.log('Cancelled');
+      return;
+    }
+  }
+
+  // Load configuration
+  const config = await loadConfig();
+
+  if (!config.todoist?.apiToken) {
+    console.error('Error: Todoist API token not configured');
+    console.error('');
+    console.error('Please set your API token using one of these methods:');
+    console.error(
+      '  1. Environment variable: export TODOIST_API_TOKEN=<token>',
+    );
+    console.error('  2. Global config: ~/.md2do.json or ~/.md2do.yaml');
+    console.error('  3. Project config: .md2do.json or .md2do.yaml');
+    process.exit(1);
+  }
+
+  const client = new TodoistClient({ apiToken: config.todoist.apiToken });
+
+  // If --force and already has ID, clear it so pushDocument won't reject
+  if (tree.projectTodoistId && options.force) {
+    delete tree.projectTodoistId;
+  }
+
+  // Push to Todoist
+  console.log('Pushing to Todoist...');
+  const result = await pushDocument(client, tree);
+
+  // Write back Todoist IDs to headings
+  const headingUpdates: Array<{ line: number; todoistId: string }> = [];
+
+  if (tree.projectHeadingLine) {
+    headingUpdates.push({
+      line: tree.projectHeadingLine,
+      todoistId: result.projectId,
+    });
+  }
+
+  for (const [headingLine, sectionId] of result.sectionIds) {
+    headingUpdates.push({ line: headingLine, todoistId: sectionId });
+  }
+
+  if (headingUpdates.length > 0) {
+    const writeResult = await updateHeadings(file, headingUpdates);
+    if (!writeResult.success) {
+      console.error(
+        `Warning: Failed to write IDs back to file: ${writeResult.error}`,
+      );
+    }
+  }
+
+  // Display results
+  console.log('');
+  console.log('Pushed to Todoist!');
+  console.log('');
+  console.log(`  Project: ${result.projectName} (ID: ${result.projectId})`);
+  console.log(`  Tasks: ${result.taskCount}`);
+  console.log(`  Sections: ${result.sectionCount}`);
+  if (headingUpdates.length > 0) {
+    console.log(`  Todoist IDs written back to ${file}`);
+  }
   console.log('');
 }
 

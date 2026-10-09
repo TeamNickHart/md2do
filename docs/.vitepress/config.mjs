@@ -85,6 +85,7 @@ export default defineConfig({
               { text: 'list', link: '/cli/todoist/list' },
               { text: 'add', link: '/cli/todoist/add' },
               { text: 'import', link: '/cli/todoist/import' },
+              { text: 'push', link: '/cli/todoist/push' },
               { text: 'sync', link: '/cli/todoist/sync' },
             ],
           },

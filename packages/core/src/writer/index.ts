@@ -148,6 +148,46 @@ export async function updateTask(
 }
 
 /**
+ * Write Todoist IDs back to heading lines in a markdown file.
+ * Updates H1/H2 headings by appending {todoist:ID}.
+ */
+export async function updateHeadings(
+  file: string,
+  updates: Array<{ line: number; todoistId: string }>,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const content = await fs.readFile(file, 'utf-8');
+    const lines = content.split('\n');
+
+    for (const update of updates) {
+      const lineIndex = update.line - 1;
+      if (lineIndex < 0 || lineIndex >= lines.length) continue;
+
+      const originalLine = lines[lineIndex]!;
+      // Only update heading lines (# or ##)
+      if (!/^#{1,6}\s/.test(originalLine)) continue;
+      // Don't add if already has a todoist ID
+      if (/\{todoist:\d+\}/.test(originalLine)) continue;
+
+      lines[lineIndex] =
+        `${originalLine.trimEnd()} {todoist:${update.todoistId}}`;
+    }
+
+    const tempFile = `${file}.md2do.tmp`;
+    const newContent = lines.join('\n');
+    await fs.writeFile(tempFile, newContent, 'utf-8');
+    await fs.rename(tempFile, file);
+
+    return { success: true };
+  } catch (error) {
+    return {
+      success: false,
+      error: `Failed to update headings: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+}
+
+/**
  * Batch update multiple tasks in a file
  * More efficient than calling updateTask multiple times
  */

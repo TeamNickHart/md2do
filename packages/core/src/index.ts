@@ -28,6 +28,9 @@ export * from './migrator/index.js';
 // Ingest
 export * from './ingest/index.js';
 
+// Document
+export * from './document/index.js';
+
 // Utilities
 export * from './utils/dates.js';
 export * from './utils/id.js';

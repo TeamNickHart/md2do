@@ -8,6 +8,7 @@ Interact with [Todoist](https://www.todoist.com) from the command line.
 - [`todoist add`](/cli/todoist/add) - Create tasks in Todoist
 - [`todoist import`](/cli/todoist/import) - Import markdown tasks to Todoist
 - [`todoist sync`](/cli/todoist/sync) - Sync completion status to markdown
+- [`todoist push`](/cli/todoist/push) - Push a markdown file to Todoist as a project
 
 ## Requirements
 
@@ -27,6 +28,10 @@ md2do todoist import tasks.md:15
 
 # Sync everything
 md2do todoist sync
+
+# Push a markdown file as a new Todoist project
+md2do todoist push planning.md --dry-run
+md2do todoist push planning.md
 ```
 
 ## Related
