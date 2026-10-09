@@ -1,5 +1,9 @@
 import { defineConfig } from 'vitest/config';
 
+// Run tests off UTC by default so UTC-only date code fails here (see
+// packages/core/vitest.config.ts). `pnpm test:tz` overrides the timezone.
+process.env.TZ ??= 'Europe/Berlin';
+
 export default defineConfig({
   test: {
     globals: true,

@@ -96,7 +96,9 @@ describe('parseAbsoluteDate', () => {
 });
 
 describe('resolveRelativeDate', () => {
-  const baseDate = new Date('2026-01-18T12:00:00Z');
+  // Base dates are local wall-clock times so the day-of-month assertions
+  // hold in every timezone `pnpm test:tz` runs.
+  const baseDate = new Date(2026, 0, 18, 12, 0);
 
   describe('Today', () => {
     it('should return the same date for "today"', () => {
@@ -125,7 +127,7 @@ describe('resolveRelativeDate', () => {
     });
 
     it('should handle month boundary', () => {
-      const endOfMonth = new Date('2026-01-31T12:00:00Z');
+      const endOfMonth = new Date(2026, 0, 31, 12, 0);
       const result = resolveRelativeDate('tomorrow', endOfMonth);
       expect(result?.getDate()).toBe(1);
       expect(result?.getMonth()).toBe(1); // February
@@ -147,13 +149,13 @@ describe('resolveRelativeDate', () => {
     });
 
     it('should return next Monday when base is Monday', () => {
-      const monday = new Date('2026-01-19T12:00:00Z');
+      const monday = new Date(2026, 0, 19, 12, 0);
       const result = resolveRelativeDate('next week', monday);
       expect(result?.getDate()).toBe(26); // Next Monday
     });
 
     it('should return next Monday when base is Friday', () => {
-      const friday = new Date('2026-01-23T12:00:00Z');
+      const friday = new Date(2026, 0, 23, 12, 0);
       const result = resolveRelativeDate('next week', friday);
       expect(result?.getDate()).toBe(26); // Next Monday
     });
@@ -173,7 +175,7 @@ describe('resolveRelativeDate', () => {
     });
 
     it('should handle year boundary', () => {
-      const december = new Date('2025-12-15T12:00:00Z');
+      const december = new Date(2025, 11, 15, 12, 0);
       const result = resolveRelativeDate('next month', december);
       expect(result?.getMonth()).toBe(0); // January
       expect(result?.getFullYear()).toBe(2026);
@@ -204,10 +206,14 @@ describe('resolveRelativeDate', () => {
 });
 
 describe('formatLocalDate', () => {
-  it('should run in a timezone other than UTC (see vitest.config.ts)', () => {
-    // Without this, the midnight tests below also pass with a UTC date
-    expect(new Date(2026, 9, 9).getTimezoneOffset()).not.toBe(0);
-  });
+  // `pnpm test:tz` also runs the suite with TZ=UTC on purpose
+  it.skipIf(process.env.TZ === 'UTC')(
+    'should run in a timezone other than UTC (see vitest.config.ts)',
+    () => {
+      // Without this, the midnight tests below also pass with a UTC date
+      expect(new Date(2026, 9, 9).getTimezoneOffset()).not.toBe(0);
+    },
+  );
 
   it('should format a date as YYYY-MM-DD', () => {
     expect(formatLocalDate(new Date(2026, 0, 5, 12, 0))).toBe('2026-01-05');

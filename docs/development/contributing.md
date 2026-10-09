@@ -118,6 +118,9 @@ pnpm test:run
 # Run tests in watch mode
 pnpm test
 
+# Run date-sensitive suites in several timezones
+pnpm test:tz
+
 # Lint code
 pnpm lint
 
@@ -174,6 +177,19 @@ We use [Vitest](https://vitest.dev/) for testing:
 - Write tests in `*.test.ts` files
 - Aim for high coverage on new features
 - Run tests before committing
+
+### Dates and timezones
+
+Due and completed dates are calendar dates in the user's local timezone. When you
+test anything that depends on "today" or compares dates:
+
+- Build dates through the parser or with local constructors
+  (`new Date(2026, 9, 9)`), not UTC strings (`new Date('2026-10-09T00:00:00Z')`).
+- Use the shared edge cases in `packages/core/tests/helpers/time-cases.ts`
+  (midnight, DST changes, year and leap-day boundaries).
+- Run `pnpm test:tz`, which repeats the suites in six timezones. CI runs it too.
+- For CLI end-to-end tests, `runCli()` in `packages/cli/tests/helpers/run-cli.ts`
+  takes a `tz` and a frozen `now`.
 
 ## Code Style
 
