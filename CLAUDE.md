@@ -25,10 +25,23 @@ pnpm typecheck      # typecheck all packages
    # commit the generated .changeset/*.md file with the PR
    ```
 
-2. **Merge the feature PR to main.** The `publish.yml` workflow runs automatically and opens a
-   "chore: version packages" PR with all version bumps and CHANGELOG entries applied.
+2. **Merge the feature PR to main.** Nothing is published yet.
 
-3. **Merge the version PR.** `publish.yml` detects no changeset files remain and runs:
+3. **Open the version PR by hand** when ready to release:
+
+   ```bash
+   git switch -c chore/version-vX.Y.Z main
+   GITHUB_TOKEN=$(gh auth token) pnpm run version  # changeset version + lockfile
+   ```
+
+   `GITHUB_TOKEN` is needed by the GitHub changelog generator. Commit the result and open a
+   PR titled "chore: version packages to vX.Y.Z".
+
+   `changeset version` also bumps the private dependents `md2do-vscode` and `md2do-obsidian`.
+   Keep the `md2do-vscode` bump only if the extension actually changed (and add a real
+   CHANGELOG line); revert the `md2do-obsidian` bump unless the plugin changed.
+
+4. **Merge the version PR.** `publish.yml` detects no changeset files remain and runs:
    ```bash
    pnpm release  # = pnpm build && changeset publish --provenance
    ```
@@ -38,7 +51,11 @@ pnpm typecheck      # typecheck all packages
 
 - **Do not** create GitHub Releases to trigger publishing — `release.yml` has been deleted.
 - **Do not** use `NPM_TOKEN` — Trusted Publishing is configured on npmjs.com for all `@md2do/*` packages.
-- **Do not** manually run `changeset version` or `changeset publish` locally unless debugging.
+- **Do not** run `changeset publish` locally unless debugging — the merge of the version PR publishes.
+- **Do not** expect `publish.yml` to open the version PR. It can't: the repo doesn't allow
+  GitHub Actions to create pull requests, and a PR opened by the Actions token wouldn't
+  trigger the required `CI Success` check anyway. Until that is set up, the Publish run on a
+  feature merge fails at "creating pull request"; that failure is expected and harmless.
 - **Do not** bump versions in `package.json` manually — changesets manages this.
 
 ### Linked packages (always same version)

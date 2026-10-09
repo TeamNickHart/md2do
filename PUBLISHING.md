@@ -80,16 +80,15 @@ This creates a file in `.changeset/` that will be committed with your changes.
 
 ### Automated Publishing Process
 
-When you push to `main`:
+See [.github/RELEASE.md](.github/RELEASE.md) for the exact steps.
 
-1. **Changesets PR Created** (if there are changesets):
-   - GitHub Actions detects unreleased changesets
-   - Creates/updates a "Version Packages" PR
-   - PR includes version bumps and changelog updates
+1. **Open the version PR by hand** (when there are changesets on `main`):
+   - On a `chore/version-vX.Y.Z` branch, run `GITHUB_TOKEN=$(gh auth token) pnpm run version`
+   - The PR includes version bumps and changelog updates
 
 2. **Merge the PR**:
    - Review the version changes and changelogs
-   - Merge the "Version Packages" PR
+   - Merge the version PR
 
 3. **Automatic Publish**:
    - After merge, GitHub Actions automatically:

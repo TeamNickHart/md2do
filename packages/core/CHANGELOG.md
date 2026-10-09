@@ -1,5 +1,11 @@
 # @md2do/core
 
+## 0.8.1
+
+### Patch Changes
+
+- [#78](https://github.com/TeamNickHart/md2do/pull/78) [`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976) Thanks [@smuemd](https://github.com/smuemd)! - Add `formatLocalDate()` to format a date as `YYYY-MM-DD` in the local timezone. The VS Code extension now uses it for `{completed:...}` dates, which were computed in UTC and could land on the previous day shortly after local midnight.
+
 ## 0.8.0
 
 ### Patch Changes

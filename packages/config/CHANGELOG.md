@@ -1,5 +1,11 @@
 # @md2do/config
 
+## 0.8.1
+
+### Patch Changes
+
+- [#78](https://github.com/TeamNickHart/md2do/pull/78) [`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976) Thanks [@smuemd](https://github.com/smuemd)! - `loadConfig()` accepts a `fallbackCwd` option: when `cwd` has no project config, the project config is read from `fallbackCwd` instead.
+
 ## 0.8.0
 
 ### Patch Changes

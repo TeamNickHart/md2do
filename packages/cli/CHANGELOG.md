@@ -1,5 +1,16 @@
 # @md2do/cli
 
+## 0.8.1
+
+### Patch Changes
+
+- [#78](https://github.com/TeamNickHart/md2do/pull/78) [`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976) Thanks [@smuemd](https://github.com/smuemd)! - `list` and `stats` now respect `markdown.root` and `markdown.pattern` from `.md2do.json`; `--path` and `--pattern` still take precedence when given. With `--path`, a config in that directory is used if there is one, otherwise the config in the current directory.
+
+- Updated dependencies [[`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976), [`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976)]:
+  - @md2do/config@0.8.1
+  - @md2do/core@0.8.1
+  - @md2do/todoist@0.8.1
+
 ## 0.8.0
 
 ### Patch Changes
