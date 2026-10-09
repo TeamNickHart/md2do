@@ -1,5 +1,5 @@
 import type { Task } from '@md2do/core';
-import { formatSources } from '@md2do/core';
+import { formatLocalDate, formatSources, parseAbsoluteDate } from '@md2do/core';
 import type { Task as TodoistTask } from '@doist/todoist-api-typescript';
 
 /**
@@ -102,11 +102,9 @@ export function formatTaskContent(
 
   // Add due date
   if (options.due) {
-    // Format date in UTC to avoid timezone issues
-    const year = options.due.getUTCFullYear();
-    const month = String(options.due.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(options.due.getUTCDate()).padStart(2, '0');
-    result += ` #due/${year}-${month}-${day}`;
+    // Due dates are calendar dates held at local midnight, as the parser
+    // creates them
+    result += ` #due/${formatLocalDate(options.due)}`;
   }
 
   // Add source links
@@ -145,11 +143,8 @@ export function md2doToTodoist(
 
   // Add due date
   if (task.dueDate) {
-    // Format date in UTC to avoid timezone issues
-    const year = task.dueDate.getUTCFullYear();
-    const month = String(task.dueDate.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(task.dueDate.getUTCDate()).padStart(2, '0');
-    params.due_date = `${year}-${month}-${day}`;
+    // The parser creates due dates at local midnight, so read the local date
+    params.due_date = formatLocalDate(task.dueDate);
   }
 
   // Add project ID
@@ -177,9 +172,10 @@ export function todoistToMd2do(
   assignee?: string,
 ): Md2doTaskUpdate {
   const priority = todoistToMd2doPriority(todoistTask.priority);
-  // Parse date string as UTC to avoid timezone issues
+  // Same representation as the parser: local midnight of the calendar date.
+  // Todoist sends a date with a time for timed tasks; keep the date part.
   const due = todoistTask.due?.date
-    ? new Date(`${todoistTask.due.date}T00:00:00.000Z`)
+    ? (parseAbsoluteDate(todoistTask.due.date.slice(0, 10)) ?? undefined)
     : undefined;
 
   // Build format options with only defined values

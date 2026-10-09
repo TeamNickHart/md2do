@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import Table from 'cli-table3';
 import type { Task } from '@md2do/core';
-import { formatDistanceToNow } from 'date-fns';
+import { differenceInCalendarDays } from 'date-fns';
 
 export interface PrettyFormatOptions {
   /**
@@ -237,6 +237,16 @@ function getPriorityMark(priority: string, colors: boolean): string {
 }
 
 /**
+ * Describe a due date as a number of calendar days from today
+ */
+function describeDays(days: number): string {
+  if (days === 0) return 'today';
+  if (days === 1) return 'tomorrow';
+  if (days === -1) return 'yesterday';
+  return days > 0 ? `in ${days} days` : `${-days} days ago`;
+}
+
+/**
  * Format due date with color coding
  */
 function formatDueDate(
@@ -244,11 +254,11 @@ function formatDueDate(
   completed: boolean,
   colors: boolean,
 ): string {
-  const now = new Date();
-  const relative = formatDistanceToNow(dueDate, { addSuffix: true });
+  // Due dates are calendar dates: count whole local days, not elapsed hours
+  const days = differenceInCalendarDays(dueDate, new Date());
 
-  const text = `due ${relative}`;
-  const isOverdue = dueDate < now && !completed;
+  const text = `due ${describeDays(days)}`;
+  const isOverdue = days < 0 && !completed;
 
   if (!colors) {
     return isOverdue ? `${text} (overdue)` : text;

@@ -136,7 +136,7 @@ describe('formatTaskContent', () => {
 
   it('should format content with due date', () => {
     const result = formatTaskContent('Fix bug', {
-      due: new Date('2026-01-20T00:00:00.000Z'),
+      due: new Date(2026, 0, 20),
     });
     expect(result).toBe('Fix bug #due/2026-01-20');
   });
@@ -153,7 +153,7 @@ describe('formatTaskContent', () => {
       assignee: 'nick',
       priority: 'urgent',
       tags: ['backend'],
-      due: new Date('2026-01-20T00:00:00.000Z'),
+      due: new Date(2026, 0, 20),
       sources: { todoist: '123456' },
     });
     expect(result).toBe(
@@ -173,7 +173,7 @@ describe('md2doToTodoist', () => {
       tags: ['backend'],
       assignee: 'nick',
       priority: 'urgent',
-      dueDate: new Date('2026-01-20T00:00:00.000Z'),
+      dueDate: new Date(2026, 0, 20),
     };
 
     const params = md2doToTodoist(task);
@@ -245,7 +245,7 @@ describe('todoistToMd2do', () => {
       completed: false,
       priority: 'urgent',
       tags: ['backend'],
-      due: new Date('2026-01-20T00:00:00.000Z'),
+      due: new Date(2026, 0, 20),
       sources: { todoist: '123456' },
     });
   });
