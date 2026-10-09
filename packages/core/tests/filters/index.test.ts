@@ -272,30 +272,30 @@ describe('byPath', () => {
 });
 
 describe('Due date filters', () => {
-  const now = new Date('2026-01-18T12:00:00Z');
+  const now = new Date(2026, 0, 18, 12, 0);
 
   describe('isOverdue', () => {
     it('should filter overdue tasks', () => {
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-17T00:00:00Z') }), // Yesterday
-        createTask({ dueDate: new Date('2026-01-18T00:00:00Z') }), // Today
-        createTask({ dueDate: new Date('2026-01-19T00:00:00Z') }), // Tomorrow
+        createTask({ dueDate: new Date(2026, 0, 17) }), // Yesterday
+        createTask({ dueDate: new Date(2026, 0, 18) }), // Today
+        createTask({ dueDate: new Date(2026, 0, 19) }), // Tomorrow
         createTask({}), // No due date
       ];
 
       const filtered = tasks.filter(isOverdue(now));
       expect(filtered).toHaveLength(1);
-      expect(filtered[0]?.dueDate?.getUTCDate()).toBe(17);
+      expect(filtered[0]?.dueDate?.getDate()).toBe(17);
     });
 
     it('should not include completed tasks', () => {
       const tasks = [
         createTask({
-          dueDate: new Date('2026-01-17T00:00:00Z'),
+          dueDate: new Date(2026, 0, 17),
           completed: true,
         }),
         createTask({
-          dueDate: new Date('2026-01-17T00:00:00Z'),
+          dueDate: new Date(2026, 0, 17),
           completed: false,
         }),
       ];
@@ -308,7 +308,7 @@ describe('Due date filters', () => {
     it('should not include tasks with no due date', () => {
       const tasks = [
         createTask({}),
-        createTask({ dueDate: new Date('2026-01-17T00:00:00Z') }),
+        createTask({ dueDate: new Date(2026, 0, 17) }),
       ];
 
       const filtered = tasks.filter(isOverdue(now));
@@ -319,24 +319,24 @@ describe('Due date filters', () => {
   describe('isDueToday', () => {
     it('should filter tasks due today', () => {
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-17T00:00:00Z') }), // Yesterday
-        createTask({ dueDate: new Date('2026-01-18T00:00:00Z') }), // Today
-        createTask({ dueDate: new Date('2026-01-19T00:00:00Z') }), // Tomorrow
+        createTask({ dueDate: new Date(2026, 0, 17) }), // Yesterday
+        createTask({ dueDate: new Date(2026, 0, 18) }), // Today
+        createTask({ dueDate: new Date(2026, 0, 19) }), // Tomorrow
       ];
 
       const filtered = tasks.filter(isDueToday(now));
       expect(filtered).toHaveLength(1);
-      expect(filtered[0]?.dueDate?.getUTCDate()).toBe(18);
+      expect(filtered[0]?.dueDate?.getDate()).toBe(18);
     });
 
     it('should not include completed tasks', () => {
       const tasks = [
         createTask({
-          dueDate: new Date('2026-01-18T00:00:00Z'),
+          dueDate: new Date(2026, 0, 18),
           completed: true,
         }),
         createTask({
-          dueDate: new Date('2026-01-18T00:00:00Z'),
+          dueDate: new Date(2026, 0, 18),
           completed: false,
         }),
       ];
@@ -351,10 +351,10 @@ describe('Due date filters', () => {
     it('should filter tasks due this week', () => {
       // 2026-01-18 is a Sunday
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-12T00:00:00Z') }), // Previous week (Monday)
-        createTask({ dueDate: new Date('2026-01-18T00:00:00Z') }), // This week (Sunday)
-        createTask({ dueDate: new Date('2026-01-19T00:00:00Z') }), // This week (Monday)
-        createTask({ dueDate: new Date('2026-01-25T00:00:00Z') }), // Next week (Sunday)
+        createTask({ dueDate: new Date(2026, 0, 12) }), // Previous week (Monday)
+        createTask({ dueDate: new Date(2026, 0, 18) }), // This week (Sunday)
+        createTask({ dueDate: new Date(2026, 0, 19) }), // This week (Monday)
+        createTask({ dueDate: new Date(2026, 0, 25) }), // Next week (Sunday)
       ];
 
       const filtered = tasks.filter(isDueThisWeek(now));
@@ -364,8 +364,8 @@ describe('Due date filters', () => {
         filtered.every(
           (t) =>
             t.dueDate &&
-            t.dueDate >= new Date('2026-01-12T00:00:00Z') &&
-            t.dueDate <= new Date('2026-01-25T23:59:59Z'),
+            t.dueDate >= new Date(2026, 0, 12) &&
+            t.dueDate <= new Date(2026, 0, 25, 23, 59, 59),
         ),
       ).toBe(true);
     });
@@ -373,11 +373,11 @@ describe('Due date filters', () => {
     it('should not include completed tasks', () => {
       const tasks = [
         createTask({
-          dueDate: new Date('2026-01-19T00:00:00Z'),
+          dueDate: new Date(2026, 0, 19),
           completed: true,
         }),
         createTask({
-          dueDate: new Date('2026-01-19T00:00:00Z'),
+          dueDate: new Date(2026, 0, 19),
           completed: false,
         }),
       ];
@@ -390,10 +390,10 @@ describe('Due date filters', () => {
   describe('isDueWithinDays', () => {
     it('should filter tasks due within N days', () => {
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-18T00:00:00Z') }), // 0 days
-        createTask({ dueDate: new Date('2026-01-20T00:00:00Z') }), // 2 days
-        createTask({ dueDate: new Date('2026-01-25T00:00:00Z') }), // 7 days
-        createTask({ dueDate: new Date('2026-01-26T00:00:00Z') }), // 8 days
+        createTask({ dueDate: new Date(2026, 0, 18) }), // 0 days
+        createTask({ dueDate: new Date(2026, 0, 20) }), // 2 days
+        createTask({ dueDate: new Date(2026, 0, 25) }), // 7 days
+        createTask({ dueDate: new Date(2026, 0, 26) }), // 8 days
       ];
 
       const filtered = tasks.filter(isDueWithinDays(7, now));
@@ -402,7 +402,7 @@ describe('Due date filters', () => {
       expect(
         filtered.every((t) => {
           if (!t.dueDate) return false;
-          const endDate = new Date('2026-01-25T23:59:59Z');
+          const endDate = new Date(2026, 0, 25, 23, 59, 59);
           return t.dueDate <= endDate;
         }),
       ).toBe(true);
@@ -411,11 +411,11 @@ describe('Due date filters', () => {
     it('should not include completed tasks', () => {
       const tasks = [
         createTask({
-          dueDate: new Date('2026-01-20T00:00:00Z'),
+          dueDate: new Date(2026, 0, 20),
           completed: true,
         }),
         createTask({
-          dueDate: new Date('2026-01-20T00:00:00Z'),
+          dueDate: new Date(2026, 0, 20),
           completed: false,
         }),
       ];
@@ -429,9 +429,9 @@ describe('Due date filters', () => {
   describe('hasDueDate', () => {
     it('should filter tasks with due dates', () => {
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-18') }),
+        createTask({ dueDate: new Date(2026, 0, 18) }),
         createTask({}),
-        createTask({ dueDate: new Date('2026-01-19') }),
+        createTask({ dueDate: new Date(2026, 0, 19) }),
       ];
 
       const filtered = tasks.filter(hasDueDate());
@@ -443,9 +443,9 @@ describe('Due date filters', () => {
   describe('hasNoDueDate', () => {
     it('should filter tasks without due dates', () => {
       const tasks = [
-        createTask({ dueDate: new Date('2026-01-18') }),
+        createTask({ dueDate: new Date(2026, 0, 18) }),
         createTask({}),
-        createTask({ dueDate: new Date('2026-01-19') }),
+        createTask({ dueDate: new Date(2026, 0, 19) }),
         createTask({}),
       ];
 
@@ -566,29 +566,29 @@ describe('Filter combinators', () => {
 });
 
 describe('Realistic filtering scenarios', () => {
-  const now = new Date('2026-01-18T12:00:00Z');
+  const now = new Date(2026, 0, 18, 12, 0);
 
   it('should filter my urgent overdue tasks', () => {
     const tasks = [
       createTask({
         assignee: 'nick',
         priority: 'urgent',
-        dueDate: new Date('2026-01-17'),
+        dueDate: new Date(2026, 0, 17),
       }),
       createTask({
         assignee: 'nick',
         priority: 'high',
-        dueDate: new Date('2026-01-17'),
+        dueDate: new Date(2026, 0, 17),
       }),
       createTask({
         assignee: 'alice',
         priority: 'urgent',
-        dueDate: new Date('2026-01-17'),
+        dueDate: new Date(2026, 0, 17),
       }),
       createTask({
         assignee: 'nick',
         priority: 'urgent',
-        dueDate: new Date('2026-01-20'),
+        dueDate: new Date(2026, 0, 20),
       }),
     ];
 
@@ -610,15 +610,15 @@ describe('Realistic filtering scenarios', () => {
     const tasks = [
       createTask({
         project: 'acme-app',
-        dueDate: new Date('2026-01-15T00:00:00Z'), // This week (Wednesday)
+        dueDate: new Date(2026, 0, 15), // This week (Wednesday)
       }),
       createTask({
         project: 'widget-co',
-        dueDate: new Date('2026-01-15T00:00:00Z'), // This week
+        dueDate: new Date(2026, 0, 15), // This week
       }),
       createTask({
         project: 'acme-app',
-        dueDate: new Date('2026-01-27T00:00:00Z'), // Next week
+        dueDate: new Date(2026, 0, 27), // Next week
       }),
       createTask({ project: 'acme-app' }), // No due date
     ];
