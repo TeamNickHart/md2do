@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import type { Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 
 /**
  * Toggle task completion from tree view
@@ -33,7 +33,7 @@ export async function toggleTaskFromTree(task: Task): Promise<void> {
     let newSuffix = suffix;
 
     // Handle completion date
-    const today = new Date().toISOString().split('T')[0];
+    const today = formatLocalDate();
 
     if (!isCompleted) {
       // Completing: add completion date if not present

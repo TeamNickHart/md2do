@@ -1,4 +1,5 @@
 import {
+  format,
   parse,
   isValid,
   addDays,
@@ -120,4 +121,20 @@ export function resolveRelativeDate(
     default:
       return null;
   }
+}
+
+/**
+ * Format a date as YYYY-MM-DD in the local timezone
+ *
+ * Unlike `date.toISOString().split('T')[0]`, which uses UTC, this returns
+ * the calendar date the user sees on their clock.
+ *
+ * @param date - Date to format (defaults to now)
+ * @returns Local date string
+ *
+ * @example
+ * formatLocalDate(new Date(2026, 9, 9, 0, 30)) // => "2026-10-09"
+ */
+export function formatLocalDate(date: Date = new Date()): string {
+  return format(date, 'yyyy-MM-dd');
 }

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import { formatLocalDate } from '@md2do/core';
 
 /**
  * Toggle task completion at cursor position
@@ -38,7 +39,7 @@ export async function toggleComplete(): Promise<void> {
   let newSuffix = suffix;
 
   // Handle completion date
-  const today = new Date().toISOString().split('T')[0];
+  const today = formatLocalDate();
 
   if (!isCompleted) {
     // Completing: add completion date if not present
