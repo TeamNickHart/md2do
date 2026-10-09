@@ -21,10 +21,13 @@ export function createStatsCommand(): Command {
 
   command
     .description('Show task statistics')
-    .option('-p, --path <path>', 'Path to scan (defaults to current directory)')
+    .option(
+      '-p, --path <path>',
+      'Path to scan (defaults to markdown.root, otherwise current directory)',
+    )
     .option(
       '--pattern <pattern>',
-      'Glob pattern for markdown files (defaults to **/*.md)',
+      'Glob pattern for markdown files (defaults to markdown.pattern, otherwise **/*.md)',
     )
     .option('--exclude <patterns...>', 'Patterns to exclude from scanning')
     .option(
@@ -36,10 +39,9 @@ export function createStatsCommand(): Command {
     .option('--no-colors', 'Disable colors in output')
     .action(async (options: StatsCommandOptions) => {
       try {
-        // Load config for markdown.root and markdown.pattern
-        const config = await loadConfig({
-          cwd: options.path || process.cwd(),
-        });
+        // Load config for markdown.root and markdown.pattern (from the current
+        // directory, not --path, so --path keeps the project config)
+        const config = await loadConfig();
 
         // Scan markdown files
         const scanResult = await scanMarkdownFiles({

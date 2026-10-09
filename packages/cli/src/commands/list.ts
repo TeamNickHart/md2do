@@ -35,10 +35,13 @@ export function createListCommand(): Command {
 
   command
     .description('List tasks from markdown files')
-    .option('-p, --path <path>', 'Path to scan (defaults to current directory)')
+    .option(
+      '-p, --path <path>',
+      'Path to scan (defaults to markdown.root, otherwise current directory)',
+    )
     .option(
       '--pattern <pattern>',
-      'Glob pattern for markdown files (defaults to **/*.md)',
+      'Glob pattern for markdown files (defaults to markdown.pattern, otherwise **/*.md)',
     )
     .option('--exclude <patterns...>', 'Patterns to exclude from scanning')
 
@@ -89,10 +92,9 @@ export function createListCommand(): Command {
 
     .action(async (options: ListCommandOptions) => {
       try {
-        // Load config first to get workday settings
-        const config = await loadConfig({
-          cwd: options.path || process.cwd(),
-        });
+        // Load config first to get workday settings (from the current
+        // directory, not --path, so --path keeps the project config)
+        const config = await loadConfig();
 
         // Scan markdown files with workday config
         const scanResult = await scanMarkdownFiles({
