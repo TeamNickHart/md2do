@@ -204,6 +204,11 @@ describe('resolveRelativeDate', () => {
 });
 
 describe('formatLocalDate', () => {
+  it('should run in a timezone other than UTC (see vitest.config.ts)', () => {
+    // Without this, the midnight tests below also pass with a UTC date
+    expect(new Date(2026, 9, 9).getTimezoneOffset()).not.toBe(0);
+  });
+
   it('should format a date as YYYY-MM-DD', () => {
     expect(formatLocalDate(new Date(2026, 0, 5, 12, 0))).toBe('2026-01-05');
   });
