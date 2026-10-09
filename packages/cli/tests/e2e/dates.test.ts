@@ -61,6 +61,28 @@ describe.each(TEST_ZONES)('E2E: due dates in %s', (tz) => {
   );
 
   it(
+    'JSON output should give due dates as calendar dates',
+    () => {
+      makeProject();
+
+      const output = JSON.parse(
+        runCli(['list', '--format', 'json'], { cwd, home, tz }),
+      ) as { tasks: { text: string; dueDate?: string }[] };
+      const dueDates = Object.fromEntries(
+        output.tasks.map((task) => [task.text, task.dueDate]),
+      );
+
+      expect(dueDates).toEqual({
+        'Yesterday task': '2026-10-08',
+        'Today task': '2026-10-09',
+        'Tomorrow task': '2026-10-10',
+        'Undated task': undefined,
+      });
+    },
+    E2E_TIMEOUT,
+  );
+
+  it(
     'stats should count overdue and due today like list does',
     () => {
       makeProject();
