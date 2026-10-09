@@ -1,5 +1,5 @@
 import type { Task } from '@md2do/core';
-import { filters, sorting } from '@md2do/core';
+import { filters, formatLocalDate, sorting } from '@md2do/core';
 import { scanMarkdownFiles } from '../utils/scanner.js';
 import { ListTasksInputSchema } from '../types.js';
 
@@ -133,9 +133,10 @@ function formatTask(task: Task) {
   if (task.project) formatted.project = task.project;
   if (task.person) formatted.person = task.person;
   if (task.tags.length > 0) formatted.tags = task.tags;
-  if (task.dueDate) formatted.dueDate = task.dueDate.toISOString();
+  // Calendar dates (YYYY-MM-DD) in the user's timezone, as written in markdown
+  if (task.dueDate) formatted.dueDate = formatLocalDate(task.dueDate);
   if (task.completedDate)
-    formatted.completedDate = task.completedDate.toISOString();
+    formatted.completedDate = formatLocalDate(task.completedDate);
   if (task.sources && Object.keys(task.sources).length > 0)
     formatted.sources = task.sources;
   return formatted;

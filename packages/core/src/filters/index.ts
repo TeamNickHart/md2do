@@ -1,3 +1,10 @@
+import {
+  addDays,
+  endOfDay,
+  endOfWeek,
+  startOfDay,
+  startOfWeek,
+} from 'date-fns';
 import type { Task, Priority } from '../types/index.js';
 
 /**
@@ -135,72 +142,13 @@ export function byPath(
   };
 }
 
-/**
- * Get start of day in UTC
- */
-function getUTCStartOfDay(date: Date): Date {
-  return new Date(
-    Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      0,
-      0,
-      0,
-      0,
-    ),
-  );
-}
-
-/**
- * Get end of day in UTC
- */
-function getUTCEndOfDay(date: Date): Date {
-  return new Date(
-    Date.UTC(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      23,
-      59,
-      59,
-      999,
-    ),
-  );
-}
-
-/**
- * Add days to a date in UTC
- */
-function addUTCDays(date: Date, days: number): Date {
-  const result = new Date(date);
-  result.setUTCDate(result.getUTCDate() + days);
-  return result;
-}
-
-/**
- * Get start of week (Monday) in UTC
- */
-function getUTCStartOfWeek(date: Date): Date {
-  const dayOfWeek = date.getUTCDay();
-  const diff = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek; // Monday is 1, Sunday is 0
-  const result = addUTCDays(date, diff);
-  return getUTCStartOfDay(result);
-}
-
-/**
- * Get end of week (Sunday) in UTC
- */
-function getUTCEndOfWeek(date: Date): Date {
-  const dayOfWeek = date.getUTCDay();
-  const diff = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-  const result = addUTCDays(date, diff);
-  return getUTCEndOfDay(result);
-}
+// Due dates are calendar dates in the user's local timezone (the parser
+// creates them at local time), so "today" and "this week" use local day
+// boundaries. Weeks run Monday to Sunday.
 
 /**
  * Filter tasks that are overdue
- * A task is overdue if it has a due date in the past
+ * A task is overdue if it is due before today (local time)
  *
  * @param referenceDate - Date to compare against (defaults to now)
  * @returns Filter predicate
@@ -209,7 +157,7 @@ function getUTCEndOfWeek(date: Date): Date {
  * tasks.filter(isOverdue())
  */
 export function isOverdue(referenceDate: Date = new Date()): TaskFilter {
-  const today = getUTCStartOfDay(referenceDate);
+  const today = startOfDay(referenceDate);
 
   return (task: Task) => {
     if (!task.dueDate || task.completed) {
@@ -229,8 +177,8 @@ export function isOverdue(referenceDate: Date = new Date()): TaskFilter {
  * tasks.filter(isDueToday())
  */
 export function isDueToday(referenceDate: Date = new Date()): TaskFilter {
-  const todayStart = getUTCStartOfDay(referenceDate);
-  const todayEnd = getUTCEndOfDay(referenceDate);
+  const todayStart = startOfDay(referenceDate);
+  const todayEnd = endOfDay(referenceDate);
 
   return (task: Task) => {
     if (!task.dueDate || task.completed) {
@@ -250,8 +198,8 @@ export function isDueToday(referenceDate: Date = new Date()): TaskFilter {
  * tasks.filter(isDueThisWeek())
  */
 export function isDueThisWeek(referenceDate: Date = new Date()): TaskFilter {
-  const weekStart = getUTCStartOfWeek(referenceDate);
-  const weekEnd = getUTCEndOfWeek(referenceDate);
+  const weekStart = startOfWeek(referenceDate, { weekStartsOn: 1 });
+  const weekEnd = endOfWeek(referenceDate, { weekStartsOn: 1 });
 
   return (task: Task) => {
     if (!task.dueDate || task.completed) {
@@ -275,8 +223,8 @@ export function isDueWithinDays(
   days: number,
   referenceDate: Date = new Date(),
 ): TaskFilter {
-  const start = getUTCStartOfDay(referenceDate);
-  const end = getUTCEndOfDay(addUTCDays(referenceDate, days));
+  const start = startOfDay(referenceDate);
+  const end = endOfDay(addDays(referenceDate, days));
 
   return (task: Task) => {
     if (!task.dueDate || task.completed) {

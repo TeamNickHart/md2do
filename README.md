@@ -295,7 +295,7 @@ Found 113 tasks
       "assignee": "nick",
       "priority": "urgent",
       "tags": ["bug", "critical"],
-      "dueDate": "2026-01-18T00:00:00.000Z"
+      "dueDate": "2026-01-18"
     }
   ],
   "metadata": {

@@ -5,8 +5,9 @@
  * result does not depend on when or where the tests run.
  */
 
-import { describe, it, expect } from 'vitest';
-import { runCli } from '../helpers/run-cli.js';
+import { describe, it, expect, afterEach } from 'vitest';
+import { join } from 'path';
+import { runCli, createTempDirs } from '../helpers/run-cli.js';
 import {
   TEST_ZONES,
   LOCAL_TIME_CASES,
@@ -65,6 +66,39 @@ describe.each(TEST_ZONES)('E2E: add --due in %s', (tz) => {
         expect(addWithDue('today', tz, instant), name).toBe(
           `- [ ] Task #due/${expected}`,
         );
+      }
+    },
+    E2E_TIMEOUT,
+  );
+});
+
+describe.each(TEST_ZONES)('E2E: ingest in %s', (tz) => {
+  const tempDirs = createTempDirs();
+
+  afterEach(() => {
+    tempDirs.cleanup();
+  });
+
+  it(
+    'should stamp completed records with the local date around midnight',
+    () => {
+      const dir = tempDirs.make('md2do-ingest-', {
+        'teams.jsonl':
+          JSON.stringify({
+            source: 'teams',
+            externalId: 'msg-1',
+            text: 'Done task',
+            completed: true,
+          }) + '\n',
+      });
+
+      for (const { name, wall } of E2E_CASES) {
+        const output = runCli(
+          ['ingest', join(dir, 'teams.jsonl'), '--dry-run'],
+          { cwd: dir, tz, now: wall },
+        );
+
+        expect(output, name).toContain(`{completed:${wallDate(wall)}}`);
       }
     },
     E2E_TIMEOUT,

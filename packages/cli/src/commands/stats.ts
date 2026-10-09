@@ -100,19 +100,8 @@ function showOverallStats(
   const completed = tasks.filter((t) => t.completed).length;
   const incomplete = tasks.filter((t) => !t.completed).length;
 
-  const overdue = tasks.filter(
-    (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
-  ).length;
-
-  const dueToday = tasks.filter((t) => {
-    if (!t.dueDate || t.completed) return false;
-    const today = new Date();
-    return (
-      t.dueDate.getDate() === today.getDate() &&
-      t.dueDate.getMonth() === today.getMonth() &&
-      t.dueDate.getFullYear() === today.getFullYear()
-    );
-  }).length;
+  const overdue = tasks.filter(filters.isOverdue()).length;
+  const dueToday = tasks.filter(filters.isDueToday()).length;
 
   const title = colors
     ? chalk.bold.blue('md2do Statistics')
@@ -292,9 +281,7 @@ function showGroupedStats(
   for (const [name, groupTasks] of groups.entries()) {
     const completed = groupTasks.filter((t) => t.completed).length;
     const incomplete = groupTasks.length - completed;
-    const overdue = groupTasks.filter(
-      (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
-    ).length;
+    const overdue = groupTasks.filter(filters.isOverdue()).length;
 
     stats.push({
       name,

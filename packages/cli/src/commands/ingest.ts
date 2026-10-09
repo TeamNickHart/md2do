@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { parseJsonl, ingestRecords } from '@md2do/core';
+import { parseJsonl, ingestRecords, formatLocalDate } from '@md2do/core';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -75,7 +75,7 @@ async function ingestAction(
   }
 
   // Generate markdown
-  const today = new Date().toISOString().slice(0, 10);
+  const today = formatLocalDate();
   const markdown = ingestRecords(records, undefined, today);
 
   if (options.dryRun) {

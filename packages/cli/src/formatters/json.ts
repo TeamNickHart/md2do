@@ -1,4 +1,4 @@
-import type { Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 
 export interface JsonOutput {
   tasks: Array<{
@@ -11,10 +11,10 @@ export interface JsonOutput {
     person?: string;
     assignee?: string;
     priority?: string;
-    dueDate?: string; // ISO string
+    dueDate?: string; // Calendar date, YYYY-MM-DD
     tags: string[];
     sources?: Record<string, string>;
-    completedDate?: string; // ISO string
+    completedDate?: string; // Calendar date, YYYY-MM-DD
   }>;
   metadata: {
     total: number;
@@ -41,11 +41,11 @@ export function formatAsJson(tasks: Task[]): string {
       ...(task.person && { person: task.person }),
       ...(task.assignee && { assignee: task.assignee }),
       ...(task.priority && { priority: task.priority }),
-      ...(task.dueDate && { dueDate: task.dueDate.toISOString() }),
+      ...(task.dueDate && { dueDate: formatLocalDate(task.dueDate) }),
       tags: task.tags,
       ...(task.sources && { sources: task.sources }),
       ...(task.completedDate && {
-        completedDate: task.completedDate.toISOString(),
+        completedDate: formatLocalDate(task.completedDate),
       }),
     })),
     metadata: {

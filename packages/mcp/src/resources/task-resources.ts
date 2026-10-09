@@ -4,7 +4,7 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { scanMarkdownFiles } from '../utils/scanner.js';
-import type { Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 
 /**
  * Register all MCP resources with the server
@@ -134,8 +134,9 @@ function formatTask(task: Task) {
   if (task.project) formatted.project = task.project;
   if (task.person) formatted.person = task.person;
   if (task.tags.length > 0) formatted.tags = task.tags;
-  if (task.dueDate) formatted.dueDate = task.dueDate.toISOString();
+  // Calendar dates (YYYY-MM-DD) in the user's timezone, as written in markdown
+  if (task.dueDate) formatted.dueDate = formatLocalDate(task.dueDate);
   if (task.completedDate)
-    formatted.completedDate = task.completedDate.toISOString();
+    formatted.completedDate = formatLocalDate(task.completedDate);
   return formatted;
 }

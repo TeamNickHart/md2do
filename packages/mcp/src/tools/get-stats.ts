@@ -50,9 +50,7 @@ export async function getTaskStats(input: unknown): Promise<string> {
 function getOverallStats(tasks: Task[], filesScanned: number) {
   const completed = tasks.filter((t) => t.completed).length;
   const incomplete = tasks.filter((t) => !t.completed).length;
-  const overdue = tasks.filter(
-    (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
-  ).length;
+  const overdue = tasks.filter(filters.isOverdue()).length;
 
   const priorityStats = {
     urgent: tasks.filter((t) => t.priority === 'urgent').length,
@@ -132,9 +130,7 @@ function getGroupedStats(
   for (const [name, groupTasks] of groups.entries()) {
     const completed = groupTasks.filter((t) => t.completed).length;
     const incomplete = groupTasks.length - completed;
-    const overdue = groupTasks.filter(
-      (t) => !t.completed && t.dueDate && t.dueDate < new Date(),
-    ).length;
+    const overdue = groupTasks.filter(filters.isOverdue()).length;
 
     stats[name] = {
       total: groupTasks.length,

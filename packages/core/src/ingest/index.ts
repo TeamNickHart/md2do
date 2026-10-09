@@ -1,4 +1,5 @@
 import type { IngestRecord } from '../types/index.js';
+import { formatLocalDate } from '../utils/dates.js';
 
 /**
  * Parse JSONL content into IngestRecord array
@@ -127,7 +128,7 @@ export function ingestRecordToLine(
   line += ` {${record.source}:${record.externalId}}`;
 
   if (record.completed) {
-    const completedDate = today ?? new Date().toISOString().slice(0, 10);
+    const completedDate = today ?? formatLocalDate();
     line += ` {completed:${completedDate}}`;
   }
 
