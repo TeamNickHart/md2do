@@ -92,9 +92,13 @@ export function createListCommand(): Command {
 
     .action(async (options: ListCommandOptions) => {
       try {
-        // Load config first to get workday settings (from the current
-        // directory, not --path, so --path keeps the project config)
-        const config = await loadConfig();
+        // Load config first to get workday settings.
+        // Project config from --path if it has one, else from the current
+        // directory, so --path alone keeps the project's markdown.pattern.
+        const config = await loadConfig({
+          cwd: options.path || process.cwd(),
+          fallbackCwd: process.cwd(),
+        });
 
         // Scan markdown files with workday config
         const scanResult = await scanMarkdownFiles({

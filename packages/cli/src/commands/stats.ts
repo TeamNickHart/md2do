@@ -39,9 +39,13 @@ export function createStatsCommand(): Command {
     .option('--no-colors', 'Disable colors in output')
     .action(async (options: StatsCommandOptions) => {
       try {
-        // Load config for markdown.root and markdown.pattern (from the current
-        // directory, not --path, so --path keeps the project config)
-        const config = await loadConfig();
+        // Load config for markdown.root and markdown.pattern.
+        // Project config from --path if it has one, else from the current
+        // directory, so --path alone keeps the project's markdown.pattern.
+        const config = await loadConfig({
+          cwd: options.path || process.cwd(),
+          fallbackCwd: process.cwd(),
+        });
 
         // Scan markdown files
         const scanResult = await scanMarkdownFiles({

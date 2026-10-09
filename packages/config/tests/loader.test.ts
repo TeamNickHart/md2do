@@ -169,6 +169,60 @@ todoist:
     ).rejects.toThrow('Invalid configuration');
   });
 
+  describe('fallbackCwd', () => {
+    async function writeConfig(dir: string, pattern: string): Promise<void> {
+      await fs.writeFile(
+        path.join(dir, '.md2do.json'),
+        JSON.stringify({ markdown: { pattern } }),
+      );
+    }
+
+    it('should prefer project config in cwd', async () => {
+      const scanDir = path.join(tempDir, 'scan');
+      await fs.mkdir(scanDir);
+      await writeConfig(tempDir, 'from-fallback/*.md');
+      await writeConfig(scanDir, 'from-cwd/*.md');
+
+      const config = await loadConfig({
+        cwd: scanDir,
+        fallbackCwd: tempDir,
+        loadGlobal: false,
+        loadEnv: false,
+      });
+
+      expect(config.markdown?.pattern).toBe('from-cwd/*.md');
+    });
+
+    it('should use fallbackCwd when cwd has no project config', async () => {
+      const scanDir = path.join(tempDir, 'scan');
+      await fs.mkdir(scanDir);
+      await writeConfig(tempDir, 'from-fallback/*.md');
+
+      const config = await loadConfig({
+        cwd: scanDir,
+        fallbackCwd: tempDir,
+        loadGlobal: false,
+        loadEnv: false,
+      });
+
+      expect(config.markdown?.pattern).toBe('from-fallback/*.md');
+    });
+
+    it('should not search parent directories without fallbackCwd', async () => {
+      const scanDir = path.join(tempDir, 'scan');
+      await fs.mkdir(scanDir);
+      await writeConfig(tempDir, 'from-parent/*.md');
+
+      const config = await loadConfig({
+        cwd: scanDir,
+        loadGlobal: false,
+        loadEnv: false,
+      });
+
+      expect(config).toEqual(DEFAULT_CONFIG);
+    });
+  });
+
   it('should handle missing home directory gracefully', async () => {
     const originalHome = process.env.HOME;
     const originalUserProfile = process.env.USERPROFILE;
