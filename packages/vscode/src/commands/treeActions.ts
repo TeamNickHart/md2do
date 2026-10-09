@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import type { Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 
 /**
  * Toggle task completion from tree view
@@ -33,7 +33,7 @@ export async function toggleTaskFromTree(task: Task): Promise<void> {
     let newSuffix = suffix;
 
     // Handle completion date
-    const today = new Date().toISOString().split('T')[0];
+    const today = formatLocalDate();
 
     if (!isCompleted) {
       // Completing: add completion date if not present
@@ -78,12 +78,12 @@ export async function copyTaskAsMarkdown(task: Task): Promise<void> {
 
     // Add metadata
     if (task.dueDate) {
-      const dateStr = task.dueDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.dueDate);
       markdown += ` #due/${dateStr}`;
     }
 
     if (task.completedDate) {
-      const dateStr = task.completedDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.completedDate);
       markdown += ` {completed:${dateStr}}`;
     }
 

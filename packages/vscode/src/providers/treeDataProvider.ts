@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import type { Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 import { scanWorkspace } from '../utils/scanner.js';
 
 export type GroupMode =
@@ -48,7 +48,7 @@ class TaskItem extends vscode.TreeItem {
     }
 
     if (task.dueDate) {
-      const dateStr = task.dueDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.dueDate);
       parts.push(`📅 ${dateStr}`);
     }
 
@@ -79,7 +79,7 @@ class TaskItem extends vscode.TreeItem {
     md.appendMarkdown(`**${this.task.text}**\n\n`);
 
     if (this.task.dueDate) {
-      const dateStr = this.task.dueDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(this.task.dueDate);
       md.appendMarkdown(`📅 Due: ${dateStr}\n\n`);
     }
 
@@ -98,7 +98,7 @@ class TaskItem extends vscode.TreeItem {
     }
 
     if (this.task.completed && this.task.completedDate) {
-      const dateStr = this.task.completedDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(this.task.completedDate);
       md.appendMarkdown(`✅ Completed: ${dateStr}\n\n`);
     }
 

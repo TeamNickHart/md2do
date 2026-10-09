@@ -1,6 +1,8 @@
 import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 import fg from 'fast-glob';
 import { MarkdownScanner, type Task, type Warning } from '@md2do/core';
+import type { Config } from '@md2do/config';
 
 export interface ScanOptions {
   /**
@@ -46,6 +48,33 @@ export interface ScanResult {
     filesScanned: number;
     totalTasks: number;
     scanDuration: number;
+  };
+}
+
+/**
+ * Resolve the scan root and glob pattern for a command
+ *
+ * Explicit CLI options take precedence over `markdown.root` and
+ * `markdown.pattern` from config, which take precedence over defaults.
+ * A relative `markdown.root` is resolved against `cwd`.
+ *
+ * @param options - CLI options (`--path`, `--pattern`)
+ * @param config - Loaded configuration
+ * @param cwd - Directory to resolve relative paths against
+ * @returns Root and pattern to pass to scanMarkdownFiles
+ */
+export function resolveScanTarget(
+  options: { path?: string; pattern?: string },
+  config: Config,
+  cwd: string = process.cwd(),
+): { root: string; pattern?: string } {
+  const configRoot = config.markdown?.root;
+  const root = options.path || (configRoot ? resolve(cwd, configRoot) : cwd);
+  const pattern = options.pattern ?? config.markdown?.pattern;
+
+  return {
+    root,
+    ...(pattern !== undefined && { pattern }),
   };
 }
 

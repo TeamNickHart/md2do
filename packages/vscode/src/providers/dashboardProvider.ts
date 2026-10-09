@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { type Task } from '@md2do/core';
+import { formatLocalDate, type Task } from '@md2do/core';
 import { scanWorkspace } from '../utils/scanner.js';
 
 interface DashboardData {
@@ -818,7 +818,12 @@ export class DashboardProvider {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
-          dueDateStr = dueDate.toISOString().split('T')[0];
+          dueDateStr =
+            dueDate.getFullYear() +
+            '-' +
+            String(dueDate.getMonth() + 1).padStart(2, '0') +
+            '-' +
+            String(dueDate.getDate()).padStart(2, '0');
           if (dueDate < today) {
             dueDateStr = '⚠️ ' + dueDateStr + ' (overdue)';
           }
@@ -903,7 +908,7 @@ export class DashboardProvider {
           const dueDate = new Date(task.dueDate);
           const today = new Date();
           today.setHours(0, 0, 0, 0);
-          dueDateStr = dueDate.toISOString().split('T')[0]!;
+          dueDateStr = formatLocalDate(dueDate);
           if (dueDate < today) {
             dueDateStr = '⚠️ ' + dueDateStr + ' (overdue)';
           }

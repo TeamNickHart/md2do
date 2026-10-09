@@ -2,7 +2,8 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import Table from 'cli-table3';
 import type { Task } from '@md2do/core';
-import { scanMarkdownFiles } from '../scanner.js';
+import { loadConfig } from '@md2do/config';
+import { scanMarkdownFiles, resolveScanTarget } from '../scanner.js';
 import { filters } from '@md2do/core';
 
 interface StatsCommandOptions {
@@ -20,8 +21,14 @@ export function createStatsCommand(): Command {
 
   command
     .description('Show task statistics')
-    .option('-p, --path <path>', 'Path to scan (defaults to current directory)')
-    .option('--pattern <pattern>', 'Glob pattern for markdown files', '**/*.md')
+    .option(
+      '-p, --path <path>',
+      'Path to scan (defaults to markdown.root, otherwise current directory)',
+    )
+    .option(
+      '--pattern <pattern>',
+      'Glob pattern for markdown files (defaults to markdown.pattern, otherwise **/*.md)',
+    )
     .option('--exclude <patterns...>', 'Patterns to exclude from scanning')
     .option(
       '--by <field>',
@@ -32,10 +39,17 @@ export function createStatsCommand(): Command {
     .option('--no-colors', 'Disable colors in output')
     .action(async (options: StatsCommandOptions) => {
       try {
+        // Load config for markdown.root and markdown.pattern.
+        // Project config from --path if it has one, else from the current
+        // directory, so --path alone keeps the project's markdown.pattern.
+        const config = await loadConfig({
+          cwd: options.path || process.cwd(),
+          fallbackCwd: process.cwd(),
+        });
+
         // Scan markdown files
         const scanResult = await scanMarkdownFiles({
-          root: options.path || process.cwd(),
-          ...(options.pattern !== undefined && { pattern: options.pattern }),
+          ...resolveScanTarget(options, config),
           ...(options.exclude !== undefined && { exclude: options.exclude }),
         });
 

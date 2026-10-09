@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { formatLocalDate } from '@md2do/core';
 import { scanWorkspace } from '../utils/scanner.js';
 
 /**
@@ -146,9 +147,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
     nextMonth.setMonth(nextMonth.getMonth() + 1);
 
     // Helper to format date
-    const formatDate = (date: Date): string => {
-      return date.toISOString().split('T')[0]!;
-    };
+    const formatDate = formatLocalDate;
 
     // Get next Monday
     const nextMonday = new Date(today);
@@ -478,8 +477,7 @@ export class TaskCompletionProvider implements vscode.CompletionItemProvider {
    */
   private getDueShortcuts(): vscode.CompletionItem[] {
     const today = new Date();
-    const formatDate = (date: Date): string =>
-      date.toISOString().split('T')[0]!;
+    const formatDate = formatLocalDate;
 
     const makeDate = (daysFromNow: number): Date => {
       const d = new Date(today);

@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 import { filters, sorting, filterWarnings } from '@md2do/core';
 import { loadConfig, DEFAULT_CONFIG } from '@md2do/config';
-import { scanMarkdownFiles } from '../scanner.js';
+import { scanMarkdownFiles, resolveScanTarget } from '../scanner.js';
 import { formatAsPretty, formatAsTable } from '../formatters/pretty.js';
 import { formatAsJson } from '../formatters/json.js';
 
@@ -35,8 +35,14 @@ export function createListCommand(): Command {
 
   command
     .description('List tasks from markdown files')
-    .option('-p, --path <path>', 'Path to scan (defaults to current directory)')
-    .option('--pattern <pattern>', 'Glob pattern for markdown files', '**/*.md')
+    .option(
+      '-p, --path <path>',
+      'Path to scan (defaults to markdown.root, otherwise current directory)',
+    )
+    .option(
+      '--pattern <pattern>',
+      'Glob pattern for markdown files (defaults to markdown.pattern, otherwise **/*.md)',
+    )
     .option('--exclude <patterns...>', 'Patterns to exclude from scanning')
 
     // Status filters
@@ -86,15 +92,17 @@ export function createListCommand(): Command {
 
     .action(async (options: ListCommandOptions) => {
       try {
-        // Load config first to get workday settings
+        // Load config first to get workday settings.
+        // Project config from --path if it has one, else from the current
+        // directory, so --path alone keeps the project's markdown.pattern.
         const config = await loadConfig({
           cwd: options.path || process.cwd(),
+          fallbackCwd: process.cwd(),
         });
 
         // Scan markdown files with workday config
         const scanResult = await scanMarkdownFiles({
-          root: options.path || process.cwd(),
-          ...(options.pattern !== undefined && { pattern: options.pattern }),
+          ...resolveScanTarget(options, config),
           ...(options.exclude !== undefined && { exclude: options.exclude }),
           ...(config.workday?.startTime && {
             workdayStartTime: config.workday.startTime,

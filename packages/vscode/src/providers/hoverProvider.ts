@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { parseTask } from '@md2do/core';
+import { formatLocalDate, parseTask } from '@md2do/core';
 
 /**
  * Provides rich hover tooltips for task lines
@@ -39,7 +39,7 @@ export class TaskHoverProvider implements vscode.HoverProvider {
 
     // Due date
     if (task.dueDate) {
-      const dateStr = task.dueDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.dueDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const isOverdue = !task.completed && task.dueDate < today;
@@ -51,7 +51,7 @@ export class TaskHoverProvider implements vscode.HoverProvider {
 
     // Completion date
     if (task.completed && task.completedDate) {
-      const dateStr = task.completedDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.completedDate);
       sections.push(`✅ **Completed**: ${dateStr}`);
     }
 

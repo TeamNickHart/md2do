@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
+  formatLocalDate,
   parseAbsoluteDate,
   resolveRelativeDate,
 } from '../../src/utils/dates.js';
@@ -199,5 +200,36 @@ describe('resolveRelativeDate', () => {
       const result = resolveRelativeDate('next', baseDate);
       expect(result).toBeNull();
     });
+  });
+});
+
+describe('formatLocalDate', () => {
+  it('should run in a timezone other than UTC (see vitest.config.ts)', () => {
+    // Without this, the midnight tests below also pass with a UTC date
+    expect(new Date(2026, 9, 9).getTimezoneOffset()).not.toBe(0);
+  });
+
+  it('should format a date as YYYY-MM-DD', () => {
+    expect(formatLocalDate(new Date(2026, 0, 5, 12, 0))).toBe('2026-01-05');
+  });
+
+  it('should use the local date just after local midnight', () => {
+    // In timezones east of UTC this instant is still the previous day in UTC
+    expect(formatLocalDate(new Date(2026, 9, 9, 0, 30))).toBe('2026-10-09');
+  });
+
+  it('should use the local date just before local midnight', () => {
+    // In timezones west of UTC this instant is already the next day in UTC
+    expect(formatLocalDate(new Date(2026, 9, 8, 23, 59))).toBe('2026-10-08');
+  });
+
+  it('should default to now', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 9, 9, 0, 30));
+    try {
+      expect(formatLocalDate()).toBe('2026-10-09');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

@@ -114,10 +114,16 @@ async function loadGlobalConfig(): Promise<Partial<Config> | null> {
 
 export interface LoadConfigOptions {
   /**
-   * Directory to start searching for project config
+   * Directory to look in for project config
    * Defaults to process.cwd()
    */
   cwd?: string;
+
+  /**
+   * Directory to look in for project config when `cwd` has none
+   * (e.g. the current directory when `cwd` is a scan path)
+   */
+  fallbackCwd?: string;
 
   /**
    * Whether to load global config from home directory
@@ -136,7 +142,7 @@ export interface LoadConfigOptions {
  * Load configuration with hierarchical resolution:
  * 1. Default values
  * 2. Global config (~/.md2do.json)
- * 3. Project config (walks up from cwd)
+ * 3. Project config (from cwd, else from fallbackCwd)
  * 4. Environment variables
  *
  * Later sources override earlier ones.
@@ -144,7 +150,12 @@ export interface LoadConfigOptions {
 export async function loadConfig(
   options: LoadConfigOptions = {},
 ): Promise<Config> {
-  const { cwd = process.cwd(), loadGlobal = true, loadEnv = true } = options;
+  const {
+    cwd = process.cwd(),
+    fallbackCwd,
+    loadGlobal = true,
+    loadEnv = true,
+  } = options;
 
   let config: Config = DEFAULT_CONFIG;
 
@@ -158,8 +169,11 @@ export async function loadConfig(
     }
   }
 
-  // 3. Load project config (walks up from cwd)
-  const projectConfig = await loadConfigFile(cwd);
+  // 3. Load project config (from cwd, else from fallbackCwd)
+  let projectConfig = await loadConfigFile(cwd);
+  if (!projectConfig && fallbackCwd !== undefined) {
+    projectConfig = await loadConfigFile(fallbackCwd);
+  }
   if (projectConfig) {
     config = deepMerge(config, projectConfig);
   }

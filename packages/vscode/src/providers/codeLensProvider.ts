@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { parseTask } from '@md2do/core';
+import { formatLocalDate, parseTask } from '@md2do/core';
 
 /**
  * Provides inline CodeLens actions for tasks
@@ -80,8 +80,8 @@ export class TaskCodeLensProvider implements vscode.CodeLensProvider {
           dueDateText = `📅 Due in ${diffDays} days`;
           tooltip = `Due in ${diffDays} days`;
         } else {
-          dueDateText = `📅 Due ${task.dueDate.toISOString().split('T')[0]}`;
-          tooltip = `Due on ${task.dueDate.toISOString().split('T')[0]}`;
+          dueDateText = `📅 Due ${formatLocalDate(task.dueDate)}`;
+          tooltip = `Due on ${formatLocalDate(task.dueDate)}`;
         }
 
         const dueDateLens = new vscode.CodeLens(range, {
