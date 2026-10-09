@@ -333,6 +333,56 @@ jobs:
       - name: Run tests
         run: pnpm test:run
 
+  # Job 6b: Tests repeated in several timezones (date logic) - only for code changes
+  test-tz:
+    name: Test (timezones)
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build]
+    if: needs.detect-changes.outputs.code == 'true' || needs.detect-changes.outputs.config == 'true' || needs.detect-changes.outputs.workflows == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+          run_install: false
+
+      - name: Restore node_modules cache
+        id: cache-restore-nm
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            **/node_modules
+            ~/.pnpm-store
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - name: Install dependencies (if cache miss)
+        if: steps.cache-restore-nm.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Restore build cache
+        id: cache-restore-build
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            packages/*/dist
+            packages/*/tsconfig.tsbuildinfo
+          key: ${{ runner.os }}-build-${{ hashFiles('packages/*/src/**/*', 'packages/*/tsconfig.json', 'pnpm-lock.yaml') }}
+
+      - name: Build packages (if cache miss)
+        if: steps.cache-restore-build.outputs.cache-hit != 'true'
+        run: pnpm build
+
+      - name: Run tests in each timezone
+        run: pnpm test:tz
+
   # Job 7: Coverage (after build, checks coverage thresholds) - only for code changes
   coverage:
     name: Coverage Check
@@ -427,7 +477,7 @@ jobs:
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [format, lint, build, typecheck, test, coverage]
+    needs: [format, lint, build, typecheck, test, test-tz, coverage]
     if: always()
     steps:
       - name: Check job results
@@ -456,6 +506,11 @@ jobs:
 
           if [ "${{ needs.test.result }}" != "success" ] && [ "${{ needs.test.result }}" != "skipped" ]; then
             echo "❌ Tests failed or were cancelled"
+            exit 1
+          fi
+
+          if [ "${{ needs.test-tz.result }}" != "success" ] && [ "${{ needs.test-tz.result }}" != "skipped" ]; then
+            echo "❌ Timezone tests failed or were cancelled"
             exit 1
           fi
 

@@ -3,68 +3,41 @@
  */
 
 import { describe, it, expect, afterEach } from 'vitest';
-import { execFileSync } from 'child_process';
 import { join } from 'path';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-
-const cliPath = join(__dirname, '../../dist/cli.js');
-
-function run(args: string[], cwd: string, home: string): string {
-  return execFileSync(process.execPath, [cliPath, ...args], {
-    encoding: 'utf-8',
-    cwd,
-    // Point HOME at an empty dir so a global ~/.md2do.json can't leak in
-    env: { ...process.env, HOME: home, USERPROFILE: home },
-  });
-}
+import { runCli, createTempDirs } from '../helpers/run-cli.js';
 
 describe('E2E: markdown config in list and stats', () => {
-  const tempDirs: string[] = [];
+  const tempDirs = createTempDirs();
   let home: string;
 
   function listTaskTexts(args: string[], cwd: string): string[] {
     const output = JSON.parse(
-      run(['list', '--format', 'json', ...args], cwd, home),
+      runCli(['list', '--format', 'json', ...args], { cwd, home }),
     ) as { tasks: { text: string }[] };
     return output.tasks.map((task) => task.text).sort();
   }
 
   function stats(args: string[], cwd: string): string {
-    return run(['stats', '--no-colors', ...args], cwd, home);
-  }
-
-  function makeTempDir(prefix: string): string {
-    const dir = mkdtempSync(join(tmpdir(), prefix));
-    tempDirs.push(dir);
-    return dir;
+    return runCli(['stats', '--no-colors', ...args], { cwd, home });
   }
 
   function makeProject(): string {
-    home = makeTempDir('md2do-home-');
-    const dir = makeTempDir('md2do-config-');
-    mkdirSync(join(dir, 'notes', 'deep'), { recursive: true });
-    mkdirSync(join(dir, 'other', 'nested'), { recursive: true });
-    writeFileSync(
-      join(dir, '.md2do.json'),
-      JSON.stringify({ markdown: { root: './notes', pattern: '*.md' } }),
-    );
-    writeFileSync(join(dir, 'top.md'), '- [ ] Top task\n');
-    writeFileSync(join(dir, 'notes', 'a.md'), '- [ ] Notes task\n');
-    writeFileSync(join(dir, 'notes', 'deep', 'b.md'), '- [ ] Deep task\n');
-    writeFileSync(join(dir, 'other', 'c.md'), '- [ ] Other task\n');
-    writeFileSync(
-      join(dir, 'other', 'nested', 'd.md'),
-      '- [ ] Nested other task\n',
-    );
-    return dir;
+    // An empty home dir so a global ~/.md2do.json can't leak in
+    home = tempDirs.make('md2do-home-');
+    return tempDirs.make('md2do-config-', {
+      '.md2do.json': JSON.stringify({
+        markdown: { root: './notes', pattern: '*.md' },
+      }),
+      'top.md': '- [ ] Top task\n',
+      'notes/a.md': '- [ ] Notes task\n',
+      'notes/deep/b.md': '- [ ] Deep task\n',
+      'other/c.md': '- [ ] Other task\n',
+      'other/nested/d.md': '- [ ] Nested other task\n',
+    });
   }
 
   afterEach(() => {
-    for (const dir of tempDirs) {
-      rmSync(dir, { recursive: true, force: true });
-    }
-    tempDirs.length = 0;
+    tempDirs.cleanup();
   });
 
   it('list should use markdown.root and markdown.pattern from config', () => {

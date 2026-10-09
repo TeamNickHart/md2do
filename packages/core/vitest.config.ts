@@ -3,7 +3,8 @@ import { defineConfig } from 'vitest/config';
 // Run tests in a timezone east of UTC so date code that falls back to UTC
 // (e.g. toISOString().split('T')[0]) fails here, not only for users. Set
 // before workers start: workers inherit it, and can't change it themselves.
-process.env.TZ = 'Europe/Berlin';
+// `pnpm test:tz` overrides this to run the suite in several timezones.
+process.env.TZ ??= 'Europe/Berlin';
 
 export default defineConfig({
   test: {

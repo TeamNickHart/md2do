@@ -21,6 +21,7 @@
     "test": "pnpm -r test",
     "test:run": "pnpm -r run test:run",
     "test:coverage": "pnpm -r run test:coverage",
+    "test:tz": "node scripts/test-tz.mjs",
     "test:coverage:ui": "pnpm -r test --coverage --ui",
     "test:e2e": "./scripts/e2e-test.sh",
     "test:examples": "./scripts/validate-examples.sh",
