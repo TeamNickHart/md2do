@@ -1,5 +1,12 @@
 # @md2do/todoist
 
+## 0.8.1
+
+### Patch Changes
+
+- Updated dependencies [[`ddb1431`](https://github.com/TeamNickHart/md2do/commit/ddb14316ec856a338a88d9e837906910669de976)]:
+  - @md2do/core@0.8.1
+
 ## 0.8.0
 
 ### Patch Changes

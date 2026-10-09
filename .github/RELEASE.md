@@ -17,11 +17,30 @@ See [PUBLISHING.md](../PUBLISHING.md) for background and troubleshooting.
    Select the affected packages, choose the bump type, write a summary, and commit the
    generated `.changeset/*.md` file with the PR.
 
-2. **Merge the PR to `main`.** `publish.yml` opens (or updates) a "chore: version packages"
-   PR containing the version bumps and CHANGELOG entries.
+2. **Merge the PR to `main`.** Nothing is published yet.
 
-3. **Merge the version PR.** `publish.yml` sees no changesets remain and runs
+3. **Open the version PR by hand** when ready to release.
+
+   ```bash
+   git switch -c chore/version-vX.Y.Z main
+   GITHUB_TOKEN=$(gh auth token) pnpm run version
+   ```
+
+   This runs `changeset version` and refreshes the lockfile. `GITHUB_TOKEN` is needed by the
+   GitHub changelog generator. Commit the result and open a PR titled
+   "chore: version packages to vX.Y.Z".
+
+   `changeset version` also bumps the private dependents `md2do-vscode` and
+   `md2do-obsidian`. Keep the `md2do-vscode` bump only if the extension changed, and revert
+   the `md2do-obsidian` bump unless the plugin changed.
+
+4. **Merge the version PR.** `publish.yml` sees no changesets remain and runs
    `pnpm release` (`pnpm build && changeset publish --provenance`).
+
+`publish.yml` does not open the version PR itself. The repository does not allow GitHub
+Actions to create pull requests, and a PR opened by the Actions token would not trigger the
+required `CI Success` check. Until that is set up, the Publish run on a feature merge fails
+at "creating pull request"; that failure is expected and harmless.
 
 Publishing uses npm **Trusted Publishing** (OIDC). There is no `NPM_TOKEN`; each `@md2do/*`
 package on npmjs.com trusts the `publish.yml` workflow in `TeamNickHart/md2do`.
