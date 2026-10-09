@@ -212,7 +212,9 @@ async function refreshAll(): Promise<void> {
     const tasks = taskTreeDataProvider.getTasks();
     const completed = tasks.filter((t) => t.completed).length;
     const incomplete = tasks.length - completed;
-    const today = new Date(new Date().toISOString().split('T')[0]!);
+    // Local midnight: due dates are parsed in local time
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const overdue = tasks.filter(
       (t) => !t.completed && t.dueDate && t.dueDate < today,
     ).length;

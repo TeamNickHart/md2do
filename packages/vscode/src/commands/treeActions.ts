@@ -78,12 +78,12 @@ export async function copyTaskAsMarkdown(task: Task): Promise<void> {
 
     // Add metadata
     if (task.dueDate) {
-      const dateStr = task.dueDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.dueDate);
       markdown += ` #due/${dateStr}`;
     }
 
     if (task.completedDate) {
-      const dateStr = task.completedDate.toISOString().split('T')[0];
+      const dateStr = formatLocalDate(task.completedDate);
       markdown += ` {completed:${dateStr}}`;
     }
 
